@@ -182,20 +182,7 @@
    * 因为需要追踪括号层级，无法用简单正则一步完成
    */
   function translateConcat(sql) {
-    // 匹配 CONCAT( ... ) 找出顶层 CONCAT 调用
-    var result = sql;
-    var changed = true;
-    var maxIter = 10;
-    while (changed && maxIter-- > 0) {
-      changed = false;
-      result = result.replace(/\bCONCAT\(/gi, function () {
-        changed = true;
-        return "(";
-      });
-    }
-
-    // 上面的方法太粗暴——没法区分 CONCAT(a,b) 里的逗号和普通逗号
-    // 改为更精确的方式：逐字符扫描括号层级
+    // 逐字符扫描，追踪字符串边界和括号层级
     var out = "";
     var i = 0;
     var s = sql;
@@ -205,38 +192,55 @@
       var m = rest.match(/^CONCAT\s*\(\s*/i);
       if (m) {
         i += m[0].length;
-        out += "(";
         // 扫描括号内的参数，把顶层逗号替换为 ||
         var depth = 1;
-        var argStart = out.length; // 记录参数开始位置（在 out 中的索引暂不需要，我们用 token 收集）
         var tokens = [];
         var current = "";
+        var inString = false;
+        var stringChar = "";
         while (i < s.length && depth > 0) {
           var ch = s[i];
-          if (ch === "(") {
-            depth++;
+          if (inString) {
             current += ch;
-          } else if (ch === ")") {
-            depth--;
-            if (depth === 0) {
+            if (ch === stringChar) {
+              // Check for escaped quote: '' in SQL
+              if (s[i + 1] === stringChar) {
+                current += s[i + 1];
+                i++;
+              } else {
+                inString = false;
+              }
+            }
+          } else {
+            if (ch === "'" || ch === '"') {
+              inString = true;
+              stringChar = ch;
+              current += ch;
+            } else if (ch === "(") {
+              depth++;
+              current += ch;
+            } else if (ch === ")") {
+              depth--;
+              if (depth === 0) {
+                if (current.trim()) tokens.push(current.trim());
+                break;
+              } else {
+                current += ch;
+              }
+            } else if (ch === "," && depth === 1) {
               if (current.trim()) tokens.push(current.trim());
-              // CONCAT 结束
-              break;
+              current = "";
             } else {
               current += ch;
             }
-          } else if (ch === "," && depth === 1) {
-            // 顶层逗号 → ||
-            if (current.trim()) tokens.push(current.trim());
-            current = "";
-          } else {
-            current += ch;
           }
           i++;
         }
-        // 用 || 连接所有参数
-        out += tokens.join(" || ");
-        out += ")";
+        if (tokens.length >= 2) {
+          out += "(" + tokens.join(" || ") + ")";
+        } else if (tokens.length === 1) {
+          out += tokens[0];
+        }
         i++; // 跳过右括号
       } else {
         out += s[i];
