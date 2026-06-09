@@ -14,9 +14,12 @@ Requires:
     npm run dev running on http://127.0.0.1:5173
 """
 
-import sys
-import json
-import time
+import sys, json, time, os
+import io
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ('utf-8', 'utf8'):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+if sys.stderr.encoding and sys.stderr.encoding.lower() not in ('utf-8', 'utf8'):
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 from playwright.sync_api import sync_playwright
 
 
@@ -30,7 +33,7 @@ VIEWPORTS = [
     {"name": "375x667 (iPhone SE)", "width": 375, "height": 667},
 ]
 
-BASE_URL = "http://127.0.0.1:5173"
+BASE_URL = "http://127.0.0.1:5174"
 
 TEST_SQL = "SELECT * FROM students_mst LIMIT 3;"
 
