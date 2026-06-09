@@ -20,7 +20,16 @@
       throw new Error(data.message || data.error || "代码执行失败");
     }
 
-    return data;
+    return {
+      success: data.success === true,
+      output: String(data.output || ""),
+      compileError: String(data.compileError || ""),
+      runtimeError: String(data.runtimeError || ""),
+      executionTimeMs: Number.isFinite(data.executionTimeMs)
+        ? data.executionTimeMs
+        : 0,
+      error: String(data.error || "")
+    };
   }
 
   window.WebCodeRunner = {

@@ -1,0 +1,36 @@
+# Desktop-only runtimes and launchers
+/server.py
+/study_ai.py
+/python/
+/jdk/
+/Study-Tools.exe
+
+# Private local data
+/data/study_ai.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Browser and test profiles
+/.chrome-release-check-profile/
+/.study-tools-browser-profile/
+/.playwright-cli/
+/test-results/
+
+# Generated output and backups
+/output/
+/backups/
+
+# Python and local tool caches
+__pycache__/
+*.pyc
+*.log
+/.wrangler/
+/node_modules/
+
+# Local environment secrets
+.dev.vars
+.dev.vars.*
+.env
+.env.*
+!.env.example

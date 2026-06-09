@@ -4319,15 +4319,7 @@ async function verifyCurrentCodingQuestion() {
     }
     
     try {
-      const response = await fetch('/runjava', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, stdin: q.stdinExample || "" }),
-        signal: AbortSignal.timeout(15000)
-      });
-      
-      if (!response.ok) throw new Error("HTTP connection error");
-      const res = await response.json();
+      const res = await window.WebCodeRunner.runJava(code, q.stdinExample || "");
       
       // Update output display
       let textToShow = "";
@@ -4412,15 +4404,7 @@ async function verifyCurrentCodingQuestion() {
     }
     
     try {
-      const response = await fetch('/runpython', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, stdin: q.stdinExample || "" }),
-        signal: AbortSignal.timeout(15000)
-      });
-      
-      if (!response.ok) throw new Error("HTTP connection error");
-      const res = await response.json();
+      const res = await window.WebCodeRunner.runPython(code, q.stdinExample || "");
       
       // Update output display
       let textToShow = "";

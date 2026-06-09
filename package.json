@@ -4,6 +4,7 @@
   "description": "Study Tools Web Public / PWA Edition",
   "scripts": {
     "dev": "npx -y live-server --port=5173",
+    "dev:functions": "npx wrangler pages dev .",
     "start": "npx -y live-server --port=5173"
   }
 }

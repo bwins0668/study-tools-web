@@ -1,5 +1,5 @@
 // java_sandbox.js — Java Sandbox Controller
-// Handles code execution by calling the local Launcher.cs /runjava endpoint
+// Handles code execution through the WebCodeRunner adapter
 // Provides vocab flashcard logic and keyboard shortcuts for the Java editor
 
 'use strict';
@@ -201,7 +201,7 @@ window.JavaSandbox = (() => {
     lnContainer.scrollTop = editor.scrollTop;
   }
 
-  // ─── Run Code via Launcher.cs /runjava ───────────────────────────────────
+  // ─── Run Code via WebCodeRunner ──────────────────────────────────────────
   async function runCode() {
     if (isRunning) return;
     const editor = getEditor();
@@ -227,18 +227,7 @@ window.JavaSandbox = (() => {
     displayOutput('// コンパイル中 / Compiling...\n// しばらくお待ちください / Please wait...', 'idle');
 
     try {
-      const response = await fetch('/runjava', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, stdin }),
-        signal: AbortSignal.timeout(25000)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTPエラー: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      const result = await window.WebCodeRunner.runJava(code, stdin);
       handleRunResult(result);
 
     } catch (err) {

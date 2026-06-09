@@ -1,5 +1,5 @@
 // python_sandbox.js — Python Sandbox Controller
-// Handles code execution by calling the local /runpython endpoint
+// Handles code execution through the WebCodeRunner adapter
 // Provides vocab flashcard logic and keyboard shortcuts for the Python editor
 
 'use strict';
@@ -231,7 +231,7 @@ window.PythonSandbox = (() => {
     lnContainer.scrollTop = editor.scrollTop;
   }
 
-  // ─── Run Code via /runpython ─────────────────────────────────────────────
+  // ─── Run Code via WebCodeRunner ──────────────────────────────────────────
   async function runCode() {
     if (isRunning) return;
     const editor = getEditor();
@@ -257,18 +257,7 @@ window.PythonSandbox = (() => {
     displayOutput('# 実行中 / Running...\n# しばらくお待ちください / Please wait...', 'idle');
 
     try {
-      const response = await fetch('/runpython', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, stdin }),
-        signal: AbortSignal.timeout(25000)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTPエラー: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      const result = await window.WebCodeRunner.runPython(code, stdin);
       handleRunResult(result);
 
     } catch (err) {
