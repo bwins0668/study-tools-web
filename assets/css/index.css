@@ -1385,6 +1385,12 @@ body {
 
 /* Responsiveness */
 
+/* Mobile sidebar toggle & backdrop — hidden on desktop */
+.mobile-sidebar-toggle,
+.mobile-sidebar-backdrop {
+  display: none;
+}
+
 /* ================================================================
    断点 1: 1024px – 1200px — 缩窄 sidebar、保证顶部 header 不挤
    ================================================================ */
@@ -1421,7 +1427,7 @@ body {
 }
 
 /* ================================================================
-   断点 2: 768px 以下 — 三栏改单栏、sidebar 变顶部横条
+   断点 2: 768px 以下 — 三栏改单栏、sidebar 变左侧抽屉
    ================================================================ */
 @media (max-width: 768px) {
   .app-body {
@@ -1429,12 +1435,61 @@ body {
     overflow-y: auto;
   }
 
+  /* Mobile sidebar toggle button */
+  .mobile-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    color: var(--neon-cyan);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 8px 14px 0;
+    z-index: 10;
+    transition: var(--transition-smooth);
+  }
+
+  .mobile-sidebar-toggle:hover {
+    background: rgba(0, 240, 255, 0.18);
+    border-color: var(--neon-cyan);
+  }
+
+  /* Sidebar becomes a fixed-position drawer, hidden off-screen by default */
   .app-sidebar {
-    width: 100%;
-    height: 180px;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: 1px solid var(--border-color);
     flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  /* Drawer open state */
+  body.mobile-sidebar-open .app-sidebar {
+    transform: translateX(0);
+  }
+
+  /* Backdrop overlay */
+  .mobile-sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 150;
+  }
+
+  body.mobile-sidebar-open .mobile-sidebar-backdrop {
+    display: block;
   }
 
   .lesson-content {
@@ -1562,9 +1617,15 @@ body {
     font-size: 11px !important;
   }
 
-  /* App body: tighter sidebar */
+  /* App body: compact mobile toggle and drawer */
+  .mobile-sidebar-toggle {
+    margin: 6px 10px 0;
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+
   .app-sidebar {
-    height: 150px;
+    width: 260px;
   }
 
   .lesson-content {

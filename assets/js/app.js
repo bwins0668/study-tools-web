@@ -145,6 +145,27 @@ function executeSqlViaEngine(sql) {
   return sqlEngine.execute(sql);
 }
 
+// --- Mobile Sidebar Drawer ---
+function openMobileSidebar() {
+  document.body.classList.add('mobile-sidebar-open');
+  const btn = document.getElementById('mobile-sidebar-toggle');
+  if (btn) btn.setAttribute('aria-expanded', 'true');
+}
+
+function closeMobileSidebar() {
+  document.body.classList.remove('mobile-sidebar-open');
+  const btn = document.getElementById('mobile-sidebar-toggle');
+  if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function toggleMobileSidebar() {
+  if (document.body.classList.contains('mobile-sidebar-open')) {
+    closeMobileSidebar();
+  } else {
+    openMobileSidebar();
+  }
+}
+
 // On Document Ready
 document.addEventListener("DOMContentLoaded", () => {
   logoIcon = document.getElementById("main-logo-icon");
@@ -173,6 +194,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Async: attempt to upgrade to SQLiteAdapter
   tryInitSQLiteAdapter();
+
+  // --- Mobile sidebar drawer bindings ---
+  const mobileToggle = document.getElementById('mobile-sidebar-toggle');
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', toggleMobileSidebar);
+  }
+  const mobileBackdrop = document.getElementById('mobile-sidebar-backdrop');
+  if (mobileBackdrop) {
+    mobileBackdrop.addEventListener('click', closeMobileSidebar);
+  }
+  // ESC key closes mobile sidebar
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('mobile-sidebar-open')) {
+      closeMobileSidebar();
+    }
+  });
+  // Close mobile sidebar when clicking a lesson nav item (mobile only)
+  const lessonsNav = document.getElementById('lessons-nav');
+  if (lessonsNav) {
+    lessonsNav.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 && e.target.closest('.lesson-nav-item')) {
+        closeMobileSidebar();
+      }
+    });
+  }
+  // Close mobile sidebar on window resize past breakpoint
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      closeMobileSidebar();
+    }
+  });
 });
 
 // Heartbeat function
