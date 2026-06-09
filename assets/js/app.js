@@ -81,8 +81,69 @@ const SG_TEXTBOOK_PDF = "情報セキュリティー.pdf";
 const ITPASS_TEXTBOOK_PDF = "令和08年-イメージ-クレバー方式でよくわかる-かやのき先生のITパスポート教室_00.pdf";
 let currentPdfObjectUrl = null;
 
-// Initialize the Mock SQL Engine
+// Initialize the SQL Engine (dual-engine: SQLiteAdapter with MockSQLEngine fallback)
 const sqlEngine = new MockSQLEngine();
+let sqlEngineType = 'MockSQLEngine';   // 'MockSQLEngine' | 'SQLiteAdapter'
+let sqlEngineReady = true;             // MockSQLEngine is synchronous → always ready
+let sqliteAdapterInstance = null;      // reference to the async SQLiteAdapter
+
+// Expose engine type for Console debugging
+window.getCurrentSqlEngineType = function () {
+  return sqlEngineType;
+};
+
+/**
+ * Try to upgrade to SQLiteAdapter asynchronously.
+ * On success: sqlEngine switches to SQLiteAdapter.
+ * On failure: keeps MockSQLEngine, logs warning.
+ */
+async function tryInitSQLiteAdapter() {
+  if (typeof window.SQLiteAdapter === 'undefined') {
+    console.warn('[SQL Engine] SQLiteAdapter 未加载，继续使用 MockSQLEngine');
+    return;
+  }
+  if (typeof initSqlJs === 'undefined') {
+    console.warn('[SQL Engine] sql.js 未加载（assets/vendor/sql-wasm.js），继续使用 MockSQLEngine。' +
+      '请将 sql-wasm.js 和 sql-wasm.wasm 放入 assets/vendor/ 目录。');
+    return;
+  }
+
+  // Temporarily mark engine as not ready during async init
+  sqlEngineReady = false;
+
+  const adapter = new window.SQLiteAdapter();
+  try {
+    const ok = await adapter.init();
+    if (ok && adapter.isReady()) {
+      // Swap engines
+      sqliteAdapterInstance = adapter;
+      sqlEngineType = 'SQLiteAdapter';
+      console.log('[SQL Engine] ✅ 已切换为 SQLiteAdapter (sql.js WASM)');
+    } else {
+      console.warn('[SQL Engine] SQLiteAdapter 初始化失败，继续使用 MockSQLEngine。原因: ' +
+        (adapter.getLastError() || 'unknown'));
+    }
+  } catch (e) {
+    console.warn('[SQL Engine] SQLiteAdapter 初始化异常，继续使用 MockSQLEngine。', e);
+  }
+
+  sqlEngineReady = true;
+}
+
+/**
+ * Execute SQL via the active engine.
+ * Delegates to either SQLiteAdapter or MockSQLEngine depending on sqlEngineType.
+ *
+ * @param {string} sql
+ * @returns {{success:boolean, columns?:string[], rows?:any[][], message?:string, error?:string}}
+ */
+function executeSqlViaEngine(sql) {
+  if (sqlEngineType === 'SQLiteAdapter' && sqliteAdapterInstance && sqliteAdapterInstance.isReady()) {
+    return sqliteAdapterInstance.execute(sql);
+  }
+  // Fallback to MockSQLEngine
+  return sqlEngine.execute(sql);
+}
 
 // On Document Ready
 document.addEventListener("DOMContentLoaded", () => {
@@ -96,17 +157,20 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProgressUI();
   setupEditorLineNumbers();
   setupKeyboardShortcuts();
-  
+
   // Set default values for calculators in IT Passport Mode
   initItPassCalculators();
 
   // Start heartbeat to keep local server alive
   startHeartbeat();
-  
+
   // Trigger initial subject setup (SQL) so that the sub-header and all widgets are correctly initialized on load
   currentSubject = "";
   switchSubject('sql');
   initTheme();
+
+  // Async: attempt to upgrade to SQLiteAdapter
+  tryInitSQLiteAdapter();
 });
 
 // Heartbeat function
@@ -2059,7 +2123,11 @@ function resetOutputPlaceholder() {
 // Reset Database Mock State
 function resetMockDB() {
   if (confirm("模拟数据库将被重置回初始状态，继续吗？")) {
-    sqlEngine.reset();
+    if (sqlEngineType === 'SQLiteAdapter' && sqliteAdapterInstance) {
+      sqliteAdapterInstance.reset();
+    } else {
+      sqlEngine.reset();
+    }
     showToast('✅ 模拟数据库已重置回初始数据！', 'success');
     resetOutputPlaceholder();
   }
@@ -2116,7 +2184,8 @@ function runPlaygroundQuery() {
   const countBadge = document.getElementById("output-row-count");
   
   // Run SQL logic through engine
-  const res = sqlEngine.execute(sql);
+  // If SQLiteAdapter still loading, fall back to MockSQLEngine
+  const res = executeSqlViaEngine(sql);
   
   if (res.success) {
     // Show success status
@@ -4240,7 +4309,7 @@ async function verifyCurrentCodingQuestion() {
     const countBadge = document.getElementById("output-row-count");
     
     // 1. Run User Code
-    const resUser = sqlEngine.execute(code);
+    const resUser = executeSqlViaEngine(code);
     
     if (!resUser.success) {
       statusDiv.innerHTML = `<span class="status-error"><i class="fa-solid fa-circle-exclamation"></i> 语法错误</span>`;
@@ -4280,7 +4349,7 @@ async function verifyCurrentCodingQuestion() {
     statusDiv.innerHTML = `<span class="status-success"><i class="fa-solid fa-circle-check"></i> 実行成功 (执行成功)</span>`;
     
     // 3. Run Reference Query
-    const resSol = sqlEngine.execute(q.solutionQuery);
+    const resSol = executeSqlViaEngine(q.solutionQuery);
     
     // 4. Compare Results
     const isCorrect = compareSqlResults(resUser, resSol);

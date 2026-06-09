@@ -1,5 +1,5 @@
 /**
- * SQLiteAdapter — sql.js / SQLite WASM 适配器骨架
+ * SQLiteAdapter — sql.js / SQLite WASM 适配器
  * ===============================================
  * 为 SQL Learning Hub 提供基于真实 SQLite 引擎的 SQL 执行能力。
  * 保持与 MockSQLEngine 完全兼容的返回格式。
@@ -13,11 +13,7 @@
  *   const adapter = new SQLiteAdapter();
  *   await adapter.init();
  *   const result = adapter.execute("SELECT * FROM students_mst;");
- *
- * 本阶段 (3B-1)：
- *   - 不替换 app.js 中的 MockSQLEngine
- *   - 不在 UI 上暴露
- *   - 仅通过 window.testSQLiteAdapter() 在 Console 中测试
+
  */
 
 (function () {
