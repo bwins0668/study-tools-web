@@ -1,0 +1,144 @@
+[
+  {
+    "viewport": "1920x1080 (Desktop)",
+    "width": 1920,
+    "height": 1080,
+    "category": "desktop",
+    "horizontal_scroll": false,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  },
+  {
+    "viewport": "1366x768 (Laptop)",
+    "width": 1366,
+    "height": 768,
+    "category": "desktop",
+    "horizontal_scroll": false,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  },
+  {
+    "viewport": "1024x768 (Tablet Landscape)",
+    "width": 1024,
+    "height": 768,
+    "category": "tablet",
+    "horizontal_scroll": false,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  },
+  {
+    "viewport": "820x1180 (iPad Pro Portrait)",
+    "width": 820,
+    "height": 1180,
+    "category": "tablet",
+    "horizontal_scroll": false,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  },
+  {
+    "viewport": "768x1024 (iPad Portrait)",
+    "width": 768,
+    "height": 1024,
+    "category": "mobile",
+    "horizontal_scroll": false,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  },
+  {
+    "viewport": "390x844 (iPhone 14)",
+    "width": 390,
+    "height": 844,
+    "category": "mobile",
+    "horizontal_scroll": true,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "Horizontal overflow: 502px > 390px",
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  },
+  {
+    "viewport": "375x667 (iPhone SE)",
+    "width": 375,
+    "height": 667,
+    "category": "mobile",
+    "horizontal_scroll": true,
+    "sql_button_visible": true,
+    "sql_execution_ok": true,
+    "nav_tabs_visible": true,
+    "sidebar_visible": true,
+    "content_readable": true,
+    "engine_type": "SQLiteAdapter",
+    "heartbeat_405": false,
+    "api_events_405": false,
+    "console_errors": [],
+    "notes": [
+      "Horizontal overflow: 502px > 375px",
+      "SQL button text: '\n                   执行 SQL Ctrl+Enter\n                '",
+      "SQL executed: result table visible"
+    ]
+  }
+]
