@@ -1384,26 +1384,287 @@ body {
 }
 
 /* Responsiveness */
-@media (max-width: 1200px) {
+
+/* ================================================================
+   断点 1: 1024px – 1200px — 缩窄 sidebar、保证顶部 header 不挤
+   ================================================================ */
+@media (max-width: 1200px) and (min-width: 769px) {
+  .app-sidebar {
+    width: 220px;
+  }
+  .header-logo {
+    flex: 0 0 180px;
+    min-width: 160px;
+  }
+  .logo-text h1 {
+    font-size: 15px;
+    max-width: 140px;
+  }
+  .logo-text span {
+    display: none;
+  }
+  .subject-tab {
+    padding: 5px 10px !important;
+    font-size: 11.5px !important;
+  }
+  .header-challenge-btn-start {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .challenge-control-btn {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+  .console-card-body .editor-container {
+    max-height: 240px;
+  }
+}
+
+/* ================================================================
+   断点 2: 768px 以下 — 三栏改单栏、sidebar 变顶部横条
+   ================================================================ */
+@media (max-width: 768px) {
   .app-body {
     flex-direction: column;
     overflow-y: auto;
   }
+
   .app-sidebar {
     width: 100%;
-    height: 240px;
+    height: 180px;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
   }
+
+  .lesson-content {
+    flex: 0 0 auto;
+    min-height: auto;
+    max-height: none;
+    overflow-y: visible;
+    padding: 14px;
+    gap: 14px;
+  }
+
+  /* 右栏 playground 取消 overflow:hidden，改为可滚动区域 */
   .playground-section {
-    padding: 20px;
+    overflow-y: visible;
+    overflow-x: hidden;
+    height: auto;
+    min-height: 0;
+    padding: 14px;
+    gap: 14px;
+    flex: 0 0 auto;
   }
-  .output-card.maximized {
-    width: 96vw;
-    top: 2vh;
-    height: 94vh;
+
+  .playground-card {
+    min-height: 0;
+    flex: 0 0 auto;
+  }
+
+  .console-card {
+    flex: 0 0 auto;
+    min-height: 220px;
+  }
+
+  .output-card {
+    flex: 0 0 auto;
+    min-height: 140px;
+  }
+
+  /* 中日双栏改为上下排列 */
+  .concept-container {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .concept-col {
+    flex: 0 0 auto;
+  }
+
+  /* SQL editor 缩小 */
+  .console-card-body .editor-container {
+    max-height: 200px;
+  }
+
+  .sql-editor {
+    font-size: 13px !important;
+    padding: 10px !important;
+  }
+
+  .run-query-btn {
+    padding: 8px 14px !important;
+    font-size: 12px !important;
   }
 }
+
+/* ================================================================
+   断点 3: 480px 以下 — 手机尺寸，全面压缩间距
+   ================================================================ */
+@media (max-width: 480px) {
+  .app-header {
+    padding: 8px 10px;
+    gap: 6px;
+    flex-wrap: wrap;
+    min-height: auto;
+  }
+
+  .header-logo {
+    flex: 0 0 auto;
+    min-width: 0;
+    gap: 6px;
+  }
+
+  .logo-icon {
+    font-size: 20px;
+  }
+
+  .logo-text h1 {
+    font-size: 14px;
+  }
+
+  .logo-text span {
+    display: none;
+  }
+
+  .header-subject-selector {
+    margin-left: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1 1 100%;
+    order: 3;
+  }
+
+  .subject-tab {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  .header-challenge {
+    order: 4;
+    margin-right: 0;
+  }
+
+  .header-challenge-btn-start {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .theme-toggle-btn,
+  .reset-all-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .sub-header-tab {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+
+  /* App body: tighter sidebar */
+  .app-sidebar {
+    height: 150px;
+  }
+
+  .lesson-content {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .content-card {
+    padding: 14px;
+    gap: 12px;
+    border-radius: 12px;
+  }
+
+  .lesson-header h2 {
+    font-size: 16px;
+  }
+
+  .lesson-header h3 {
+    font-size: 12px;
+  }
+
+  .playground-section {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .console-header,
+  .schema-header,
+  .output-header {
+    padding: 8px 14px;
+  }
+
+  .console-card-body .editor-container {
+    max-height: 160px;
+    min-height: 60px;
+  }
+
+  .sql-editor {
+    font-size: 12px !important;
+    line-height: 1.5;
+    padding: 8px !important;
+  }
+
+  .console-footer {
+    padding: 8px 14px;
+  }
+
+  /* SQL 执行按钮 — 触控高度至少 40px */
+  .run-query-btn {
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    min-height: 40px !important;
+  }
+
+  .run-query-btn kbd {
+    display: none;
+  }
+
+  /* 结果表格横向滚动 */
+  .result-table {
+    font-size: 11px !important;
+  }
+
+  .result-table th,
+  .result-table td {
+    padding: 6px 8px !important;
+  }
+
+  .output-body {
+    overflow-x: auto;
+  }
+
+  .playground-task-desc {
+    font-size: 11px !important;
+    padding: 6px 14px;
+  }
+
+  /* Quiz 按钮触控优化 */
+  .quiz-submit-btn {
+    min-height: 40px;
+    padding: 10px 16px;
+  }
+
+  .quiz-option {
+    padding: 10px 12px;
+  }
+
+  /* Schema card */
+  .schema-card {
+    min-height: 0;
+  }
+}
+
+/* ================================================================
+   已有补充断点 — 1500px, 1180px, 1200px fallback
+   （予以精简，避免和上面的断点冲突）
+   ================================================================ */
+
+/* The old max-width:1200px rule (column collapse) is now at 768px.
+   Keep this cleanup-compatible by narrowing its scope to height-only fixes. */
 
 /* Height-based optimizations to reduce scrolling on smaller screens */
 @media (max-height: 850px) {
