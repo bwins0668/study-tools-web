@@ -1,0 +1,378 @@
+{
+  "summary": {
+    "total_combos": 36,
+    "with_issues": 0,
+    "with_overflow": 0,
+    "issues_by_module": {
+      "java": 0,
+      "python": 0,
+      "itpass": 0,
+      "sg": 0,
+      "cbt": 0,
+      "coding": 0
+    },
+    "blocking_issues_count": 0
+  },
+  "results": [
+    {
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "subject": "java",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "subject": "python",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "subject": "itpass",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "subject": "sg",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "subject": "cbt",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "subject": "coding",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "subject": "java",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "subject": "python",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "subject": "itpass",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "subject": "sg",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "subject": "cbt",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "subject": "coding",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "subject": "java",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "subject": "python",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "subject": "itpass",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "subject": "sg",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "subject": "cbt",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "subject": "coding",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "subject": "java",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "subject": "python",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "subject": "itpass",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "subject": "sg",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "subject": "cbt",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "subject": "coding",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "subject": "java",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "subject": "python",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "subject": "itpass",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "subject": "sg",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "subject": "cbt",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "subject": "coding",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "375x667",
+      "width": 375,
+      "height": 667,
+      "subject": "java",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "375x667",
+      "width": 375,
+      "height": 667,
+      "subject": "python",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "375x667",
+      "width": 375,
+      "height": 667,
+      "subject": "itpass",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "375x667",
+      "width": 375,
+      "height": 667,
+      "subject": "sg",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "375x667",
+      "width": 375,
+      "height": 667,
+      "subject": "cbt",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    },
+    {
+      "viewport": "375x667",
+      "width": 375,
+      "height": 667,
+      "subject": "coding",
+      "overflow": false,
+      "issues": [],
+      "checks": [],
+      "console_errors": []
+    }
+  ]
+}
