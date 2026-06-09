@@ -34,3 +34,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# npm lock file (only sql.js dev dependency, vendor copies already committed)
+/package-lock.json
