@@ -1,0 +1,9 @@
+﻿{
+  "name": "study-tools-web-public",
+  "version": "1.0.0",
+  "description": "Study Tools Web Public / PWA Edition",
+  "scripts": {
+    "dev": "npx -y live-server --port=5173",
+    "start": "npx -y live-server --port=5173"
+  }
+}
