@@ -143,6 +143,10 @@ window.StudyAI = (() => {
   }
 
   async function api(path, options = {}) {
+    // Web 公开版：所有本地后端请求直接跳过，避免 405 控制台刷屏
+    if (window.STUDY_TOOLS_DISABLE_LOCAL_BACKEND) {
+      throw new Error('Web 公开版已禁用本地后端请求');
+    }
     const response = await fetch(path, {
       headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
       ...options
@@ -311,7 +315,10 @@ window.StudyAI = (() => {
         body: JSON.stringify(event)
       });
     } catch (error) {
-      console.warn('[StudyAI] event tracking failed:', error.message);
+      // Web 公开版静默跳过，不打印 warning
+      if (!window.STUDY_TOOLS_DISABLE_LOCAL_BACKEND) {
+        console.warn('[StudyAI] event tracking failed:', error.message);
+      }
       return null;
     }
   }
@@ -338,7 +345,9 @@ window.StudyAI = (() => {
         })
       });
     } catch (error) {
-      console.warn('[StudyAI] legacy import failed:', error.message);
+      if (!window.STUDY_TOOLS_DISABLE_LOCAL_BACKEND) {
+        console.warn('[StudyAI] legacy import failed:', error.message);
+      }
     }
   }
 
@@ -478,6 +487,12 @@ window.StudyAI = (() => {
   }
 
   async function loadProviders() {
+    // Web 公开版：静默跳过，不请求本地后端
+    if (window.STUDY_TOOLS_DISABLE_LOCAL_BACKEND) {
+      state.providers = [];
+      updateProviderIndicators();
+      return;
+    }
     try {
       const data = await api('/api/ai/providers');
       state.providers = data.providers || [];

@@ -161,8 +161,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set default values for calculators in IT Passport Mode
   initItPassCalculators();
 
-  // Start heartbeat to keep local server alive
-  startHeartbeat();
+  // Start heartbeat to keep local server alive (桌面版专用; Web 公开版跳过)
+  if (!window.STUDY_TOOLS_DISABLE_LOCAL_BACKEND) {
+    startHeartbeat();
+  }
 
   // Trigger initial subject setup (SQL) so that the sub-header and all widgets are correctly initialized on load
   currentSubject = "";
