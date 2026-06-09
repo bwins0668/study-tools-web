@@ -1,0 +1,36 @@
+# Cloudflare Pages _headers
+# ==========================
+# 部署后 CF Pages 会自动解析此文件并应用响应头。
+# 格式：路径 -> 响应头列表（每行两个空格缩进）
+
+# WASM 二进制：长缓存 + 明确 MIME 类型
+/assets/vendor/sql-wasm.wasm
+  Content-Type: application/wasm
+  Cache-Control: public, max-age=31536000, immutable
+
+# sql.js 加载器：长缓存（注意 NOT application/wasm）
+/assets/vendor/sql-wasm.js
+  Cache-Control: public, max-age=31536000, immutable
+
+# PWA 图标：长缓存
+/assets/images/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 第三方库文件：长缓存
+/assets/lib/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Service Worker：禁止强缓存，确保浏览器每次检查更新
+/service-worker.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+# Manifest：短缓存即可
+/manifest.webmanifest
+  Cache-Control: public, max-age=3600
+
+# 首页／根路径：允许浏览器验证新鲜度，但不强缓存
+/index.html
+  Cache-Control: no-cache
+
+/
+  Cache-Control: no-cache
