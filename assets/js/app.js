@@ -325,6 +325,24 @@ document.addEventListener("DOMContentLoaded", () => {
       closeAllMobileSubMenus();
     }
   });
+
+  // Mobile subject tabs panel click handler (event delegation to ensure mobile click triggers switchSubject)
+  const subjectPanel = document.getElementById('subject-tabs-panel');
+  if (subjectPanel) {
+    subjectPanel.addEventListener('click', (event) => {
+      if (window.innerWidth <= 768) {
+        const btn = event.target.closest('[data-subject]');
+        if (!btn) return;
+        const subject = btn.dataset.subject;
+        if (subject) {
+          event.preventDefault();
+          event.stopPropagation();
+          switchSubject(subject);
+          closeMobileSubjectMenu();
+        }
+      }
+    });
+  }
 });
 
 // Heartbeat function
