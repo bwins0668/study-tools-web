@@ -37,3 +37,7 @@ __pycache__/
 
 # npm lock file (only sql.js dev dependency, vendor copies already committed)
 /package-lock.json
+
+# Local scratch directory
+scratch/
+
