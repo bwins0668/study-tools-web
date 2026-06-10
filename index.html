@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
   <meta charset="UTF-8">
@@ -40,25 +40,34 @@
       </div>
 
       <!-- Subject Tab Switcher -->
-      <div class="header-subject-selector" onclick="event.stopPropagation()">
-        <button class="subject-tab active" id="subject-tab-sql" onclick="switchSubject('sql')">
-          <i class="fa-solid fa-database"></i> SQL 学习
+      <div class="header-subject-selector" id="header-subject-selector" onclick="event.stopPropagation()">
+        <!-- Mobile-only: dropdown toggle button -->
+        <button class="mobile-subject-toggle" id="mobile-subject-toggle" onclick="toggleMobileSubjectMenu()" aria-expanded="false" aria-haspopup="true">
+          <i class="fa-solid fa-database" id="mobile-subject-icon"></i>
+          <span id="mobile-subject-label">SQL 学习</span>
+          <i class="fa-solid fa-chevron-down mobile-subject-chevron" id="mobile-subject-chevron"></i>
         </button>
-        <button class="subject-tab" id="subject-tab-java" onclick="switchSubject('java')">
-          <i class="fa-brands fa-java"></i> Java 学習
-        </button>
-        <button class="subject-tab" id="subject-tab-python" onclick="switchSubject('python')">
-          <i class="fa-brands fa-python"></i> Python 学习
-        </button>
-        <button class="subject-tab" id="subject-tab-itpass" onclick="switchSubject('itpass')">
-          <i class="fa-solid fa-graduation-cap"></i> ITパスポート 备考
-        </button>
-        <button class="subject-tab" id="subject-tab-sg" onclick="switchSubject('sg')">
-          <i class="fa-solid fa-shield-halved"></i> SG 备考
-        </button>
-        <button class="subject-tab" id="subject-tab-typing" onclick="switchSubject('typing')">
-          <i class="fa-solid fa-keyboard"></i> 日本語タイピング
-        </button>
+        <!-- Tab buttons (desktop: horizontal row; mobile: dropdown panel) -->
+        <div class="subject-tabs-panel" id="subject-tabs-panel">
+          <button class="subject-tab active" id="subject-tab-sql" onclick="switchSubject('sql')">
+            <i class="fa-solid fa-database"></i> SQL 学习
+          </button>
+          <button class="subject-tab" id="subject-tab-java" onclick="switchSubject('java')">
+            <i class="fa-brands fa-java"></i> Java 学習
+          </button>
+          <button class="subject-tab" id="subject-tab-python" onclick="switchSubject('python')">
+            <i class="fa-brands fa-python"></i> Python 学习
+          </button>
+          <button class="subject-tab" id="subject-tab-itpass" onclick="switchSubject('itpass')">
+            <i class="fa-solid fa-graduation-cap"></i> ITパスポート 备考
+          </button>
+          <button class="subject-tab" id="subject-tab-sg" onclick="switchSubject('sg')">
+            <i class="fa-solid fa-shield-halved"></i> SG 备考
+          </button>
+          <button class="subject-tab" id="subject-tab-typing" onclick="switchSubject('typing')">
+            <i class="fa-solid fa-keyboard"></i> 日本語タイピング
+          </button>
+        </div>
       </div>
 
 
@@ -91,7 +100,13 @@
 
     <!-- Sub-Header Bar (Visible in SQL mode to toggle Textbook vs Mock Exam) -->
     <div class="sub-header-bar" id="sql-sub-header" style="display: none;">
-      <div class="sub-header-tabs">
+      <!-- Mobile-only: sub-nav dropdown toggle -->
+      <button class="mobile-sub-toggle" id="sql-sub-toggle" onclick="toggleMobileSubMenu('sql')" aria-expanded="false">
+        <i class="fa-solid fa-book-open" id="sql-sub-icon"></i>
+        <span id="sql-sub-label">教科书与演练沙盒</span>
+        <i class="fa-solid fa-chevron-down mobile-sub-chevron"></i>
+      </button>
+      <div class="sub-header-tabs" id="sql-sub-tabs-panel">
         <button class="sub-header-tab active" id="sql-sub-tab-lessons" onclick="switchSqlSubMode('lessons')">
           <i class="fa-solid fa-book-open"></i> 教科书与演练沙盒 (テキスト・演習)
         </button>
@@ -103,7 +118,13 @@
 
     <!-- Sub-Header Bar (Visible in IT Passport mode to toggle Textbook vs Past Exam Dojo) -->
     <div class="sub-header-bar" id="itpass-sub-header" style="display: none;">
-      <div class="sub-header-tabs">
+      <!-- Mobile-only: sub-nav dropdown toggle -->
+      <button class="mobile-sub-toggle" id="itpass-sub-toggle" onclick="toggleMobileSubMenu('itpass')" aria-expanded="false">
+        <i class="fa-solid fa-book-open" id="itpass-sub-icon"></i>
+        <span id="itpass-sub-label">教科书章节学习</span>
+        <i class="fa-solid fa-chevron-down mobile-sub-chevron"></i>
+      </button>
+      <div class="sub-header-tabs" id="itpass-sub-tabs-panel">
         <button class="sub-header-tab active" id="sub-tab-lessons" onclick="switchItPassSubMode('lessons')">
           <i class="fa-solid fa-book-open"></i> 教科书章节学习 (テキスト学習)
         </button>
@@ -115,7 +136,13 @@
 
     <!-- Sub-Header Bar (Visible in SG mode to toggle Textbook vs Past Exam Dojo) -->
     <div class="sub-header-bar" id="sg-sub-header" style="display: none;">
-      <div class="sub-header-tabs">
+      <!-- Mobile-only: sub-nav dropdown toggle -->
+      <button class="mobile-sub-toggle" id="sg-sub-toggle" onclick="toggleMobileSubMenu('sg')" aria-expanded="false">
+        <i class="fa-solid fa-book-open" id="sg-sub-icon"></i>
+        <span id="sg-sub-label">教科书章节学习</span>
+        <i class="fa-solid fa-chevron-down mobile-sub-chevron"></i>
+      </button>
+      <div class="sub-header-tabs" id="sg-sub-tabs-panel">
         <button class="sub-header-tab active" id="sg-sub-tab-lessons" onclick="switchSgSubMode('lessons')">
           <i class="fa-solid fa-book-open"></i> 教科书章节学习 (テキスト学習)
         </button>
@@ -127,7 +154,13 @@
 
     <!-- Java Sub-Header (入門編 / 実践編 switch + Exam) -->
     <div class="sub-header-bar" id="java-sub-header" style="display: none;">
-      <div class="sub-header-tabs">
+      <!-- Mobile-only: sub-nav dropdown toggle -->
+      <button class="mobile-sub-toggle" id="java-sub-toggle" onclick="toggleMobileSubMenu('java')" aria-expanded="false">
+        <i class="fa-solid fa-seedling" id="java-sub-icon"></i>
+        <span id="java-sub-label">入門編 (基础篇)</span>
+        <i class="fa-solid fa-chevron-down mobile-sub-chevron"></i>
+      </button>
+      <div class="sub-header-tabs" id="java-sub-tabs-panel">
         <button class="sub-header-tab active" id="java-sub-tab-nyumon" onclick="switchJavaBook('nyumon')">
           <i class="fa-solid fa-seedling"></i> 入門編 (基础篇) — 第1〜8章
         </button>
@@ -142,7 +175,13 @@
 
     <!-- Sub-Header Bar (Visible in Python mode to toggle Textbook vs Mock Exam) -->
     <div class="sub-header-bar" id="python-sub-header" style="display: none;">
-      <div class="sub-header-tabs">
+      <!-- Mobile-only: sub-nav dropdown toggle -->
+      <button class="mobile-sub-toggle" id="python-sub-toggle" onclick="toggleMobileSubMenu('python')" aria-expanded="false">
+        <i class="fa-solid fa-book-open" id="python-sub-icon"></i>
+        <span id="python-sub-label">教科书与演练沙盒</span>
+        <i class="fa-solid fa-chevron-down mobile-sub-chevron"></i>
+      </button>
+      <div class="sub-header-tabs" id="python-sub-tabs-panel">
         <button class="sub-header-tab active" id="python-sub-tab-lessons" onclick="switchPythonSubMode('lessons')">
           <i class="fa-solid fa-book-open"></i> 教科书与演练沙盒 (テキスト・演習)
         </button>

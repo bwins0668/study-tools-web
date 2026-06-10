@@ -166,6 +166,89 @@ function toggleMobileSidebar() {
   }
 }
 
+// --- Mobile Subject Dropdown (主导航 Dropdown) ---
+
+// Subject metadata for label/icon updates
+const SUBJECT_META = {
+  sql:    { label: 'SQL 学习',            icon: 'fa-solid fa-database' },
+  java:   { label: 'Java 学習',           icon: 'fa-brands fa-java' },
+  python: { label: 'Python 学习',         icon: 'fa-brands fa-python' },
+  itpass: { label: 'ITパスポート 备考', icon: 'fa-solid fa-graduation-cap' },
+  sg:     { label: 'SG 备考',             icon: 'fa-solid fa-shield-halved' },
+  typing: { label: '日本語タイピング',     icon: 'fa-solid fa-keyboard' },
+};
+
+function toggleMobileSubjectMenu() {
+  const panel = document.getElementById('subject-tabs-panel');
+  const btn   = document.getElementById('mobile-subject-toggle');
+  if (!panel || !btn) return;
+  const isOpen = panel.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+function closeMobileSubjectMenu() {
+  const panel = document.getElementById('subject-tabs-panel');
+  const btn   = document.getElementById('mobile-subject-toggle');
+  if (panel) panel.classList.remove('open');
+  if (btn)   btn.setAttribute('aria-expanded', 'false');
+}
+
+/** 切换科目后更新手机端导航按钮文字+图标 */
+function updateMobileSubjectLabel(subject) {
+  const meta  = SUBJECT_META[subject];
+  if (!meta) return;
+  const label = document.getElementById('mobile-subject-label');
+  const icon  = document.getElementById('mobile-subject-icon');
+  if (label) label.textContent = meta.label;
+  if (icon)  icon.className = meta.icon;
+  closeMobileSubjectMenu(); // 选完自动关闭
+}
+
+// --- Mobile Sub-Header Dropdown (二级导航 Dropdown) ---
+
+const SUB_MENUS = ['sql', 'itpass', 'sg', 'java', 'python'];
+
+function toggleMobileSubMenu(subject) {
+  const panelId = `${subject}-sub-tabs-panel`;
+  const btnId   = `${subject}-sub-toggle`;
+  const panel   = document.getElementById(panelId);
+  const btn     = document.getElementById(btnId);
+  if (!panel || !btn) return;
+
+  const isOpen = panel.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+  // 关闭其他展开的子菜单
+  SUB_MENUS.forEach(s => {
+    if (s !== subject) closeMobileSubMenu(s);
+  });
+}
+
+function closeMobileSubMenu(subject) {
+  const panel = document.getElementById(`${subject}-sub-tabs-panel`);
+  const btn   = document.getElementById(`${subject}-sub-toggle`);
+  if (panel) panel.classList.remove('open');
+  if (btn)   btn.setAttribute('aria-expanded', 'false');
+}
+
+function closeAllMobileSubMenus() {
+  SUB_MENUS.forEach(s => closeMobileSubMenu(s));
+}
+
+/**
+ * 切换子模式后更新对应的二级导航按钮文字
+ * @param {string} subject - 'sql' | 'itpass' | 'sg' | 'java' | 'python'
+ * @param {string} label   - 要显示的文字
+ * @param {string} iconClass - FontAwesome class string
+ */
+function updateMobileSubLabel(subject, label, iconClass) {
+  const labelEl = document.getElementById(`${subject}-sub-label`);
+  const iconEl  = document.getElementById(`${subject}-sub-icon`);
+  if (labelEl) labelEl.textContent = label;
+  if (iconEl)  iconEl.className = iconClass;
+  closeMobileSubMenu(subject); // 选完自动关闭
+}
+
 // On Document Ready
 document.addEventListener("DOMContentLoaded", () => {
   logoIcon = document.getElementById("main-logo-icon");
@@ -208,6 +291,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && document.body.classList.contains('mobile-sidebar-open')) {
       closeMobileSidebar();
+      closeMobileSubjectMenu();
+      closeAllMobileSubMenus();
     }
   });
   // Close mobile sidebar when clicking a lesson nav item (mobile only)
@@ -223,6 +308,21 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener('resize', () => {
     if (window.innerWidth > 768) {
       closeMobileSidebar();
+      closeMobileSubjectMenu();
+      closeAllMobileSubMenus();
+    }
+  });
+  // Click outside to close mobile subject/sub dropdowns
+  document.addEventListener('click', (e) => {
+    const subjectSelector = document.getElementById('header-subject-selector');
+    if (subjectSelector && !subjectSelector.contains(e.target)) {
+      closeMobileSubjectMenu();
+    }
+    const subHeaderBars = document.querySelectorAll('.sub-header-bar');
+    let insideSubHeader = false;
+    subHeaderBars.forEach(el => { if (el.contains(e.target)) insideSubHeader = true; });
+    if (!insideSubHeader) {
+      closeAllMobileSubMenus();
     }
   });
 });
@@ -559,6 +659,8 @@ function switchSubject(subject) {
     switchItPassSubMode(itpassSubMode);
   }
   
+  // Update mobile subject dropdown label (mobile-only, no-op on desktop)
+  updateMobileSubjectLabel(subject);
   updateProgressUI();
 }
 
@@ -628,6 +730,12 @@ function switchItPassSubMode(mode) {
       document.getElementById("cbt-results-screen").style.display = "none";
     }
   }
+  // Update mobile sub-header label
+  if (mode === 'lessons') {
+    updateMobileSubLabel('itpass', '教科书章节学习', 'fa-solid fa-book-open');
+  } else {
+    updateMobileSubLabel('itpass', '过去问道场 & 模拟考试', 'fa-solid fa-compass');
+  }
 }
 
 // Switch SG sub modes (lessons vs. dojo/mock exam)
@@ -661,6 +769,12 @@ function switchSgSubMode(mode) {
       document.getElementById("cbt-testing-screen").style.display = "none";
       document.getElementById("cbt-results-screen").style.display = "none";
     }
+  }
+  // Update mobile sub-header label
+  if (mode === 'lessons') {
+    updateMobileSubLabel('sg', '教科书章节学习', 'fa-solid fa-book-open');
+  } else {
+    updateMobileSubLabel('sg', '过去问道场 & 模拟考试', 'fa-solid fa-compass');
   }
 }
 
@@ -1093,6 +1207,10 @@ function switchJavaBook(book) {
   
   initSidebar();
   loadJavaLesson(currentJavaLessonId);
+  // Update mobile sub label
+  const bookLabel = book === 'nyumon' ? '入門編 (基础篇)' : '実践編 (进阶篇)';
+  const bookIcon  = book === 'nyumon' ? 'fa-solid fa-seedling' : 'fa-solid fa-rocket';
+  updateMobileSubLabel('java', bookLabel, bookIcon);
 }
 
 // Load Java lesson into content panel
@@ -3925,6 +4043,12 @@ function switchSqlSubMode(mode) {
   } else {
     initCodingExamSubLayout();
   }
+  // Update mobile sub label
+  if (mode === 'lessons') {
+    updateMobileSubLabel('sql', '教科书与演练沙盒', 'fa-solid fa-book-open');
+  } else {
+    updateMobileSubLabel('sql', '实操模拟考试', 'fa-solid fa-laptop-code');
+  }
 }
 
 // Switch Python sub modes (Lessons/Sandbox vs Mock Exam)
@@ -3940,6 +4064,12 @@ function switchPythonSubMode(mode) {
     loadPythonLesson(currentPythonLessonId);
   } else {
     initCodingExamSubLayout();
+  }
+  // Update mobile sub label
+  if (mode === 'lessons') {
+    updateMobileSubLabel('python', '教科书与演练沙盒', 'fa-solid fa-book-open');
+  } else {
+    updateMobileSubLabel('python', '实操模拟考试', 'fa-solid fa-laptop-code');
   }
 }
 
@@ -3959,6 +4089,14 @@ function switchJavaSubMode(mode) {
     loadJavaLesson(currentJavaLessonId);
   } else {
     initCodingExamSubLayout();
+  }
+  // Update mobile sub label
+  if (mode === 'lessons') {
+    const bookLabel = currentJavaBook === 'nyumon' ? '入門編 (基础篇)' : '実践編 (进阶篇)';
+    const bookIcon  = currentJavaBook === 'nyumon' ? 'fa-solid fa-seedling' : 'fa-solid fa-rocket';
+    updateMobileSubLabel('java', bookLabel, bookIcon);
+  } else {
+    updateMobileSubLabel('java', '实操模拟考试', 'fa-solid fa-laptop-code');
   }
 }
 

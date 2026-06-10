@@ -359,13 +359,17 @@ body {
   display: flex;
   gap: 20px;
   transition: var(--transition-smooth);
+  min-width: 0; /* prevent flex overflow */
+  width: 100%;
 }
 
 .concept-col {
   flex: 1;
+  min-width: 0; /* prevent flex child from overflowing */
   display: flex;
   flex-direction: column;
   gap: 10px;
+  overflow: hidden;
 }
 
 .concept-col h4 {
@@ -391,6 +395,10 @@ body {
   padding: 16px;
   border-radius: 10px;
   white-space: pre-line;
+  /* Fix: prevent long text from breaking card layout */
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 .concept-body strong {
   color: var(--neon-cyan);
@@ -1427,8 +1435,30 @@ body {
 }
 
 /* ================================================================
+   [Mobile Nav Dropdown] — 手机端主/二级导航 Dropdown 组件基础样式
+   桌面端隐藏触发按钮；手机端隐藏 tabs panel，改为点击展开
+   ================================================================ */
+
+/* 手机端主导航触发按钮 — 桌面默认隐藏 */
+.mobile-subject-toggle {
+  display: none;
+}
+
+/* 手机端二级导航触发按钮 — 桌面默认隐藏 */
+.mobile-sub-toggle {
+  display: none;
+}
+
+/* Mobile nav dropdown animation */
+@keyframes mobileMenuFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================
    断点 2: 768px 以下 — 三栏改单栏、sidebar 变左侧抽屉
    ================================================================ */
+
 @media (max-width: 768px) {
   .app-body {
     flex-direction: column;
@@ -1531,11 +1561,41 @@ body {
   .concept-container {
     flex-direction: column;
     gap: 14px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .concept-col {
     flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
+
+  /* concept-body: ensure text and code wrap inside narrow containers */
+  .concept-body {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .concept-body code {
+    word-break: break-all;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+  }
+
+  /* lesson-content and content-card: constrain width */
+  .lesson-content,
+  .content-card {
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
 
   /* SQL editor 缩小 */
   .console-card-body .editor-container {
@@ -1582,20 +1642,162 @@ body {
     display: none;
   }
 
+
+
+  /* ===== 手机端主导航 Dropdown ===== */
+  /* 隐藏原横向 tab 容器内的 panel，改为 dropdown */
   .header-subject-selector {
+    position: relative;
     margin-left: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    flex: 1 1 100%;
-    order: 3;
+    flex: 0 0 auto;
+    order: 2;
+    background: transparent;
+    border: none;
+    padding: 0;
+    gap: 0;
   }
 
-  .subject-tab {
-    padding: 6px 10px !important;
-    font-size: 11px !important;
-    white-space: nowrap !important;
+  /* 显示触发按钮 */
+  .mobile-subject-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    color: var(--neon-cyan);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-smooth);
+    min-height: 36px;
   }
 
+  .mobile-subject-toggle:hover,
+  .mobile-subject-toggle[aria-expanded="true"] {
+    background: rgba(0, 240, 255, 0.18);
+    border-color: var(--neon-cyan);
+  }
+
+  .mobile-subject-chevron {
+    font-size: 10px;
+    transition: transform 0.25s;
+  }
+
+  .mobile-subject-toggle[aria-expanded="true"] .mobile-subject-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Tab panel — hidden by default on mobile */
+  .subject-tabs-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 500;
+    flex-direction: column;
+    background: #0b0f1f;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 10px;
+    padding: 6px;
+    gap: 3px;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    animation: mobileMenuFadeIn 0.2s ease;
+  }
+
+  .subject-tabs-panel.open {
+    display: flex;
+  }
+
+  /* Tabs inside mobile dropdown: full-width, slightly larger touch targets */
+  .subject-tabs-panel .subject-tab {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    white-space: nowrap;
+    border-radius: 6px;
+  }
+
+  /* ===== 手机端二级导航 Dropdown ===== */
+  .sub-header-bar {
+    position: relative;
+    padding: 8px 14px;
+    overflow: visible; /* allow dropdown to overflow */
+  }
+
+  /* 显示触发按钮 */
+  .mobile-sub-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    color: #c084fc;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-smooth);
+    min-height: 36px;
+  }
+
+  .mobile-sub-toggle:hover,
+  .mobile-sub-toggle[aria-expanded="true"] {
+    background: rgba(168, 85, 247, 0.18);
+    border-color: #c084fc;
+  }
+
+  .mobile-sub-chevron {
+    font-size: 10px;
+    margin-left: auto;
+    transition: transform 0.25s;
+  }
+
+  .mobile-sub-toggle[aria-expanded="true"] .mobile-sub-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Sub tabs panel — hidden by default on mobile */
+  .sub-header-tabs {
+    display: none;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 14px;
+    z-index: 500;
+    flex-direction: column;
+    background: #0b0f1f;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 10px;
+    padding: 6px;
+    gap: 3px;
+    min-width: 240px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+    animation: mobileMenuFadeIn 0.2s ease;
+  }
+
+  .sub-header-tabs.open {
+    display: flex;
+  }
+
+  /* Tabs inside mobile sub dropdown */
+  .sub-header-tab {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    white-space: normal;
+    border-radius: 6px;
+  }
+
+  /* header-challenge もモバイルでは非表示 */
   .header-challenge {
     order: 4;
     margin-right: 0;
@@ -1615,6 +1817,20 @@ body {
   .sub-header-tab {
     padding: 6px 10px !important;
     font-size: 11px !important;
+  }
+
+  /* 480px: 主导航 Dropdown — 触发按钮进一步缩小 */
+  .mobile-subject-toggle {
+    padding: 5px 10px;
+    font-size: 12px;
+    min-height: 34px;
+  }
+
+  /* 480px: 二级导航 Dropdown 触发按钮进一步缩小 */
+  .mobile-sub-toggle {
+    padding: 5px 10px;
+    font-size: 12px;
+    min-height: 34px;
   }
 
   /* App body: compact mobile toggle and drawer */
@@ -1718,23 +1934,16 @@ body {
     min-height: 0;
   }
 
-  /* sub-header-bar: reduce padding, allow horizontal scroll to prevent document overflow */
+  /* sub-header-bar: 480px 延续 768px dropdown 方案，只调整尺寸 */
   .sub-header-bar {
-    padding: 8px 10px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    padding: 6px 10px;
   }
 
   .sub-header-tabs {
-    flex-shrink: 0;
-    gap: 8px;
+    left: 10px;
+    min-width: 220px;
   }
 
-  .sub-header-tab {
-    padding: 6px 10px !important;
-    font-size: 11.5px !important;
-    white-space: nowrap;
-  }
 }
 
 /* ================================================================
@@ -1873,6 +2082,7 @@ body {
 /* Subject Selector in Header */
 .header-subject-selector {
   display: flex;
+  align-items: center;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
@@ -1881,6 +2091,13 @@ body {
   margin-left: 20px;
   margin-right: auto;
 }
+
+/* Desktop: tabs panel is a flex row (the mobile-subject-toggle is hidden) */
+.subject-tabs-panel {
+  display: flex;
+  gap: 3px;
+}
+
 
 .subject-tab {
   background: transparent;
