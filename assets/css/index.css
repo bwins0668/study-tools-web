@@ -7299,3 +7299,168 @@ body.i18n-active :where(
   white-space: pre-line;
 }
 
+/* =================================================================
+   Mobile Responsive Styles for CBT Exam Simulator (width <= 768px)
+   ================================================================= */
+@media (max-width: 768px) {
+  /* 1. CBT 主容器调整，避免与侧边栏目录按钮视觉重叠 */
+  .cbt-exam-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 400; /* 盖住 z-index: 10 的目录按钮 */
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 2. CBT 考试配置页面 */
+  .cbt-config-screen {
+    padding: 16px;
+  }
+
+  .cbt-config-card {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  /* 3. CBT 运行界面大布局切换为纵向单栏 */
+  .cbt-testing-screen {
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: visible;
+  }
+
+  .cbt-testing-body {
+    flex-direction: column;
+    height: auto;
+    overflow-y: visible;
+  }
+
+  /* 4. 题目区域占满宽度并支持长文本安全折行 */
+  .cbt-question-canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none;
+    overflow-y: visible;
+    padding: 16px;
+    gap: 14px;
+    background: #05070c;
+    box-sizing: border-box;
+  }
+
+  .cbt-q-body-text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-break: anywhere;
+  }
+
+  .cbt-q-body-text img {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+
+  /* 5. 选项卡片自然折行与文字合理包裹 */
+  .cbt-option-item {
+    padding: 10px 14px;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .cbt-option-text {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-break: anywhere;
+  }
+
+  /* 6. 答题卡移到题目下方，占满宽度 */
+  .cbt-navigator-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none;
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    padding: 16px;
+    background: #090d16;
+    box-sizing: border-box;
+  }
+
+  .cbt-grid-canvas {
+    grid-template-columns: repeat(5, 1fr);
+    max-height: 240px; /* 限制最大高度，可内部滚动答题卡，不占太多屏幕 */
+    overflow-y: auto;
+    gap: 6px;
+    flex: none;
+  }
+
+  /* 7. 顶部考试信息及控制条响应式排版 */
+  .cbt-testing-header {
+    height: auto;
+    min-height: 52px;
+    padding: 10px 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    background: #090d16;
+    box-sizing: border-box;
+  }
+
+  .cbt-exam-title-box {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .cbt-exam-timer-box {
+    justify-content: center;
+    padding: 4px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .cbt-exam-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .cbt-btn-action {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 10px;
+    min-height: 40px;
+    font-size: 13px;
+  }
+
+  /* 8. CBT 结果报告界面移动端适配 */
+  .cbt-results-screen {
+    padding: 16px;
+  }
+
+  .cbt-results-card {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .cbt-results-summary-row {
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .cbt-results-total-box {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-right: 0 !important;
+    padding-bottom: 16px;
+  }
+}
+
