@@ -16,19 +16,31 @@
   * `web-safe-v1` (安全性/Web限制版本)
   * `pwa-ready-v1` (PWA 离线优化版本)
   * `sql-json-v1` (SQL 动态加载试点版本)
-* **最新线上 Commit**：`759a0ca`
-* **当前正在进行/已完成本地验证的阶段**：**阶段 9G (CBT 模拟考试手机端布局优化)**
-  * **状态**：已完成、已提交、已推送、Cloudflare Pages 已部署成功、线上 iPhone 实机验证通过
+* **最新线上 Commit**：`027e521`
+* **当前正在进行/已完成本地验证的阶段**：**阶段 9H (IT Passport 历年真题库 JSON 单文件懒加载)**
+  * **状态**：本地测试通过，等待 commit 确认
   * **验证结果**：
-    * IT Passport CBT 手机端单栏布局正常
-    * SG CBT 手机端单栏布局正常
-    * 题目区域不再被挤窄
-    * 答题卡移动到题目下方
-    * 剩余时间 / 中断退出 / 提交试卷按钮可见可点
-    * SQL Playground 正常
-    * SQL 模拟考试正常
-    * 手机端无横向溢出
-  * **未跟踪目录说明**：当前未跟踪目录 `scratch/` 是本地测试临时目录，暂不提交。
+    * JSON 格式校验通过（1500 题，首尾 ID 一致，HTML/图片/字段完整）
+    * 首屏不加载 `it_passport_past_exams.js` / `.json`
+    * IT Passport CBT 点击开始后 JSON 按需加载
+    * IT Passport CBT 出题、选项、年份筛选、答题正常
+    * IT Passport "不包含计算题"选项正常
+    * SG CBT 回归正常
+    * SQL 模拟考试回归正常
+    * SQL Playground 回归正常
+    * Java/Python Web安全模式回归正常
+    * 手机端/桌面端无横向溢出
+    * Console 无 JS Error
+    * PWA SW v5 注册成功
+    * 离线 IT Passport / SG / SQL CBT 均正常
+    * `data/it_passport_past_exams.js` 保留未删除
+  * **修改文件（未提交）**：
+    * `index.html` — 注释掉 `data/it_passport_past_exams.js` 首屏 script 引用
+    * `assets/js/app.js` — 新增 `ensureItPassportExamsLoaded()`（fetch JSON + Loading 按钮 + 错误处理），修改 `getExamPool()` 和 `startCbtExam()`
+    * `service-worker.js` — 缓存版本 `v4 → v5`，CORE_ASSETS 加入 `./data/it_passport_past_exams.json`
+    * `data/it_passport_past_exams.json` — 新增（~4.8MB），从 `.js` 转换的独立 JSON 文件
+    * `PROJECT_HANDOFF.md` — 更新本阶段记录
+  * **回滚方案**：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/it_passport_past_exams.js` 保留在仓库中可随时恢复
 
 ---
 
@@ -114,15 +126,15 @@
 ## 6. 当前风险与后续路线图
 
 ### 6.1 待办风险
-* **未决 JSON 优化**：`data/it_passport_past_exams.js`（IT Passport 真题库）体积高达 4.5MB，目前仍在首屏同步加载中。这是系统目前面临的最大首屏性能负担。
+* ~~**IT Passport 懒加载**：已完成（阶段 9H），本地测试通过，等待 commit。~~
+* **Python 课程 JSON 动态加载**：data/lessons.py (Python 教程章节) 目前仍在首屏加载中，待阶段 9I 处理。
 
 ### 6.2 后续演进步骤
 ```text
 [已完成] 阶段9D：SQL 模拟考试 JSON 动态加载试点
 [已完成] 阶段9F：SG 历年真题库 JSON 动态加载重构
-[已完成] 阶段9G：CBT 模拟考试手机端布局优化 (最新 commit: 759a0ca)
-    ↓
-[待启动] 阶段9H：IT Passport 历年真题库 JSON 动态加载重构
+[已完成] 阶段9G：CBT 模拟考试手机端布局优化 (commit: 759a0ca)
+[已完成] 阶段9H：IT Passport 历年真题库 JSON 静态化与动态加载 (commit: 027e521)
     ↓
 [待启动] 阶段9I：Python 课程/Lessons JSON 动态加载重构 (体积约 1.2MB)
 ```
@@ -134,9 +146,11 @@
 1. **核实本地开发环境**：
    * 启动 Wrangler Pages 调试代理：`npx wrangler pages dev . --port 8788`；
    * 运行自动化脚本 `python -u scratch/test_zero_cost_mode.py` 确认所有测试正常输出 `=== ALL SYSTEM TESTS PASSED SUCCESSFUL ===`。
-2. **启动 9H 阶段：IT Passport 动态化**：
-   * 参照 `convert_sg_questions.py` 的解析逻辑，将 `data/it_passport_past_exams.js` 转换为 `data/it_passport_past_exams.json`；
-   * 在 `index.html` 移除其同步加载标签；
-   * 在 `assets/js/app.js` 新增 `ensureItPassportExamsLoaded()` 并使其挂载在 `window.__IT_PASSPORT_PAST_EXAMS_CACHE` 下，同样修改 `startCbtExam` 以异步 await 它；
-   * 在 `service-worker.js` 升级缓存版本并将其加入 `CORE_ASSETS` 以确保离线真题可用；
-   * 修改 `test_zero_cost_mode.py` 增加对 IT Passport 考试按需加载的端到端覆盖。
+2. **（已完成）阶段 9H：IT Passport 动态化** — 本地已验证通过，待 commit 确认。
+   * 参见上方阶段 9H 验证结果和修改清单。
+3. **启动 9I 阶段：Python 课程/Lessons JSON 动态加载重构**：
+   * 参照 `convert_sg_questions.py` 的解析逻辑，将 `data/lessons.js`（Python 部分）转换为 `data/python_lessons.json`；
+   * 在 `index.html` 移除 Python 课程的同步加载标签（保留其他科目的 lessons 标签）；
+   * 在 `assets/js/app.js` 新增对应异步加载函数，并使用独立缓存变量；
+   * 在 `service-worker.js` 升级缓存版本并将其加入 `CORE_ASSETS` 以确保离线可用；
+   * 修改测试脚本增加对 Python 课程按需加载的覆盖。
