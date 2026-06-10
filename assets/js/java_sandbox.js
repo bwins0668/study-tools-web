@@ -232,15 +232,15 @@ window.JavaSandbox = (() => {
 
     } catch (err) {
       if (err.message && (err.message.includes('尚未配置') || err.message.includes('未配置'))) {
-        setStatus('ready', '零成本模式 / ゼロコストモード');
+        setStatus('ready', 'Web安全模式 / Webセーフモード');
         displayOutput('', 'idle');
         const out = getOutput();
         if (out) {
           out.innerHTML = 
-            '// 零成本模式：当前 Web 版未启用 Java/Python 在线运行。\n' +
-            '// 如果需要完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 端完整版下载页面</a>。\n\n' +
-            '// ゼロコストモード：現在の Web 版では Java/Python のオンライン実行は有効になっていません。\n' +
-            '// 完全なローカル実行功能を使いたい場合は、<a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 版の最新版ダウンロードページ</a>へ進んでください。';
+            '// Web 版出于安全限制，暂不支持直接运行 Java/Python。\n' +
+            '// 如需完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 端完整版下载页面</a>。\n\n' +
+            '// セキュリティ上の制限により、現在の Web 版では Java/Python の直接実行には対応していません。\n' +
+            '// 完全なローカル実行機能を使いたい場合は、<a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 版の最新版ダウンロードページ</a>へ進んでください。';
         }
         return;
       }
