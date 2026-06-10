@@ -1655,6 +1655,7 @@ body {
     border: none;
     padding: 0;
     gap: 0;
+    overflow: visible !important; /* Prevent dropdown clipping */
   }
 
   /* 显示触发按钮 */
@@ -1695,8 +1696,9 @@ body {
     display: none;
     position: absolute;
     top: calc(100% + 6px);
-    left: 0;
-    z-index: 500;
+    right: 0; /* Align to the right edge of the toggle */
+    left: auto; /* Prevent left alignment from causing screen overflow */
+    z-index: 9999; /* Higher z-index to stay above other elements */
     flex-direction: column;
     background: #0b0f1f;
     border: 1px solid rgba(0, 240, 255, 0.2);
@@ -1769,8 +1771,9 @@ body {
     display: none;
     position: absolute;
     top: calc(100% + 2px);
-    left: 14px;
-    z-index: 500;
+    right: 14px; /* Align to the right edge of the sub-bar */
+    left: auto; /* Prevent left overflow */
+    z-index: 9999; /* Higher z-index to stay above main app contents */
     flex-direction: column;
     background: #0b0f1f;
     border: 1px solid rgba(168, 85, 247, 0.2);
@@ -1940,7 +1943,8 @@ body {
   }
 
   .sub-header-tabs {
-    left: 10px;
+    right: 10px;
+    left: auto;
     min-width: 220px;
   }
 
@@ -2093,9 +2097,11 @@ body {
 }
 
 /* Desktop: tabs panel is a flex row (the mobile-subject-toggle is hidden) */
-.subject-tabs-panel {
-  display: flex;
-  gap: 3px;
+@media (min-width: 481px) {
+  .subject-tabs-panel {
+    display: flex;
+    gap: 3px;
+  }
 }
 
 
@@ -2143,9 +2149,11 @@ body {
   animation: fadeIn 0.3s ease;
 }
 
-.sub-header-tabs {
-  display: flex;
-  gap: 12px;
+@media (min-width: 481px) {
+  .sub-header-tabs {
+    display: flex;
+    gap: 12px;
+  }
 }
 
 .sub-header-tab {
