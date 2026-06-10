@@ -4184,12 +4184,59 @@ function isCodingExamActiveAndRunning() {
   return activeCodingExam && activeCodingExam.subject === currentSubject && !activeCodingExam.isSubmitted;
 }
 
+// 确保 SQL 模拟考试题库被异步载入
+async function ensureSqlExamQuestionsLoaded() {
+  if (window.__SQL_EXAM_QUESTIONS_CACHE && window.__SQL_EXAM_QUESTIONS_CACHE.length > 0) {
+    return window.__SQL_EXAM_QUESTIONS_CACHE;
+  }
+
+  // 1. 设置开始按钮为 Loading 状态
+  const startBtn = document.querySelector(".coding-exam-config .cbt-launch-btn");
+  let originalHtml = "";
+  if (startBtn) {
+    originalHtml = startBtn.innerHTML;
+    startBtn.disabled = true;
+    startBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 読み込み中... / 加载中...';
+  }
+
+  try {
+    const res = await fetch('./data/sql_exam_questions.json');
+    if (!res.ok) throw new Error("无法读取 SQL 模拟题库数据！ / 題庫の取得に失敗しました。");
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new Error("题库数据格式非法或为空！ / 題庫データが無効です。");
+    }
+    
+    // 2. 写入独立缓存和兼容全局变量名
+    window.__SQL_EXAM_QUESTIONS_CACHE = data;
+    window.SQL_EXAM_QUESTIONS = data;
+    
+    return data;
+  } catch (err) {
+    console.error("Failed to load SQL Exam questions:", err);
+    showToast("⚠️ 题库加载失败，请检查网络连接！\n題庫の読み込みに失敗しました。接続を確認してください。", "error");
+    throw err;
+  } finally {
+    // 3. 还原按钮状态
+    if (startBtn) {
+      startBtn.disabled = false;
+      startBtn.innerHTML = originalHtml;
+    }
+  }
+}
+
 // Start Coding Exam (Launches the timer and prepares questions)
-function startCodingExam() {
+async function startCodingExam() {
   const countSelect = parseInt(document.getElementById("coding-exam-count").value);
   
   let pool = [];
-  if (currentSubject === 'sql') pool = [...SQL_EXAM_QUESTIONS];
+  if (currentSubject === 'sql') {
+    try {
+      pool = await ensureSqlExamQuestionsLoaded();
+    } catch (e) {
+      return; // 加载失败，不开始测试
+    }
+  }
   else if (currentSubject === 'java') pool = [...JAVA_EXAM_QUESTIONS];
   else if (currentSubject === 'python') pool = [...PYTHON_EXAM_QUESTIONS];
   
