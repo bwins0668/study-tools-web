@@ -1729,7 +1729,8 @@ body {
   .sub-header-bar {
     position: relative;
     padding: 8px 14px;
-    overflow: visible; /* allow dropdown to overflow */
+    overflow: visible !important; /* allow dropdown to overflow */
+    z-index: 1000; /* Elevate stack level to display dropdown above main contents */
   }
 
   /* 显示触发按钮 */
@@ -1773,7 +1774,7 @@ body {
     top: calc(100% + 2px);
     right: 14px; /* Align to the right edge of the sub-bar */
     left: auto; /* Prevent left overflow */
-    z-index: 9999; /* Higher z-index to stay above main app contents */
+    z-index: 10000; /* Higher z-index to stay above main app contents and toggles */
     flex-direction: column;
     background: #0b0f1f;
     border: 1px solid rgba(168, 85, 247, 0.2);
