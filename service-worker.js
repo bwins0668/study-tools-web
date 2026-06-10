@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v3";
+const CACHE_NAME = "study-tools-web-v4";
 
 const CORE_ASSETS = [
   "./",
@@ -13,6 +13,7 @@ const CORE_ASSETS = [
   "./assets/vendor/sql-wasm.js",
   "./assets/vendor/sql-wasm.wasm",
   "./data/sql_exam_questions.json",
+  "./data/sg_past_exams.json",
 ];
 
 self.addEventListener("install", (event) => {

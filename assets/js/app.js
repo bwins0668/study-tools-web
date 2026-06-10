@@ -3125,18 +3125,68 @@ const CBT_FALLBACK_QUESTIONS = [
   }
 ];
 
+// 确保 SG 历年真题库被异步载入
+async function ensureSgPastExamsLoaded() {
+  if (window.__SG_PAST_EXAMS_CACHE && window.__SG_PAST_EXAMS_CACHE.length > 0) {
+    return window.__SG_PAST_EXAMS_CACHE;
+  }
+
+  // 1. 设置开始按钮为 Loading 状态
+  const startBtn = document.querySelector("#cbt-config-screen .cbt-launch-btn");
+  let originalHtml = "";
+  if (startBtn) {
+    originalHtml = startBtn.innerHTML;
+    startBtn.disabled = true;
+    startBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 読み込み中... / 加载中...';
+  }
+
+  try {
+    const res = await fetch('./data/sg_past_exams.json');
+    if (!res.ok) throw new Error("无法读取 SG 模拟题库数据！ / 題庫の取得に失敗しました。");
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new Error("题库数据格式非法或为空！ / 題庫データが無効です。");
+    }
+    
+    // 2. 写入缓存并做向下兼容
+    window.__SG_PAST_EXAMS_CACHE = data;
+    window.SG_PAST_EXAMS = data;
+    
+    return data;
+  } catch (err) {
+    console.error("Failed to load SG Exam questions:", err);
+    showToast("⚠️ 题库加载失败，请检查网络连接！\n題庫の読み込みに失敗しました。接続を確認してください。", "error");
+    throw err;
+  } finally {
+    // 3. 还原按钮状态
+    if (startBtn) {
+      startBtn.disabled = false;
+      startBtn.innerHTML = originalHtml;
+    }
+  }
+}
+
 const getExamPool = () => {
   if (currentSubject === 'sg') {
-    return (typeof SG_PAST_EXAMS !== 'undefined' && SG_PAST_EXAMS.length > 0) ? SG_PAST_EXAMS : [];
+    return window.__SG_PAST_EXAMS_CACHE || window.SG_PAST_EXAMS || [];
   }
   return (typeof IT_PASSPORT_PAST_EXAMS !== 'undefined' && IT_PASSPORT_PAST_EXAMS.length > 0) ? IT_PASSPORT_PAST_EXAMS : CBT_FALLBACK_QUESTIONS;
 };
 
-function startCbtExam() {
+// Start CBT Testing session
+async function startCbtExam() {
   const yearSelect = document.getElementById("cbt-year-select").value;
   const countSelect = parseInt(document.getElementById("cbt-count-select").value);
   const optShuffle = document.getElementById("cbt-opt-shuffle").checked;
   const optNoCalc = document.getElementById("cbt-opt-nocalc").checked;
+  
+  if (currentSubject === 'sg') {
+    try {
+      await ensureSgPastExamsLoaded();
+    } catch (e) {
+      return; // 加载失败，不开始测试
+    }
+  }
   
   const fullPool = getExamPool();
   let filtered = [];
