@@ -260,7 +260,20 @@ window.PythonSandbox = (() => {
       const result = await window.WebCodeRunner.runPython(code, stdin);
       handleRunResult(result);
 
-    } catch (err) {
+    } catch (err) {
+      if (err.message && (err.message.includes('尚未配置') || err.message.includes('未配置'))) {
+        setStatus('ready', '零成本模式 / ゼロコストモード');
+        displayOutput('', 'idle');
+        const out = getOutput();
+        if (out) {
+          out.innerHTML = 
+            '# 零成本模式：当前 Web 版未启用 Java/Python 在线运行。\n' +
+            '# 如果需要完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 端完整版下载页面</a>。\n\n' +
+            '# ゼロコストモード：現在の Web 版では Java/Python のオンライン実行は有効になっていません。\n' +
+            '# 完全なローカル実行功能を使いたい場合は、<a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 版の最新版ダウンロードページ</a>へ進んでください。';
+        }
+        return;
+      }
       if (err.name === 'TimeoutError') {
         setStatus('error', 'タイムアウト / Timeout');
         displayOutput('# タイムアウトエラー / Timeout Error\n# コードの実行が25秒を超えました。\n# 无限循环或输入挂起，请检查代码。', 'error');
