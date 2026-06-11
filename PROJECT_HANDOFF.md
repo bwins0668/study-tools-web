@@ -16,26 +16,25 @@
   * `web-safe-v1` (安全性/Web限制版本)
   * `pwa-ready-v1` (PWA 离线优化版本)
   * `sql-json-v1` (SQL 动态加载试点版本)
-* **最新线上 Commit**：`d02e268`
-* **当前已完成阶段**：**阶段 9H/9I：IT Passport 历年真题库 JSON 单文件懒加载**
-  * **命名说明**：阶段编号在开发过程中曾有 9H / 9I 的差异，但实际对应同一个任务，统一记录为 **阶段 9H/9I**。
-  * **状态**：已完成 / 已提交 / 已推送 / Cloudflare Pages 已部署成功 / 线上验证通过
-  * **提交 commit**：`d02e268 perf: lazy-load IT Passport past exams from JSON`
-  * **线上验证结果（Cloudflare Pages Production + iPhone 实机）**：
-    * 首屏不加载 `it_passport_past_exams.js` / `.json`
-    * 点击 IT Passport CBT 开始考试后才加载 `data/it_passport_past_exams.json`
-* **最新线上 Commit**：`d02e268`（9H/9I），本地最新修改：**阶段 9K（未提交）**
-* **上一个已完成阶段**：**阶段 9H/9I：IT Passport 历年真题库 JSON 单文件懒加载**（已上线）
-* **当前进行阶段**：**阶段 9K：Python 课程数据 JSON 单文件懒加载**
-  * **状态**：本地测试通过，等待 commit 确认
-  * **阶段 9K 修改文件（未提交）**：
-    * `index.html` — 注释掉 `data/python_lessons.js` 首屏 script 引用
-    * `assets/js/app.js` — 新增 `ensurePythonLessonsLoaded()`（fetch JSON + 内存缓存 + 兼容回滚），`switchPythonSubMode` 改为 async 并在 lessons 模式 await 懒加载，所有 `PYTHON_LESSONS` 引用统一使用 `window.PYTHON_LESSONS`
-    * `service-worker.js` — 缓存版本 `v5 → v6`，CORE_ASSETS 加入 `./data/python_lessons.json`
-    * `data/python_lessons.json` — 新增（~1.56MB，255 条课程），从 `.js` 转换的独立 JSON 文件
+* **最新线上 Commit**：`dd88e38`
+* **当前已完成阶段**：**阶段 9K：Python 课程数据 JSON 单文件懒加载**
+  * **状态**：已完成、已提交、已推送、Cloudflare Pages 已部署成功、线上验证通过
+  * **提交 commit**：`dd88e38 perf: lazy-load Python lessons from JSON`
+  * **线上验证结果（Cloudflare Pages Production）**：
+    * 首页正常打开，无控制台报错
+    * 首屏不加载 `data/python_lessons.js`
+    * 首屏不加载 `data/python_lessons.json`
+    * 点击 Python 学习后才加载 `data/python_lessons.json`
+    * Python 课程目录正常显示
+    * Python 章节正文正常渲染（HTML 标签、代码块、中日双语均正常）
+    * Python Web安全模式正常（输出友好降级提示并正确提供最新 Windows PC 端完整版下载页面的超链接）
+    * 其他学习模块（Java / IT Passport / SG / SQL）切换和内容均正常
+    * 模拟考试（IT Passport / SG / SQL CBT）运行和评分均正常
+    * Service Worker v6 正常升级，Cache Storage 出现 `study-tools-web-v6` 缓存组，且包含 `data/python_lessons.json`
+    * 离线测试通过，完全离线状态下 Python 学习目录与首章节仍可顺利打开与浏览
   * **回滚方案**：
-    * 方式一（代码回退）：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/python_lessons.js` 保留在仓库中可随时恢复首屏 script 引用
-    * 方式二（Cloudflare Rollback）：在 Cloudflare Pages 控制台直接 Rollback 到 `d02e268`（上一稳定版本）
+    * 方式一（代码回退）：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/python_lessons.js` 完好保留在仓库中，可随时恢复首屏 script 同步引用
+    * 方式二（Cloudflare Rollback）：在 Cloudflare Pages 控制台直接 Rollback 到 `2429321` 或更早版本
 
 ---
 
@@ -81,7 +80,7 @@
   * SG 历年真题：`data/sg_past_exams.json` (体积约 1.05MB)
   * IT Passport 历年真题：`data/it_passport_past_exams.json` (体积约 4.8MB)
 * **双重缓存**：内存中使用 `window.__SQL_EXAM_QUESTIONS_CACHE` / `window.__SG_PAST_EXAMS_CACHE` / `window.__IT_PASSPORT_PAST_EXAMS_CACHE` 进行首轮缓存。PWA 层面通过在 `service-worker.js` 的 `CORE_ASSETS` 中注册 JSON 资源进行预缓存，确保**完全离线状态下所有题库 100% 可用**。
-* **当前 Service Worker 版本**：`study-tools-web-v5`
+* **当前 Service Worker 版本**：`study-tools-web-v6`
 
 ---
 
@@ -123,8 +122,8 @@
 ## 6. 当前风险与后续路线图
 
 ### 6.1 待办风险
-* ~~**IT Passport 懒加载**：已完成（阶段 9H/9I），线上验证通过，commit: d02e268。~~
-* **Python 课程 JSON 动态加载**：`data/python_lessons.js` 目前仍在首屏加载中，可作为下一阶段处理目标。
+* ~~**Python 课程数据懒加载**：已完成（阶段 9K），线上验证通过，commit: `dd88e38`。~~
+* **Java 课程数据懒加载**：`data/java_lessons.js` 等剩余大文件目前仍在首屏同步加载中，可作为未来优化目标。
 
 ### 6.2 后续演进步骤
 ```text
@@ -132,8 +131,9 @@
 [已完成] 阶段9F：SG 历年真题库 JSON 动态加载重构 (commit: bf42213)
 [已完成] 阶段9G：CBT 模拟考试手机端布局优化 (commit: 759a0ca)
 [已完成] 阶段9H/9I：IT Passport 历年真题库 JSON 单文件懒加载 (commit: d02e268)
+[已完成] 阶段9K：Python 课程数据 JSON 单文件懒加载 (commit: dd88e38)
     ↓
-[待启动] 下一阶段：Python 课程/Lessons JSON 动态加载重构（data/python_lessons.js 体积约 1.2MB）
+[待启动] 下一阶段：剩余首屏大文件按需加载评估与优化
 ```
 
 ---
@@ -141,21 +141,15 @@
 ## 7. 给下一位 AI 的接手指令
 
 1. **核实当前状态**：
-   * 最新 commit：`d02e268`，分支 `master`，已推送至 GitHub
-   * Cloudflare Pages 已部署 `d02e268`，线上验证通过
-   * `git status` 应为 clean（`tools/` 下4个临时诊断脚本已加入 `.gitignore`）
-2. **核实本地开发环境**：
-   * 启动 Wrangler Pages 调试代理：`npx wrangler pages dev . --port 8788`
-   * 运行自动化脚本 `python -u scratch/test_zero_cost_mode.py` 确认所有测试正常输出 `=== ALL SYSTEM TESTS PASSED SUCCESSFUL ===`
-3. **已完成阶段 9H/9I** — IT Passport 懒加载已上线，无需任何操作。
-4. **启动下一阶段：Python 课程/Lessons JSON 动态加载重构**：
-   * 参照 `convert_sg_questions.py` 的解析逻辑，将 `data/python_lessons.js` 转换为 `data/python_lessons.json`
-   * 在 `index.html` 移除 Python 课程的同步加载标签（保留其他科目的 lessons 标签）
-   * 在 `assets/js/app.js` 新增对应异步加载函数，并使用独立缓存变量 `window.__PYTHON_LESSONS_CACHE`
-   * 在 `service-worker.js` 升级缓存版本（`v5 → v6`）并将其加入 `CORE_ASSETS` 以确保离线可用
-   * 修改测试脚本增加对 Python 课程按需加载的覆盖
-5. **严格限制**：
-   * 不要删除 `data/it_passport_past_exams.js`（保留作为历史备份）
-   * 不要动 `functions/api/execute.js`、`assets/js/sqlite-adapter.js`、Java/Python Sandbox 相关文件
+   * 最新 commit：`dd88e38`，分支 `master`，已推送至 GitHub
+   * Cloudflare Pages 已部署 `dd88e38`，线上验证通过
+   * `git status` 应为 clean
+2. **已完成阶段 9K** — Python 课程数据 JSON 单文件懒加载已完成上线，无需任何操作。
+3. **启动下一阶段：剩余首屏大文件按需加载评估与优化**：
+   * 确认并梳理当前首屏同步加载的剩余大文件（如 `data/java_lessons.js`）。
+   * 采用类似设计，提供平滑降级（同步加载回滚机制）和 Service Worker 离线支持。
+4. **严格限制**：
+   * 不要删除 `data/python_lessons.js`（保留作为历史备份）
+   * 不要动 `functions/api/execute.js`、`assets/js/sqlite-adapter.js`、Java/Python Sandbox 相关逻辑
    * 不要使用 `git add .`，每次只精确 add 计划提交的文件
    * 不要 force push
