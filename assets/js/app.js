@@ -1237,7 +1237,9 @@ function loadJavaLesson(id) {
   if (typeof JAVA_LESSONS === 'undefined') return;
   const lesson = JAVA_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-  
+
+  ensureContentPackForCurrentLesson();
+
   currentJavaLessonId = id;
 
   const localized = getLessonLocalizedText("java", lesson);
@@ -1472,7 +1474,9 @@ function markJavaProgress(lessonId, action) {
 function loadLesson(id) {
   const lesson = SQL_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-  
+
+  ensureContentPackForCurrentLesson();
+
   const localized = getLessonLocalizedText("sql", lesson);
   
   // Header
@@ -1528,7 +1532,9 @@ function loadLesson(id) {
 function loadItPassLesson(id) {
   const lesson = IT_PASSPORT_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-  
+
+  ensureContentPackForCurrentLesson();
+
   // Load checking quizzes completed index array
   const completedItPassQuizSaved = localStorage.getItem(`itpass_quiz_completed_${id}`);
   let completedQuizIndices = [];
@@ -1614,7 +1620,9 @@ function loadItPassLesson(id) {
 function loadSgLesson(id) {
   const lesson = SG_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-  
+
+  ensureContentPackForCurrentLesson();
+
   // Load checking quizzes completed index array
   const completedSgQuizSaved = localStorage.getItem(`sg_quiz_completed_${id}`);
   let completedQuizIndices = [];
@@ -1702,6 +1710,23 @@ function getLessonLocalizedText(subject, lesson) {
     ? window.I18n.getLanguage()
     : "default-ja-zh";
   return window.ContentI18n.get(subject, lesson.id, lang);
+}
+
+// Ensure the content language pack for the current subject+language is loaded.
+// Fires async load; when the pack arrives, refreshes the lesson display.
+function ensureContentPackForCurrentLesson() {
+  if (!window.ContentI18n || typeof window.ContentI18n.loadPack !== "function") return;
+  var lang = window.I18n && typeof window.I18n.getLanguage === "function"
+    ? window.I18n.getLanguage()
+    : "default-ja-zh";
+  var normLang = window.ContentI18n.normalizeLang(lang);
+  if (normLang === "ja" || normLang === "zh") return;
+  var subject = currentSubject;
+  window.ContentI18n.loadPack(subject, lang).then(function(loaded) {
+    if (loaded && typeof refreshI18nForCurrentLesson === "function") {
+      refreshI18nForCurrentLesson();
+    }
+  });
 }
 
 // Simple parser to render basic markdown bold and code blocks into HTML safely
@@ -3982,7 +4007,9 @@ function loadPythonLesson(id) {
   if (!window.PYTHON_LESSONS && typeof PYTHON_LESSONS === 'undefined') return;
   const lesson = (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === id);
   if (!lesson) return;
-  
+
+  ensureContentPackForCurrentLesson();
+
   currentPythonLessonId = id;
 
   const localized = getLessonLocalizedText("python", lesson);

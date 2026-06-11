@@ -1362,6 +1362,19 @@
     if (typeof window.refreshI18nForCurrentLesson === "function") {
       window.refreshI18nForCurrentLesson();
     }
+
+    // Lazy-load content language pack for current subject (en/vi/my/fr only)
+    if (typeof window.ContentI18n !== 'undefined' && typeof window.ContentI18n.loadPack === 'function') {
+      var _subject = typeof getActiveSubject === 'function' ? getActiveSubject() : null;
+      if (_subject) {
+        window.ContentI18n.loadPack(_subject, currentLang).then(function () {
+          if (typeof window.refreshI18nForCurrentLesson === 'function') {
+            window.refreshI18nForCurrentLesson();
+          }
+        });
+      }
+    }
+
     scheduleTranslate(document.body);
   }
 
