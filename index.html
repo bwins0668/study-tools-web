@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="assets/css/light-theme.css?v=20260608_i18n_fix">
   <link rel="stylesheet" href="assets/css/japanese-typing.css?v=20260606_v2">
   <link rel="stylesheet" href="assets/css/ai_learning.css?v=20260608_v2">
+  <link rel="stylesheet" href="assets/css/glossary.css">
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="theme-color" content="#0f1117">
 <script src="./assets/js/config.web.js"></script>
@@ -88,6 +89,11 @@
           </button>
         </div>
       </div>
+
+      <button id="glossary-open-btn" class="header-action-btn" type="button" title="术语表" data-i18n-title="glossary.open">
+        <i class="fa-solid fa-book-open"></i>
+        <span data-i18n="glossary.open">术语表</span>
+      </button>
 
       <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="切换浅色/深色模式" aria-label="切换浅色或深色模式">
         <i class="fa-solid fa-sun"></i>
@@ -1259,6 +1265,36 @@
     </main>
   </section>
 
+  <!-- Glossary Modal -->
+  <div id="glossary-modal" class="glossary-modal" hidden>
+    <div class="glossary-backdrop" data-glossary-close></div>
+    <section class="glossary-dialog" role="dialog" aria-modal="true" aria-labelledby="glossary-title">
+      <header class="glossary-header">
+        <div>
+          <h2 id="glossary-title" data-i18n="glossary.title">IT术语表</h2>
+          <p data-i18n="glossary.keepEnglishNote">保留英文技术术语</p>
+        </div>
+        <button type="button" class="glossary-close-btn" data-glossary-close data-i18n-title="glossary.close">
+          <i class="fa-solid fa-xmark"></i>
+          <span class="sr-only" data-i18n="glossary.close">关闭</span>
+        </button>
+      </header>
+      <div class="glossary-toolbar">
+        <input id="glossary-search" type="search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="搜索术语...">
+        <select id="glossary-category-filter" data-i18n-title="glossary.category">
+          <option value="all" data-i18n="glossary.allCategories">全部</option>
+          <option value="database" data-i18n="glossary.filterDatabase">数据库</option>
+          <option value="security" data-i18n="glossary.filterSecurity">安全</option>
+          <option value="network" data-i18n="glossary.filterNetwork">网络</option>
+          <option value="programming" data-i18n="glossary.filterProgramming">编程</option>
+          <option value="system" data-i18n="glossary.filterSystem">系统</option>
+        </select>
+      </div>
+      <div id="glossary-count" class="glossary-count"></div>
+      <div id="glossary-results" class="glossary-results"></div>
+    </section>
+  </div>
+
   <!-- Lesson Data & JS Scripts -->
   <script src="data/db.js?v=20260604"></script>
   <!-- SQLite WASM — sql.js 内存数据库引擎 -->
@@ -1279,8 +1315,32 @@
   <script src="data/japanese_typing_library.js?v=20260606_v1"></script>
   <script src="data/japanese_typing_expansion.js?v=20260606_v1"></script>
   <script src="assets/js/japanese_typing.js?v=20260606_v1"></script>
-  <script src="assets/js/i18n.js?v=20260609_global_pair_v12"></script>
-  <script src="assets/js/app.js?v=20260609_i18n_sidebar_v1"></script>
+  <script src="assets/js/i18n-ui-dict.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/content-i18n.js"></script>
+  <script src="data/i18n_content/sql_en.js"></script>
+  <script src="data/i18n_content/sql_vi.js"></script>
+  <script src="data/i18n_content/sql_my.js"></script>
+  <script src="data/i18n_content/sql_fr.js"></script>
+  <script src="data/i18n_content/itpass_en.js"></script>
+  <script src="data/i18n_content/itpass_vi.js"></script>
+  <script src="data/i18n_content/itpass_my.js"></script>
+  <script src="data/i18n_content/itpass_fr.js"></script>
+  <script src="data/i18n_content/sg_en.js"></script>
+  <script src="data/i18n_content/sg_vi.js"></script>
+  <script src="data/i18n_content/sg_my.js"></script>
+  <script src="data/i18n_content/sg_fr.js"></script>
+  <script src="data/i18n_content/java_en.js"></script>
+  <script src="data/i18n_content/java_vi.js"></script>
+  <script src="data/i18n_content/java_my.js"></script>
+  <script src="data/i18n_content/java_fr.js"></script>
+  <script src="data/i18n_content/python_en.js"></script>
+  <script src="data/i18n_content/python_vi.js"></script>
+  <script src="data/i18n_content/python_my.js"></script>
+  <script src="data/i18n_content/python_fr.js"></script>
+  <script src="data/glossary/it_terms.js"></script>
+  <script src="assets/js/glossary.js"></script>
+  <script src="assets/js/app.js"></script>
   <script src="assets/js/ai_assistant.js?v=20260608_global_target"></script>
 <script>
 if ("serviceWorker" in navigator) {

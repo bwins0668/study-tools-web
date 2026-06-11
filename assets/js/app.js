@@ -1240,11 +1240,13 @@ function loadJavaLesson(id) {
   
   currentJavaLessonId = id;
 
+  const localized = getLessonLocalizedText("java", lesson);
+
   // Header
   const badge = document.getElementById("lesson-section-badge");
   badge.innerText = `${lesson.book} — 第 ${lesson.subSectionId} 节`;
   badge.className = "lesson-badge java-badge";
-  document.getElementById("lesson-title-ja").innerText = lesson.titleJa;
+  document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
   
   // 启用“显示原书 PDF”按钮！
@@ -1258,7 +1260,11 @@ function loadJavaLesson(id) {
   }
 
   // Concept Body
-  document.getElementById("concept-ja-body").innerHTML = lesson.conceptJa;
+  if (localized && localized.concept) {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(localized.concept);
+  } else {
+    document.getElementById("concept-ja-body").innerHTML = lesson.conceptJa;
+  }
   document.getElementById("concept-zh-body").innerHTML = lesson.conceptZh;
 
   // Analogy
@@ -1467,14 +1473,20 @@ function loadLesson(id) {
   const lesson = SQL_LESSONS.find(l => l.id === id);
   if (!lesson) return;
   
+  const localized = getLessonLocalizedText("sql", lesson);
+  
   // Header
   document.getElementById("lesson-section-badge").innerText = lesson.section;
-  document.getElementById("lesson-title-ja").innerText = lesson.titleJa;
+  document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
   document.getElementById("locate-pdf-btn").style.display = "none";
   
   // Concept Body
-  document.getElementById("concept-ja-body").innerHTML = formatMarkdown(lesson.conceptJa);
+  if (localized && localized.concept) {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(localized.concept);
+  } else {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(lesson.conceptJa);
+  }
   document.getElementById("concept-zh-body").innerHTML = formatMarkdown(lesson.conceptZh);
   
   // Analogy & Example
@@ -1533,15 +1545,21 @@ function loadItPassLesson(id) {
   itpassQuizIdx = 0;
   selectedItPassQuizOption = null;
   
+  const localized = getLessonLocalizedText("itpass", lesson);
+  
   // Header details
   document.getElementById("lesson-section-badge").innerText = lesson.section;
-  document.getElementById("lesson-title-ja").innerText = lesson.titleJa;
+  document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
   const locatePdfBtn = document.getElementById("locate-pdf-btn");
   locatePdfBtn.style.display = lesson.pdfPage ? "inline-flex" : "none";
   
   // Concepts & Analogy
-  document.getElementById("concept-ja-body").innerHTML = formatMarkdown(lesson.conceptJa);
+  if (localized && localized.concept) {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(localized.concept);
+  } else {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(lesson.conceptJa);
+  }
   document.getElementById("concept-zh-body").innerHTML = formatMarkdown(lesson.conceptZh);
   document.getElementById("lesson-analogy").innerText = lesson.analogy;
   
@@ -1613,15 +1631,21 @@ function loadSgLesson(id) {
   sgQuizIdx = 0;
   selectedSgQuizOption = null;
   
+  const localized = getLessonLocalizedText("sg", lesson);
+  
   // Header details
   document.getElementById("lesson-section-badge").innerText = lesson.section;
-  document.getElementById("lesson-title-ja").innerText = lesson.titleJa;
+  document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
   const locatePdfBtn = document.getElementById("locate-pdf-btn");
   locatePdfBtn.style.display = lesson.pdfPage ? "inline-flex" : "none";
   
   // Concepts & Analogy
-  document.getElementById("concept-ja-body").innerHTML = formatMarkdown(lesson.conceptJa);
+  if (localized && localized.concept) {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(localized.concept);
+  } else {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(lesson.conceptJa);
+  }
   document.getElementById("concept-zh-body").innerHTML = formatMarkdown(lesson.conceptZh);
   document.getElementById("lesson-analogy").innerText = lesson.analogy;
   
@@ -1672,23 +1696,58 @@ function loadSgLesson(id) {
   document.querySelector(".lesson-content").scrollTop = 0;
 }
 
+function getLessonLocalizedText(subject, lesson) {
+  if (!window.ContentI18n || !lesson || !lesson.id) return null;
+  var lang = window.I18n && typeof window.I18n.getLanguage === "function"
+    ? window.I18n.getLanguage()
+    : "default-ja-zh";
+  return window.ContentI18n.get(subject, lesson.id, lang);
+}
+
 // Simple parser to render basic markdown bold and code blocks into HTML safely
 function formatMarkdown(text) {
   if (!text) return "";
-  let escaped = text
+
+  // Step 1: Extract fenced code blocks (``` ... ```) and replace with placeholders
+  let codeBlocks = [];
+  let idx = 0;
+  let working = text;
+
+  const fencedRegex = /```([a-zA-Z0-9_+-]*)\s*\n([\s\S]*?)```/gm;
+  working = working.replace(fencedRegex, function(match, lang, code) {
+    const placeholder = "@@CODE_BLOCK_" + idx + "@@";
+    const safeLang = /^[a-zA-Z0-9_+-]*$/.test(lang) ? lang : "";
+    const escapedCode = String(code || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    const langClass = safeLang ? " class=\"language-" + safeLang + "\"" : "";
+    const html = "<pre><code" + langClass + ">" + escapedCode + "</code></pre>";
+    codeBlocks.push(html);
+    idx++;
+    return placeholder;
+  });
+
+  // Step 2: Escape HTML in the remaining text
+  let escaped = working
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
   
-  // Replace **bold** with <strong>bold</strong>
+  // Step 3: Replace **bold** with <strong>bold</strong>
   escaped = escaped.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   
-  // Replace `code` with <code>code</code>
+  // Step 4: Replace `code` with <code>code</code>
   escaped = escaped.replace(/`(.*?)`/g, "<code>$1</code>");
   
-  // Highlight bilingual SQL and IT terms
+  // Step 5: Highlight bilingual SQL and IT terms
   escaped = escaped.replace(/([ぁ-んァ-ヶa-zA-Z0-9_ー]+)\s*\((AND|OR|WHERE|SELECT|LIMIT|ORDER BY|GROUP BY|HAVING|JOIN|INNER JOIN|LEFT JOIN|SUM|AVG|COUNT|MAX|MIN|BETWEEN|LIKE|IS NULL|IS NOT NULL|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|COMMIT|ROLLBACK|CPU|RAM|ROM|HDD|SSD|OS|WAF|RAID|MTBF|MTTR|SLA|DNS|DHCP|VoIP|SWOT|PPM|ERP|SCM|CRM|DX|ROI|!=|&lt;&gt;|=|\s*&gt;=\s*|\s*&lt;=\s*|\s*&gt;\s*|\s*&lt;\s*)\)/g, '<span class="vocab-highlight">$1 ($2)</span>');
   
+  // Step 6: Restore fenced code blocks
+  for (let i = 0; i < codeBlocks.length; i++) {
+    escaped = escaped.replace("@@CODE_BLOCK_" + i + "@@", () => codeBlocks[i]);
+  }
+
   return escaped;
 }
 
@@ -3926,11 +3985,13 @@ function loadPythonLesson(id) {
   
   currentPythonLessonId = id;
 
+  const localized = getLessonLocalizedText("python", lesson);
+
   // Header
   const badge = document.getElementById("lesson-section-badge");
   badge.innerText = `${lesson.book} — 第 ${lesson.subSectionId} 节`;
   badge.className = "lesson-badge python-badge";
-  document.getElementById("lesson-title-ja").innerText = lesson.titleJa;
+  document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
   
   // Hide locate PDF button
@@ -3940,7 +4001,11 @@ function loadPythonLesson(id) {
   }
 
   // Concept Body
-  document.getElementById("concept-ja-body").innerHTML = lesson.conceptJa;
+  if (localized && localized.concept) {
+    document.getElementById("concept-ja-body").innerHTML = formatMarkdown(localized.concept);
+  } else {
+    document.getElementById("concept-ja-body").innerHTML = lesson.conceptJa;
+  }
   document.getElementById("concept-zh-body").innerHTML = lesson.conceptZh;
 
   // Analogy
