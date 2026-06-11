@@ -823,8 +823,9 @@ function resetAllProgress() {
     } else if (currentSubject === "python") {
       completedPythonLessons = [];
       localStorage.removeItem("python_completed_lessons");
-      if (typeof PYTHON_LESSONS !== 'undefined') {
-        PYTHON_LESSONS.forEach(l => localStorage.removeItem('python_progress_' + l.id));
+      if (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') {
+        const pl = window.PYTHON_LESSONS || PYTHON_LESSONS;
+        pl.forEach(l => localStorage.removeItem('python_progress_' + l.id));
       }
       initSidebar();
       loadPythonLesson(currentPythonLessonId);
@@ -871,7 +872,7 @@ function updateProgressUI() {
     document.getElementById("progress-fill").style.width = `${pct}%`;
     if (typeof JavaSandbox !== 'undefined') JavaSandbox.updateProgressDisplay();
   } else if (currentSubject === 'python') {
-    const total = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.length : 240;
+    const total = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).length : 240;
     const completedCount = completedPythonLessons.length;
     const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
     document.getElementById("progress-percentage").innerText = `${pct}%`;
@@ -1031,7 +1032,7 @@ function initSidebar() {
     renderFlatSidebar(bookLessons, completedJavaLessons, currentJavaLessonId, selectJavaLesson, "java");
   } else if (currentSubject === "python") {
     titleText.innerText = "Python コース (課程目録)";
-    const lessonsList = typeof PYTHON_LESSONS !== 'undefined' ? PYTHON_LESSONS : [];
+    const lessonsList = window.PYTHON_LESSONS || (typeof PYTHON_LESSONS !== 'undefined' ? PYTHON_LESSONS : []);
     renderFlatSidebar(lessonsList, completedPythonLessons, currentPythonLessonId, selectPythonLesson, "python");
   } else if (currentSubject === "sg") {
     titleText.innerText = "テキスト章節 (SG 教科书章节)";
@@ -1733,8 +1734,8 @@ function getCurrentLessonForI18n() {
   if (currentSubject === 'java' && typeof JAVA_LESSONS !== 'undefined') {
     return JAVA_LESSONS.find(l => l.id === currentJavaLessonId);
   }
-  if (currentSubject === 'python' && typeof PYTHON_LESSONS !== 'undefined') {
-    return PYTHON_LESSONS.find(l => l.id === currentPythonLessonId);
+  if (currentSubject === 'python' && (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined')) {
+    return (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId);
   }
   if (currentSubject === 'sg' && typeof SG_LESSONS !== 'undefined') {
     return SG_LESSONS.find(l => l.id === currentSgLessonId);
@@ -2015,7 +2016,7 @@ function checkQuizAnswer() {
       feedback.className = "quiz-feedback error";
     }
   } else if (currentSubject === 'python') {
-    const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === currentPythonLessonId) : null;
+    const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId) : null;
     if (!lesson || !lesson.quizList || lesson.quizList.length === 0) return;
     const quiz = lesson.quizList[pythonQuizIdx];
     const feedback = document.getElementById("quiz-feedback");
@@ -3125,6 +3126,38 @@ const CBT_FALLBACK_QUESTIONS = [
   }
 ];
 
+// 确保 Python 课程数据被异步载入（按需 fetch data/python_lessons.json）
+async function ensurePythonLessonsLoaded() {
+  // 1. 已有内存缓存
+  if (window.__PYTHON_LESSONS_CACHE && window.__PYTHON_LESSONS_CACHE.length > 0) {
+    window.PYTHON_LESSONS = window.__PYTHON_LESSONS_CACHE;
+    return window.__PYTHON_LESSONS_CACHE;
+  }
+  // 2. 旧版同步 script 已加载（兼容回滚）
+  if (typeof PYTHON_LESSONS !== 'undefined' && PYTHON_LESSONS.length > 0) {
+    window.__PYTHON_LESSONS_CACHE = PYTHON_LESSONS;
+    window.PYTHON_LESSONS = PYTHON_LESSONS;
+    return PYTHON_LESSONS;
+  }
+
+  // 3. 异步 fetch JSON
+  try {
+    const res = await fetch('./data/python_lessons.json');
+    if (!res.ok) throw new Error('无法读取 Python 课程数据！ / Pythonレッスンデータの取得に失敗しました。');
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new Error('Python 课程数据格式非法或为空！ / データが無効です。');
+    }
+    window.__PYTHON_LESSONS_CACHE = data;
+    window.PYTHON_LESSONS = data;
+    return data;
+  } catch (err) {
+    console.error('Failed to load Python lessons:', err);
+    showToast('⚠️ Python 课程加载失败，请检查网络连接！\nPythonレッスンの読み込みに失敗しました。接続を確認してください。', 'error');
+    throw err;
+  }
+}
+
 // 确保 SG 历年真题库被异步载入
 async function ensureSgPastExamsLoaded() {
   if (window.__SG_PAST_EXAMS_CACHE && window.__SG_PAST_EXAMS_CACHE.length > 0) {
@@ -3887,8 +3920,8 @@ function selectPythonLesson(id) {
 }
 
 function loadPythonLesson(id) {
-  if (typeof PYTHON_LESSONS === 'undefined') return;
-  const lesson = PYTHON_LESSONS.find(l => l.id === id);
+  if (!window.PYTHON_LESSONS && typeof PYTHON_LESSONS === 'undefined') return;
+  const lesson = (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === id);
   if (!lesson) return;
   
   currentPythonLessonId = id;
@@ -4028,7 +4061,7 @@ function loadPythonQuiz(lesson) {
 }
 
 function renderPythonQuizQuestion() {
-  const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === currentPythonLessonId) : null;
+  const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId) : null;
   if (!lesson || !lesson.quizList || lesson.quizList.length === 0) return;
 
   const totalQuizzes = lesson.quizList.length;
@@ -4071,7 +4104,7 @@ function pythonQuizPrev() {
 }
 
 function pythonQuizNext() {
-  const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === currentPythonLessonId) : null;
+  const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId) : null;
   if (lesson && pythonQuizIdx < lesson.quizList.length - 1) {
     pythonQuizIdx++;
     renderPythonQuizQuestion();
@@ -4091,7 +4124,7 @@ function markPythonProgress(lessonId, action) {
     completedPythonLessons.push(lessonId);
     saveProgress();
     
-    const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === lessonId) : null;
+    const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === lessonId) : null;
     if (lesson) {
       const navItem = document.getElementById(`nav-item-python-${lessonId}`);
       if (navItem) {
@@ -4172,7 +4205,7 @@ function switchSqlSubMode(mode) {
 }
 
 // Switch Python sub modes (Lessons/Sandbox vs Mock Exam)
-function switchPythonSubMode(mode) {
+async function switchPythonSubMode(mode) {
   pythonSubMode = mode;
   document.getElementById("python-sub-tab-lessons").classList.toggle("active", mode === "lessons");
   document.getElementById("python-sub-tab-exam").classList.toggle("active", mode === "exam");
@@ -4180,6 +4213,12 @@ function switchPythonSubMode(mode) {
   handleSubModeViewToggle(mode);
   
   if (mode === "lessons") {
+    try {
+      await ensurePythonLessonsLoaded();
+    } catch (e) {
+      // Error already shown via showToast; abort rendering
+      return;
+    }
     initSidebar();
     loadPythonLesson(currentPythonLessonId);
   } else {

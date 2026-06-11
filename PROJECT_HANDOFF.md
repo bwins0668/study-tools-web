@@ -24,22 +24,18 @@
   * **线上验证结果（Cloudflare Pages Production + iPhone 实机）**：
     * 首屏不加载 `it_passport_past_exams.js` / `.json`
     * 点击 IT Passport CBT 开始考试后才加载 `data/it_passport_past_exams.json`
-    * IT Passport CBT 出题、选项、年份筛选、不包含计算题、评分均正常
-    * SG CBT 回归正常
-    * SQL CBT 回归正常
-    * SQL Playground 回归正常
-    * 手机端 CBT 单栏布局正常
-    * Service Worker v5 正常注册
-    * Cache Storage 出现 `study-tools-web-v5`
-    * `data/it_passport_past_exams.js` 已保留，未删除
-  * **修改文件（已提交）**：
-    * `index.html` — 注释掉 `data/it_passport_past_exams.js` 首屏 script 引用
-    * `assets/js/app.js` — 新增 `ensureItPassportExamsLoaded()`（fetch JSON + Loading 按钮 + 错误处理），修改 `getExamPool()` 和 `startCbtExam()`
-    * `service-worker.js` — 缓存版本 `v4 → v5`，CORE_ASSETS 加入 `./data/it_passport_past_exams.json`
-    * `data/it_passport_past_exams.json` — 新增（~4.8MB），从 `.js` 转换的独立 JSON 文件
+* **最新线上 Commit**：`d02e268`（9H/9I），本地最新修改：**阶段 9K（未提交）**
+* **上一个已完成阶段**：**阶段 9H/9I：IT Passport 历年真题库 JSON 单文件懒加载**（已上线）
+* **当前进行阶段**：**阶段 9K：Python 课程数据 JSON 单文件懒加载**
+  * **状态**：本地测试通过，等待 commit 确认
+  * **阶段 9K 修改文件（未提交）**：
+    * `index.html` — 注释掉 `data/python_lessons.js` 首屏 script 引用
+    * `assets/js/app.js` — 新增 `ensurePythonLessonsLoaded()`（fetch JSON + 内存缓存 + 兼容回滚），`switchPythonSubMode` 改为 async 并在 lessons 模式 await 懒加载，所有 `PYTHON_LESSONS` 引用统一使用 `window.PYTHON_LESSONS`
+    * `service-worker.js` — 缓存版本 `v5 → v6`，CORE_ASSETS 加入 `./data/python_lessons.json`
+    * `data/python_lessons.json` — 新增（~1.56MB，255 条课程），从 `.js` 转换的独立 JSON 文件
   * **回滚方案**：
-    * 方式一（代码回退）：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/it_passport_past_exams.js` 保留在仓库中可随时恢复首屏 script 引用
-    * 方式二（Cloudflare Rollback）：在 Cloudflare Pages 控制台直接 Rollback 到 `027e521` 或 `759a0ca`
+    * 方式一（代码回退）：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/python_lessons.js` 保留在仓库中可随时恢复首屏 script 引用
+    * 方式二（Cloudflare Rollback）：在 Cloudflare Pages 控制台直接 Rollback 到 `d02e268`（上一稳定版本）
 
 ---
 

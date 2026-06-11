@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v5";
+const CACHE_NAME = "study-tools-web-v6";
 
 const CORE_ASSETS = [
   "./",
@@ -15,6 +15,7 @@ const CORE_ASSETS = [
   "./data/sql_exam_questions.json",
   "./data/sg_past_exams.json",
   "./data/it_passport_past_exams.json",
+  "./data/python_lessons.json",
 ];
 
 self.addEventListener("install", (event) => {
