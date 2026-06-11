@@ -16,31 +16,30 @@
   * `web-safe-v1` (安全性/Web限制版本)
   * `pwa-ready-v1` (PWA 离线优化版本)
   * `sql-json-v1` (SQL 动态加载试点版本)
-* **最新线上 Commit**：`027e521`
-* **当前正在进行/已完成本地验证的阶段**：**阶段 9H (IT Passport 历年真题库 JSON 单文件懒加载)**
-  * **状态**：本地测试通过，等待 commit 确认
-  * **验证结果**：
-    * JSON 格式校验通过（1500 题，首尾 ID 一致，HTML/图片/字段完整）
+* **最新线上 Commit**：`d02e268`
+* **当前已完成阶段**：**阶段 9H/9I：IT Passport 历年真题库 JSON 单文件懒加载**
+  * **命名说明**：阶段编号在开发过程中曾有 9H / 9I 的差异，但实际对应同一个任务，统一记录为 **阶段 9H/9I**。
+  * **状态**：已完成 / 已提交 / 已推送 / Cloudflare Pages 已部署成功 / 线上验证通过
+  * **提交 commit**：`d02e268 perf: lazy-load IT Passport past exams from JSON`
+  * **线上验证结果（Cloudflare Pages Production + iPhone 实机）**：
     * 首屏不加载 `it_passport_past_exams.js` / `.json`
-    * IT Passport CBT 点击开始后 JSON 按需加载
-    * IT Passport CBT 出题、选项、年份筛选、答题正常
-    * IT Passport "不包含计算题"选项正常
+    * 点击 IT Passport CBT 开始考试后才加载 `data/it_passport_past_exams.json`
+    * IT Passport CBT 出题、选项、年份筛选、不包含计算题、评分均正常
     * SG CBT 回归正常
-    * SQL 模拟考试回归正常
+    * SQL CBT 回归正常
     * SQL Playground 回归正常
-    * Java/Python Web安全模式回归正常
-    * 手机端/桌面端无横向溢出
-    * Console 无 JS Error
-    * PWA SW v5 注册成功
-    * 离线 IT Passport / SG / SQL CBT 均正常
-    * `data/it_passport_past_exams.js` 保留未删除
-  * **修改文件（未提交）**：
+    * 手机端 CBT 单栏布局正常
+    * Service Worker v5 正常注册
+    * Cache Storage 出现 `study-tools-web-v5`
+    * `data/it_passport_past_exams.js` 已保留，未删除
+  * **修改文件（已提交）**：
     * `index.html` — 注释掉 `data/it_passport_past_exams.js` 首屏 script 引用
     * `assets/js/app.js` — 新增 `ensureItPassportExamsLoaded()`（fetch JSON + Loading 按钮 + 错误处理），修改 `getExamPool()` 和 `startCbtExam()`
     * `service-worker.js` — 缓存版本 `v4 → v5`，CORE_ASSETS 加入 `./data/it_passport_past_exams.json`
     * `data/it_passport_past_exams.json` — 新增（~4.8MB），从 `.js` 转换的独立 JSON 文件
-    * `PROJECT_HANDOFF.md` — 更新本阶段记录
-  * **回滚方案**：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/it_passport_past_exams.js` 保留在仓库中可随时恢复
+  * **回滚方案**：
+    * 方式一（代码回退）：`git checkout -- index.html assets/js/app.js service-worker.js`；`data/it_passport_past_exams.js` 保留在仓库中可随时恢复首屏 script 引用
+    * 方式二（Cloudflare Rollback）：在 Cloudflare Pages 控制台直接 Rollback 到 `027e521` 或 `759a0ca`
 
 ---
 
@@ -80,11 +79,13 @@
 * **运行机制**：Web 版放弃了本地 python-sqlite 桥接，直接使用浏览器端 SQLite WASM (`assets/vendor/sql-wasm.js` 和 `sql-wasm.wasm`)。
 * **数据持久化**：用户练习所做的数据更改仅存在于浏览器运行内存中。如需重新答题或数据库损坏，支持一键“重置数据库”重新加载预置 Schema 脚本。
 
-### 3.4 动态数据 JSON 按需懒加载机制 (阶段 9D/9F 成果)
-* **首屏减负**：原 `index.html` 同步 script 载入的数据量高达 9MB+。已将 `sql_exam_questions.js` 和 `sg_past_exams.js` 从首屏中剔除，改在用户实际进入对应科目考试并点击“开始考试”按钮时，进行异步 Fetch 懒加载：
+### 3.4 动态数据 JSON 按需懒加载机制 (阶段 9D/9F/9H-9I 成果)
+* **首屏减负**：原 `index.html` 同步 script 载入的数据量高达 13MB+。已将以下数据文件从首屏中剔除，改在用户实际进入对应科目考试并点击“开始考试”按钮时，进行异步 Fetch 懒加载：
   * SQL 题库：`data/sql_exam_questions.json` (体积约 260KB)
   * SG 历年真题：`data/sg_past_exams.json` (体积约 1.05MB)
-* **双重缓存**：内存中使用 `window.__SQL_EXAM_QUESTIONS_CACHE` / `window.__SG_PAST_EXAMS_CACHE` 进行首轮缓存。PWA 层面通过在 `service-worker.js` 的 `CORE_ASSETS` 中注册 JSON 资源进行预缓存，确保**完全离线状态下 SQL 实操考试和 SG 真题演练 100% 可用**。
+  * IT Passport 历年真题：`data/it_passport_past_exams.json` (体积约 4.8MB)
+* **双重缓存**：内存中使用 `window.__SQL_EXAM_QUESTIONS_CACHE` / `window.__SG_PAST_EXAMS_CACHE` / `window.__IT_PASSPORT_PAST_EXAMS_CACHE` 进行首轮缓存。PWA 层面通过在 `service-worker.js` 的 `CORE_ASSETS` 中注册 JSON 资源进行预缓存，确保**完全离线状态下所有题库 100% 可用**。
+* **当前 Service Worker 版本**：`study-tools-web-v5`
 
 ---
 
@@ -126,31 +127,39 @@
 ## 6. 当前风险与后续路线图
 
 ### 6.1 待办风险
-* ~~**IT Passport 懒加载**：已完成（阶段 9H），本地测试通过，等待 commit。~~
-* **Python 课程 JSON 动态加载**：data/lessons.py (Python 教程章节) 目前仍在首屏加载中，待阶段 9I 处理。
+* ~~**IT Passport 懒加载**：已完成（阶段 9H/9I），线上验证通过，commit: d02e268。~~
+* **Python 课程 JSON 动态加载**：`data/python_lessons.js` 目前仍在首屏加载中，可作为下一阶段处理目标。
 
 ### 6.2 后续演进步骤
 ```text
 [已完成] 阶段9D：SQL 模拟考试 JSON 动态加载试点
-[已完成] 阶段9F：SG 历年真题库 JSON 动态加载重构
+[已完成] 阶段9F：SG 历年真题库 JSON 动态加载重构 (commit: bf42213)
 [已完成] 阶段9G：CBT 模拟考试手机端布局优化 (commit: 759a0ca)
-[已完成] 阶段9H：IT Passport 历年真题库 JSON 静态化与动态加载 (commit: 027e521)
+[已完成] 阶段9H/9I：IT Passport 历年真题库 JSON 单文件懒加载 (commit: d02e268)
     ↓
-[待启动] 阶段9I：Python 课程/Lessons JSON 动态加载重构 (体积约 1.2MB)
+[待启动] 下一阶段：Python 课程/Lessons JSON 动态加载重构（data/python_lessons.js 体积约 1.2MB）
 ```
 
 ---
 
 ## 7. 给下一位 AI 的接手指令
 
-1. **核实本地开发环境**：
-   * 启动 Wrangler Pages 调试代理：`npx wrangler pages dev . --port 8788`；
-   * 运行自动化脚本 `python -u scratch/test_zero_cost_mode.py` 确认所有测试正常输出 `=== ALL SYSTEM TESTS PASSED SUCCESSFUL ===`。
-2. **（已完成）阶段 9H：IT Passport 动态化** — 本地已验证通过，待 commit 确认。
-   * 参见上方阶段 9H 验证结果和修改清单。
-3. **启动 9I 阶段：Python 课程/Lessons JSON 动态加载重构**：
-   * 参照 `convert_sg_questions.py` 的解析逻辑，将 `data/lessons.js`（Python 部分）转换为 `data/python_lessons.json`；
-   * 在 `index.html` 移除 Python 课程的同步加载标签（保留其他科目的 lessons 标签）；
-   * 在 `assets/js/app.js` 新增对应异步加载函数，并使用独立缓存变量；
-   * 在 `service-worker.js` 升级缓存版本并将其加入 `CORE_ASSETS` 以确保离线可用；
-   * 修改测试脚本增加对 Python 课程按需加载的覆盖。
+1. **核实当前状态**：
+   * 最新 commit：`d02e268`，分支 `master`，已推送至 GitHub
+   * Cloudflare Pages 已部署 `d02e268`，线上验证通过
+   * `git status` 应为 clean（`tools/` 下4个临时诊断脚本已加入 `.gitignore`）
+2. **核实本地开发环境**：
+   * 启动 Wrangler Pages 调试代理：`npx wrangler pages dev . --port 8788`
+   * 运行自动化脚本 `python -u scratch/test_zero_cost_mode.py` 确认所有测试正常输出 `=== ALL SYSTEM TESTS PASSED SUCCESSFUL ===`
+3. **已完成阶段 9H/9I** — IT Passport 懒加载已上线，无需任何操作。
+4. **启动下一阶段：Python 课程/Lessons JSON 动态加载重构**：
+   * 参照 `convert_sg_questions.py` 的解析逻辑，将 `data/python_lessons.js` 转换为 `data/python_lessons.json`
+   * 在 `index.html` 移除 Python 课程的同步加载标签（保留其他科目的 lessons 标签）
+   * 在 `assets/js/app.js` 新增对应异步加载函数，并使用独立缓存变量 `window.__PYTHON_LESSONS_CACHE`
+   * 在 `service-worker.js` 升级缓存版本（`v5 → v6`）并将其加入 `CORE_ASSETS` 以确保离线可用
+   * 修改测试脚本增加对 Python 课程按需加载的覆盖
+5. **严格限制**：
+   * 不要删除 `data/it_passport_past_exams.js`（保留作为历史备份）
+   * 不要动 `functions/api/execute.js`、`assets/js/sqlite-adapter.js`、Java/Python Sandbox 相关文件
+   * 不要使用 `git add .`，每次只精确 add 计划提交的文件
+   * 不要 force push
