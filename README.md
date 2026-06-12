@@ -22,6 +22,7 @@ The Web Public edition is optimized for quick previews, lightweight study, and m
 | **AI Learning Mentor** | Requires user's own API keys | Supports local and remote AI integration |
 
 *Note: AI-backed translation fallback via `/api/i18n/translate` is disabled on the public web runtime to eliminate 405 preflight log noise. It falls back to static multilingual content packs (en/vi/my/fr).*
+*Social Sharing: Features a custom 1200x630 Open Graph (OG) sharing preview image (`assets/images/og-study-tools-v2026-6-11.png`) and large image Twitter Card support.*
 
 ---
 
