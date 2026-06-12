@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v6";
+const CACHE_NAME = "study-tools-web-v2026-6-11-r13-10";
 
 const CORE_ASSETS = [
   "./",
@@ -92,8 +92,9 @@ self.addEventListener("fetch", (event) => {
   // This means an old version serves instantly from cache, then background-fetches the
   // new version. The next page load gets the freshest version.
   if (isStaticAsset(event.request.url)) {
+    const hasVersion = event.request.url.includes("?v=") || event.request.url.includes("&v=");
     event.respondWith(
-      caches.match(event.request, { ignoreSearch: true }).then((cached) => {
+      caches.match(event.request, { ignoreSearch: !hasVersion }).then((cached) => {
         const fetchPromise = fetch(event.request)
           .then((response) => {
             if (response.ok) {

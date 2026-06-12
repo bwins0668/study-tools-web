@@ -28,6 +28,8 @@ except ImportError:
     sys.exit(1)
 
 BASE_URL = "https://study-tools-web-pages.pages.dev"
+if len(sys.argv) > 1:
+    BASE_URL = sys.argv[1]
 RELEASE_URL = "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.11"
 
 results = []
@@ -198,6 +200,23 @@ def run():
               f"calls={len(translate_requests)}")
         check("Network: no 405 status responses", len(network_405s) == 0,
               f"{len(network_405s)} 405s: {network_405s[:5]}")
+
+        # ---- 15. Cache Busting checks ----
+        has_version_param = True
+        missing_versions = []
+        for file in ["version.js", "app.js", "content-i18n.js"]:
+            matching = [u for u in requested_urls if file in u and "v=v2026.6.11-r13.10" in u]
+            if not matching:
+                has_version_param = False
+                missing_versions.append(file)
+        check("Cache Busting: core scripts have version query param", has_version_param,
+              f"missing={missing_versions}")
+
+        sql_en_versioned = any("sql_en.js" in u and "v=v2026.6.11-r13.10" in u for u in requested_urls)
+        check("Cache Busting: sql_en.js loaded with version param", sql_en_versioned)
+
+        python_fr_versioned = any("python_fr.js" in u and "v=v2026.6.11-r13.10" in u for u in requested_urls)
+        check("Cache Busting: python_fr.js loaded with version param", python_fr_versioned)
 
         browser.close()
 

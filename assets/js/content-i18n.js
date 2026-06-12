@@ -90,7 +90,11 @@
 
     loadingPacks[key] = new Promise(function (resolve) {
       var script = document.createElement("script");
-      script.src = "data/i18n_content/" + subject + "_" + normLang + ".js";
+      var version = "";
+      if (window.STUDY_TOOLS_VERSION && window.STUDY_TOOLS_VERSION.assetVersion) {
+        version = "?v=" + encodeURIComponent(window.STUDY_TOOLS_VERSION.assetVersion);
+      }
+      script.src = "data/i18n_content/" + subject + "_" + normLang + ".js" + version;
       script.onload = function () {
         loadedPacks[key] = true;
         delete loadingPacks[key];

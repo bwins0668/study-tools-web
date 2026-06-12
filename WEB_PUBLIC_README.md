@@ -25,6 +25,9 @@
    * 在公网 Web 运行环境下（通过 `isWebPublicRuntime()` 识别），自动跳过向 `/api/i18n/translate` 发送翻译请求并直接返回空对象以进行静默降级，彻底消除了控制台和 smoke test 中产生的 405 preflight 错误噪音，且不影响已有静态多语言包的渲染与加载。
 6. **定制 1200x630 OG 社交卡片**
    * 将社交媒体分享图从默认的 512px app icon 升级为定制 1200x630 社交分享预览图 `og-study-tools-v2026-6-11.png`，并适配 `summary_large_image` Twitter 卡片，大幅提升在 X (Twitter)、Facebook 等平台分享时的视觉体验。
+7. **静态资源与懒加载包 Cache Busting 机制**
+   * 设计了针对 Vanilla JS 静态架构的即时缓存击穿机制。在 `version.js` 中全局注入 `assetVersion: "v2026.6.11-r13.10"`，并将所有核心 CSS/JS 资源及 `ContentI18n.loadPack` 动态加载的语言包路径拼接 `?v=[assetVersion]`。
+   * 在 `service-worker.js` 中升级 CACHE_NAME 为 `study-tools-web-v2026-6-11-r13-10`，并针对含版本参数的请求取消 `ignoreSearch` 模糊匹配，确保文件更新时能在首次加载即时下载生效。
 
 ---
 
