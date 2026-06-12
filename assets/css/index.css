@@ -7464,3 +7464,218 @@ body.i18n-active :where(
   }
 }
 
+/* ==========================================================================
+   Round 14.2: UX/UI Improvements
+   ========================================================================== */
+
+/* UX-001: First Run Onboarding Guidance */
+.first-run-guidance {
+  position: relative;
+  background: linear-gradient(135deg, rgba(18, 24, 36, 0.95), rgba(10, 14, 23, 0.95));
+  border: 1px solid var(--neon-cyan-glow);
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: var(--transition-smooth);
+  z-index: 10;
+}
+
+.first-run-guidance .guidance-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition-smooth);
+}
+
+.first-run-guidance .guidance-close-btn:hover {
+  color: var(--error-color);
+}
+
+.first-run-guidance .guidance-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 70%;
+}
+
+.first-run-guidance .guidance-icon {
+  font-size: 24px;
+  color: var(--neon-cyan);
+}
+
+.first-run-guidance .guidance-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.first-run-guidance .guidance-title {
+  font-weight: 700;
+  color: var(--neon-cyan);
+  font-size: 14px;
+}
+
+.first-run-guidance .guidance-desc {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.first-run-guidance .guidance-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.first-run-guidance .guidance-btn {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition-smooth);
+}
+
+.first-run-guidance .guidance-btn:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* UI-002: Responsive Lang Tab labels support */
+.lang-tab .lang-tab-short {
+  display: none;
+}
+.lang-tab .lang-tab-full {
+  display: inline;
+}
+
+/* UX-004: Soft Warning for Safe Mode console */
+.safe-mode-warning {
+  display: flex;
+  gap: 12px;
+  background: rgba(252, 185, 0, 0.08);
+  border: 1px solid rgba(252, 185, 0, 0.3);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 12px;
+  color: var(--text-main);
+  line-height: 1.5;
+  font-family: inherit;
+  text-align: left;
+}
+
+.safe-mode-warning .warning-icon {
+  font-size: 20px;
+  color: #ffb900;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 2px;
+}
+
+.safe-mode-warning .warning-title {
+  font-weight: 700;
+  color: #ffb900;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.safe-mode-warning .warning-desc {
+  font-size: 13px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.safe-mode-warning .warning-desc-ja {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.safe-mode-warning .download-link-box {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.safe-mode-warning .warning-link {
+  color: var(--neon-cyan);
+  text-decoration: underline;
+  font-weight: 600;
+}
+.safe-mode-warning .warning-link:hover {
+  color: #ffb900;
+}
+
+.java-status-warning,
+.python-status-warning {
+  background: rgba(252, 185, 0, 0.15) !important;
+  border-color: #fcb900 !important;
+  color: #ffb900 !important;
+}
+
+/* UI-005 & UI-007: Table Scroll wrappers */
+.table-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: rgba(5, 8, 16, 0.5);
+  margin-bottom: 8px;
+}
+
+/* Media Query Adaptations */
+@media (max-width: 768px) {
+  .first-run-guidance {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 16px 16px 16px;
+  }
+  .first-run-guidance .guidance-content {
+    max-width: 100%;
+  }
+  .first-run-guidance .guidance-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .lang-tab .lang-tab-short {
+    display: inline;
+  }
+  .lang-tab .lang-tab-full {
+    display: none;
+  }
+  .lang-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    width: 100% !important;
+  }
+  
+  .table-scroll-wrapper::after {
+    content: "↔ 左右滑动查看完整表格 / Swipe horizontally";
+    display: block;
+    text-align: right;
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid var(--border-color);
+  }
+}
+

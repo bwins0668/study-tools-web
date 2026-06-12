@@ -27,16 +27,16 @@
   <!-- Google Fonts & FontAwesome Localized -->
   <link rel="stylesheet" href="assets/lib/google-fonts/css/google-fonts.css">
   <link rel="stylesheet" href="assets/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/index.css?v=v2026.6.11-r13.10">
-  <link rel="stylesheet" href="assets/css/light-theme.css?v=v2026.6.11-r13.10">
-  <link rel="stylesheet" href="assets/css/japanese-typing.css?v=v2026.6.11-r13.10">
-  <link rel="stylesheet" href="assets/css/ai_learning.css?v=v2026.6.11-r13.10">
-  <link rel="stylesheet" href="assets/css/glossary.css?v=v2026.6.11-r13.10">
+  <link rel="stylesheet" href="assets/css/index.css?v=v2026.6.11-r14.2">
+  <link rel="stylesheet" href="assets/css/light-theme.css?v=v2026.6.11-r14.2">
+  <link rel="stylesheet" href="assets/css/japanese-typing.css?v=v2026.6.11-r14.2">
+  <link rel="stylesheet" href="assets/css/ai_learning.css?v=v2026.6.11-r14.2">
+  <link rel="stylesheet" href="assets/css/glossary.css?v=v2026.6.11-r14.2">
   <link rel="manifest" href="./manifest.webmanifest">
   <meta name="theme-color" content="#0f1117">
   <script src="./assets/js/config.web.js"></script>
-  <script src="./assets/js/version.js?v=v2026.6.11-r13.10"></script>
-  <script src="./assets/js/code-runner-api.js?v=v2026.6.11-r13.10"></script>
+  <script src="./assets/js/version.js?v=v2026.6.11-r14.2"></script>
+  <script src="./assets/js/code-runner-api.js?v=v2026.6.11-r14.2"></script>
 </head>
 <body>
 
@@ -254,6 +254,27 @@
 
       <!-- Center: Lesson Content -->
       <main class="lesson-content">
+
+        <!-- Onboarding Guidance Banner -->
+        <div class="first-run-guidance" id="first-run-guidance">
+          <div class="guidance-close-btn" onclick="dismissGuidance()" title="关闭提示" aria-label="关闭提示">
+            <i class="fa-solid fa-xmark"></i>
+          </div>
+          <div class="guidance-content">
+            <div class="guidance-icon">
+              <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div class="guidance-text">
+              <span class="guidance-title">初めての方へ / 新手建议：</span>
+              <span class="guidance-desc">先选择上方科目 → 从左侧第 1 课开始 → 读完讲解并完成理解度测试/沙盒练习。</span>
+            </div>
+          </div>
+          <div class="guidance-actions">
+            <button class="guidance-btn" onclick="startWithSubject('sql')" title="开始学习 SQL"><i class="fa-solid fa-database"></i> 从 SQL 开始</button>
+            <button class="guidance-btn" onclick="startWithSubject('itpass')" title="开始学习 IT Passport"><i class="fa-solid fa-graduation-cap"></i> 从 IT Passport 开始</button>
+          </div>
+        </div>
+
         <div class="content-card">
           <!-- Lesson Header -->
           <div class="lesson-header">
@@ -271,13 +292,13 @@
           <!-- Language Selector Tabs -->
           <div class="lang-tabs">
             <button class="lang-tab active" data-lang="both" onclick="setLangView('both')">
-              <i class="fa-solid fa-columns"></i> 左右对照 (日/中)
+              <i class="fa-solid fa-columns"></i> <span class="lang-tab-full">左右对照 (日/中)</span><span class="lang-tab-short">ZH / JA</span>
             </button>
             <button class="lang-tab" data-lang="ja" onclick="setLangView('ja')">
-              日本語のみ
+              <span class="lang-tab-full">日本語のみ</span><span class="lang-tab-short">JA</span>
             </button>
             <button class="lang-tab" data-lang="zh" onclick="setLangView('zh')">
-              中文简体
+              <span class="lang-tab-full">中文简体</span><span class="lang-tab-short">ZH</span>
             </button>
           </div>
 
@@ -1293,7 +1314,12 @@
         </button>
       </header>
       <div class="glossary-toolbar">
-        <input id="glossary-search" type="search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="搜索术语...">
+        <div class="glossary-search-wrap">
+          <input id="glossary-search" type="search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="搜索术语...">
+          <button type="button" id="glossary-search-clear" class="glossary-search-clear-btn" aria-label="Clear search" title="Clear search" style="display: none;">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </button>
+        </div>
         <select id="glossary-category-filter" data-i18n-title="glossary.category">
           <option value="all" data-i18n="glossary.allCategories">全部</option>
           <option value="database" data-i18n="glossary.filterDatabase">数据库</option>
@@ -1311,30 +1337,30 @@
   <!-- Lesson Data & JS Scripts -->
   <script src="data/db.js?v=20260604"></script>
   <!-- SQLite WASM — sql.js 内存数据库引擎 -->
-  <script src="assets/vendor/sql-wasm.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/sqlite-adapter.js?v=v2026.6.11-r13.10"></script>
+  <script src="assets/vendor/sql-wasm.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/sqlite-adapter.js?v=v2026.6.11-r14.2"></script>
   <script src="data/lessons.js?v=20260604"></script>
   <script src="data/it_passport_lessons.js?v=20260604"></script>
   <!-- <script src="data/it_passport_past_exams.js?v=20260604"></script> -->
   <script src="data/sg_lessons.js?v=20260604"></script>
  
   <script src="data/java_lessons.js?v=20260604"></script>
-  <script src="assets/js/java_sandbox.js?v=v2026.6.11-r13.10"></script>
+  <script src="assets/js/java_sandbox.js?v=v2026.6.11-r14.2"></script>
   <!-- <script src="data/python_lessons.js?v=20260606_v6"></script> -->
-  <script src="assets/js/python_sandbox.js?v=v2026.6.11-r13.10"></script>
+  <script src="assets/js/python_sandbox.js?v=v2026.6.11-r14.2"></script>
  
   <script src="data/java_exam_questions.js?v=20260604"></script>
   <script src="data/python_exam_questions.js?v=20260604"></script>
   <script src="data/japanese_typing_library.js?v=20260606_v1"></script>
   <script src="data/japanese_typing_expansion.js?v=20260606_v1"></script>
-  <script src="assets/js/japanese_typing.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/i18n-ui-dict.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/i18n.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/content-i18n.js?v=v2026.6.11-r13.10"></script>
-  <script src="data/glossary/it_terms.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/glossary.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/app.js?v=v2026.6.11-r13.10"></script>
-  <script src="assets/js/ai_assistant.js?v=v2026.6.11-r13.10"></script>
+  <script src="assets/js/japanese_typing.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/i18n-ui-dict.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/i18n.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/content-i18n.js?v=v2026.6.11-r14.2"></script>
+  <script src="data/glossary/it_terms.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/glossary.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/app.js?v=v2026.6.11-r14.2"></script>
+  <script src="assets/js/ai_assistant.js?v=v2026.6.11-r14.2"></script>
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

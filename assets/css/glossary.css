@@ -295,7 +295,7 @@ body:not(.i18n-active) .glossary-backdrop {
     gap: 8px;
   }
 
-  .glossary-toolbar input[type="search"],
+  .glossary-search-wrap,
   .glossary-toolbar select {
     width: 100%;
     min-width: 0;
@@ -341,3 +341,41 @@ body:not(.i18n-active) .glossary-backdrop {
     font-size: 11px;
   }
 }
+
+/* UX-006: Glossary search clearing button */
+.glossary-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+  display: flex;
+  align-items: center;
+}
+
+.glossary-search-wrap input[type="search"] {
+  width: 100%;
+  padding-right: 32px !important; /* space for X button */
+}
+
+.glossary-search-clear-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+  padding: 0;
+  margin: 0;
+  height: 24px;
+  width: 24px;
+  z-index: 5;
+}
+
+.glossary-search-clear-btn:hover {
+  color: var(--neon-cyan, #22d3ee) !important;
+}
+

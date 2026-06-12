@@ -693,9 +693,10 @@
     const both = document.querySelector('.lang-tab[data-lang="both"]');
     const ja = document.querySelector('.lang-tab[data-lang="ja"]');
     const target = document.querySelector('.lang-tab[data-lang="zh"]');
-    if (both) both.innerHTML = `<i class="fa-solid fa-columns"></i> ${info.native} / 日本語`;
-    if (ja) ja.textContent = "日本語のみ";
-    if (target) target.textContent = info.native;
+    const targetCode = (info.code === 'default-ja-zh') ? 'ZH' : info.code.substring(0, 2).toUpperCase();
+    if (both) both.innerHTML = `<i class="fa-solid fa-columns"></i> <span class="lang-tab-full">${info.native} / 日本語</span><span class="lang-tab-short">${targetCode} / JA</span>`;
+    if (ja) ja.innerHTML = `<span class="lang-tab-full">日本語のみ</span><span class="lang-tab-short">JA</span>`;
+    if (target) target.innerHTML = `<span class="lang-tab-full">${info.native}</span><span class="lang-tab-short">${targetCode}</span>`;
     if (jaHead) jaHead.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> 解説 (日本語)';
     if (targetHead) targetHead.innerHTML = `<i class="fa-solid fa-language"></i> Explanation (${info.native})`;
   }
@@ -736,6 +737,7 @@
       }
       titleJaEl.textContent = lesson.titleJa || "";
       conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
+      if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
       return;
     }
 
@@ -748,6 +750,7 @@
         conceptTargetEl.innerHTML = renderOriginalConcept(localized.concept || lesson.conceptZh || lesson.conceptJa || "");
         titleJaEl.textContent = lesson.titleJa || "";
         conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
+        if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
         return;
       }
     }
@@ -777,6 +780,7 @@
     titleTargetEl.textContent = cachedTitle || lesson.titleZh || lesson.titleJa || "";
     titleJaEl.textContent = lesson.titleJa || "";
     conceptTargetEl.innerHTML = sanitizeHtml(cachedConcept || renderOriginalConcept(lesson.conceptZh || lesson.conceptJa || ""));
+    if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
 
     try {
       const translated = await translateBatch([titleItem, conceptItem]);
@@ -787,6 +791,8 @@
       conceptTargetEl.innerHTML = sanitizeHtml(translated["lesson-concept"] || renderOriginalConcept(lesson.conceptZh || ""));
     } catch (error) {
       showI18nError(error);
+    } finally {
+      if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
     }
   }
 

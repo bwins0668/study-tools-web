@@ -205,17 +205,17 @@ def run():
         has_version_param = True
         missing_versions = []
         for file in ["version.js", "app.js", "content-i18n.js"]:
-            matching = [u for u in requested_urls if file in u and "v=v2026.6.11-r13.10" in u]
+            matching = [u for u in requested_urls if file in u and "v=v2026.6.11-r14.2" in u]
             if not matching:
                 has_version_param = False
                 missing_versions.append(file)
         check("Cache Busting: core scripts have version query param", has_version_param,
               f"missing={missing_versions}")
 
-        sql_en_versioned = any("sql_en.js" in u and "v=v2026.6.11-r13.10" in u for u in requested_urls)
+        sql_en_versioned = any("sql_en.js" in u and "v=v2026.6.11-r14.2" in u for u in requested_urls)
         check("Cache Busting: sql_en.js loaded with version param", sql_en_versioned)
 
-        python_fr_versioned = any("python_fr.js" in u and "v=v2026.6.11-r13.10" in u for u in requested_urls)
+        python_fr_versioned = any("python_fr.js" in u and "v=v2026.6.11-r14.2" in u for u in requested_urls)
         check("Cache Busting: python_fr.js loaded with version param", python_fr_versioned)
 
         # ---- 16. Manifest checks ----
@@ -234,7 +234,7 @@ def run():
             
             if asset_manifest_json:
                 check("Manifest: asset-manifest.json has correct assetVersion",
-                      asset_manifest_json.get("assetVersion") == "v2026.6.11-r13.10",
+                      asset_manifest_json.get("assetVersion") == "v2026.6.11-r14.2",
                       f"version={asset_manifest_json.get('assetVersion')}")
 
         # 16.2 data/i18n_content/manifest.json HTTP 200 and schema validation
@@ -252,7 +252,7 @@ def run():
                 
             if content_manifest_json:
                 check("Manifest: content manifest has correct assetVersion",
-                      content_manifest_json.get("assetVersion") == "v2026.6.11-r13.10",
+                      content_manifest_json.get("assetVersion") == "v2026.6.11-r14.2",
                       f"version={content_manifest_json.get('assetVersion')}")
                 check("Manifest: content manifest has totalPacks = 20",
                       content_manifest_json.get("totalPacks") == 20,
@@ -275,6 +275,23 @@ def run():
                             sample_pack_ok = False
                             break
                 check("Manifest: sampled pack path from manifest is online accessible", sample_pack_ok)
+
+        # ---- 17. UX / UI checks ----
+        # 17.1 Onboarding guidance banner exists
+        guidance = page.locator("#first-run-guidance")
+        check("UX: Onboarding guidance banner exists", guidance.count() > 0)
+
+        # 17.2 Glossary clear button exists
+        glossary_btn = page.locator("#glossary-open-btn")
+        if glossary_btn.count() > 0:
+            glossary_btn.click()
+            page.wait_for_timeout(800)
+            clear_btn = page.locator("#glossary-search-clear")
+            check("UX: Glossary search clear button exists", clear_btn.count() > 0)
+            page.keyboard.press("Escape")
+            page.wait_for_timeout(300)
+        else:
+            check("UX: Glossary search clear button exists", False, "Glossary open button not found")
 
         browser.close()
 

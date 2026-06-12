@@ -262,15 +262,20 @@ window.PythonSandbox = (() => {
 
     } catch (err) {
       if (err.message && (err.message.includes('尚未配置') || err.message.includes('未配置'))) {
-        setStatus('ready', 'Web安全模式 / Webセーフモード');
+        setStatus('warning', 'Web安全模式 / Webセーフモード');
         displayOutput('', 'idle');
         const out = getOutput();
         if (out) {
           out.innerHTML = 
-            '# Web 版出于安全限制，暂不支持直接运行 Java/Python。\n' +
-            '# 如需完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 端完整版下载页面</a>。\n\n' +
-            '# セキュリティ上の制限により、現在の Web 版では Java/Python の直接実行には対応していません。\n' +
-            '# 完全なローカル実行功能を使いたい場合は、<a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" style="color: #64b5f6; text-decoration: underline;">Windows PC 版の最新版ダウンロードページ</a>へ進んでください。';
+            '<div class="safe-mode-warning">' +
+            '  <div class="warning-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
+            '  <div class="warning-text">' +
+            '    <p class="warning-title">Web安全模式 / Webセーフモード</p>' +
+            '    <p class="warning-desc">Web 版为了安全不会真实执行本地代码，这里展示的是安全模拟输出 / 学习提示。</p>' +
+            '    <p class="warning-desc-ja">セキュリティ制限のため、Web版では実際のローカルコード実行は行いません。ここでは安全なシミュレーション出力/学習ヒントを表示しています。</p>' +
+            '    <p class="download-link-box">如需完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" class="warning-link">Windows PC 端完整版下载页面</a>。</p>' +
+            '  </div>' +
+            '</div>';
         }
         return;
       }

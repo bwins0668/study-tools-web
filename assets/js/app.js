@@ -97,6 +97,18 @@ window.getCurrentSqlEngineType = function () {
  * On success: sqlEngine switches to SQLiteAdapter.
  * On failure: keeps MockSQLEngine, logs warning.
  */
+function updateSqlRunButtonState() {
+  const btn = document.getElementById("run-query-btn");
+  if (!btn) return;
+  if (!sqlEngineReady) {
+    btn.disabled = true;
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SQL engine loading... / SQLエンジンを読み込み中...`;
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = `<i class="fa-solid fa-play"></i> 実行 SQL <kbd>Ctrl+Enter</kbd>`;
+  }
+}
+
 async function tryInitSQLiteAdapter() {
   if (typeof window.SQLiteAdapter === 'undefined') {
     console.warn('[SQL Engine] SQLiteAdapter 未加载，继续使用 MockSQLEngine');
@@ -110,6 +122,7 @@ async function tryInitSQLiteAdapter() {
 
   // Temporarily mark engine as not ready during async init
   sqlEngineReady = false;
+  updateSqlRunButtonState();
 
   const adapter = new window.SQLiteAdapter();
   try {
@@ -125,9 +138,10 @@ async function tryInitSQLiteAdapter() {
     }
   } catch (e) {
     console.warn('[SQL Engine] SQLiteAdapter 初始化异常，继续使用 MockSQLEngine。', e);
+  } finally {
+    sqlEngineReady = true;
+    updateSqlRunButtonState();
   }
-
-  sqlEngineReady = true;
 }
 
 /**
@@ -2477,7 +2491,7 @@ function runPlaygroundQuery() {
       countBadge.innerText = `${res.rows.length}行`;
       countBadge.style.display = "inline";
       
-      tableHtml += `<table class="result-table"><thead><tr>`;
+      tableHtml += `<div class="table-scroll-wrapper"><table class="result-table"><thead><tr>`;
       res.columns.forEach(col => {
         tableHtml += `<th>${col}</th>`;
       });
@@ -2490,7 +2504,7 @@ function runPlaygroundQuery() {
         });
         tableHtml += `</tr>`;
       });
-      tableHtml += `</tbody></table>`;
+      tableHtml += `</tbody></table></div>`;
     } else {
       countBadge.style.display = "none";
     }
@@ -3558,6 +3572,7 @@ function renderCbtQuestion() {
   });
   
   updateCbtNavigatorGridUI();
+  if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
 }
 
 function selectCbtAnswer(oIdx) {
@@ -4663,6 +4678,7 @@ function renderCodingQuestion() {
   
   // Render navigator grid
   renderCodingNavigatorGrid();
+  if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
 }
 
 // Render grid navigator indices
@@ -4819,7 +4835,7 @@ async function verifyCurrentCodingQuestion() {
       countBadge.innerText = `${resUser.rows.length}行`;
       countBadge.style.display = "inline";
       
-      tableHtml += `<table class="result-table"><thead><tr>`;
+      tableHtml += `<div class="table-scroll-wrapper"><table class="result-table"><thead><tr>`;
       resUser.columns.forEach(col => {
         tableHtml += `<th>${col}</th>`;
       });
@@ -4831,7 +4847,7 @@ async function verifyCurrentCodingQuestion() {
         });
         tableHtml += `</tr>`;
       });
-      tableHtml += `</tbody></table>`;
+      tableHtml += `</tbody></table></div>`;
     } else {
       countBadge.style.display = "none";
     }
@@ -5308,4 +5324,47 @@ function initTheme() {
     setRuntimeLightThemeOverride(true);
   }
 }
+
+// UX-001: Onboarding Guidance dismissal and initialization
+function dismissGuidance() {
+  const guidance = document.getElementById('first-run-guidance');
+  if (guidance) {
+    guidance.style.display = 'none';
+  }
+}
+
+function startWithSubject(subject) {
+  switchSubject(subject);
+  if (subject === 'sql') {
+    loadLesson(1);
+  } else if (subject === 'itpass') {
+    loadItPassLesson(1);
+  }
+  dismissGuidance();
+}
+
+// UI-005 & UI-007: Dynamic Table Scroll Wrapping
+window.wrapAllTablesWithScrollWrapper = function() {
+  const containers = [
+    document.getElementById('concept-ja-body'),
+    document.getElementById('concept-zh-body'),
+    document.getElementById('cbt-q-body-text'),
+    document.getElementById('eq-task-ja'),
+    document.getElementById('eq-task-zh'),
+    document.getElementById('quiz-feedback'),
+    document.querySelector('.quiz-section'),
+    document.querySelector('.eq-expected-box')
+  ];
+  containers.forEach(container => {
+    if (!container) return;
+    container.querySelectorAll('table').forEach(table => {
+      if (table.parentElement.classList.contains('table-scroll-wrapper')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  });
+};
+
 

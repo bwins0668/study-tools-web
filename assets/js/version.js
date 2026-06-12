@@ -8,7 +8,7 @@
     releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.11",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.11-r13.10"
+    assetVersion: "v2026.6.11-r14.2"
   };
 
   function applyVersionInfo() {
