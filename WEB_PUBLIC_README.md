@@ -28,6 +28,9 @@
 7. **静态资源与懒加载包 Cache Busting 机制**
    * 设计了针对 Vanilla JS 静态架构的即时缓存击穿机制。在 `version.js` 中全局注入 `assetVersion: "v2026.6.11-r13.10"`，并将所有核心 CSS/JS 资源及 `ContentI18n.loadPack` 动态加载的语言包路径拼接 `?v=[assetVersion]`。
    * 在 `service-worker.js` 中升级 CACHE_NAME 为 `study-tools-web-v2026-6-11-r13-10`，并针对含版本参数的请求取消 `ignoreSearch` 模糊匹配，确保文件更新时能在首次加载即时下载生效。
+8. **静态资源 Manifest 与内容包索引校验**
+   * 新增自动生成脚本 `scripts/generate_asset_manifest.py`，用于对核心静态资源及 20 个动态语言包生成 `assets/asset-manifest.json` 与 `data/i18n_content/manifest.json` 索引文件（包含大小、哈希、版本号、以及课程总数统计）。
+   * 在 `online_smoke_test.py` 自动化巡检中引入只读校验，确保部署资源的完整性和一致性。Manifest 目前仅作版本比对与自动化检测，不参与运行时动态加载逻辑。
 
 ---
 

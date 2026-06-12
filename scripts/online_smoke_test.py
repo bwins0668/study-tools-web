@@ -218,6 +218,64 @@ def run():
         python_fr_versioned = any("python_fr.js" in u and "v=v2026.6.11-r13.10" in u for u in requested_urls)
         check("Cache Busting: python_fr.js loaded with version param", python_fr_versioned)
 
+        # ---- 16. Manifest checks ----
+        # 16.1 assets/asset-manifest.json HTTP 200 and schema validation
+        asset_manifest_url = f"{BASE_URL}/assets/asset-manifest.json"
+        res_asset = context.request.get(asset_manifest_url)
+        check("Manifest: assets/asset-manifest.json HTTP 200", res_asset.status == 200, f"status={res_asset.status}")
+        
+        asset_manifest_json = None
+        if res_asset.status == 200:
+            try:
+                asset_manifest_json = res_asset.json()
+                check("Manifest: asset-manifest.json is valid JSON", True)
+            except Exception as e:
+                check("Manifest: asset-manifest.json is valid JSON", False, str(e))
+            
+            if asset_manifest_json:
+                check("Manifest: asset-manifest.json has correct assetVersion",
+                      asset_manifest_json.get("assetVersion") == "v2026.6.11-r13.10",
+                      f"version={asset_manifest_json.get('assetVersion')}")
+
+        # 16.2 data/i18n_content/manifest.json HTTP 200 and schema validation
+        content_manifest_url = f"{BASE_URL}/data/i18n_content/manifest.json"
+        res_content = context.request.get(content_manifest_url)
+        check("Manifest: data/i18n_content/manifest.json HTTP 200", res_content.status == 200, f"status={res_content.status}")
+        
+        content_manifest_json = None
+        if res_content.status == 200:
+            try:
+                content_manifest_json = res_content.json()
+                check("Manifest: content manifest is valid JSON", True)
+            except Exception as e:
+                check("Manifest: content manifest is valid JSON", False, str(e))
+                
+            if content_manifest_json:
+                check("Manifest: content manifest has correct assetVersion",
+                      content_manifest_json.get("assetVersion") == "v2026.6.11-r13.10",
+                      f"version={content_manifest_json.get('assetVersion')}")
+                check("Manifest: content manifest has totalPacks = 20",
+                      content_manifest_json.get("totalPacks") == 20,
+                      f"packs={content_manifest_json.get('totalPacks')}")
+                
+                # Check for critical packs
+                packs = content_manifest_json.get("packs", [])
+                has_sql_en = any(p.get("subject") == "sql" and p.get("lang") == "en" for p in packs)
+                has_python_fr = any(p.get("subject") == "python" and p.get("lang") == "fr" for p in packs)
+                check("Manifest: content manifest contains sql/en", has_sql_en)
+                check("Manifest: content manifest contains python/fr", has_python_fr)
+                
+                # Sample validation of manifest path loading
+                sample_pack_ok = True
+                for p in packs:
+                    if p.get("subject") == "sql" and p.get("lang") == "en":
+                        pack_path = p.get("path")
+                        res_pack = context.request.get(f"{BASE_URL}/{pack_path}")
+                        if res_pack.status != 200:
+                            sample_pack_ok = False
+                            break
+                check("Manifest: sampled pack path from manifest is online accessible", sample_pack_ok)
+
         browser.close()
 
     # ---- Summary ----

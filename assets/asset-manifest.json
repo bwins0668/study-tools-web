@@ -1,0 +1,104 @@
+{
+  "assetVersion": "v2026.6.11-r13.10",
+  "generatedAt": "2026-06-12T05:16:02Z",
+  "webVersion": "v2026.6.11",
+  "releaseVersion": "v2026.6.11",
+  "assets": [
+    {
+      "path": "assets/js/version.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 1494,
+      "sha256": "2695619c8fd995dae6463d2c6e0d2ebdb85504a950d3dc7f1e830c61fb5d23a8",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/js/app.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 209745,
+      "sha256": "26b90fdad58189c0239da0b7c989eea02e1c1ce7a851cc1f896e55d14756f841",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/js/i18n.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 60374,
+      "sha256": "6aea1d1501c6c1a47d6173ac1e4c580ba10b7d07cc626709bb9c291a1777997a",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/js/content-i18n.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 4082,
+      "sha256": "85de2c63f2892f757a8ed822e8d751f45dcab8b4b3c7eafefced4ff448e93274",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/js/i18n-ui-dict.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 117102,
+      "sha256": "8a9cc0184fe882154c49dab265a50c96dd43c5338176498b635784231bf70500",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/js/glossary.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 10970,
+      "sha256": "97afb89223fe1b9a49a0e335a4657c2da94fb82298c125f7a473f510f7efa127",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/js/code-runner-api.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 1104,
+      "sha256": "375e2a58fdf09f274e21876556e2a1997b1dec16978df36a2dae3f497b6debdd",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/css/index.css",
+      "type": "css",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 168559,
+      "sha256": "cfe37d36339ea727ce761e61f1169b73310c39c9ee59bb96b92c8289270306cd",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/css/glossary.css",
+      "type": "css",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 6872,
+      "sha256": "3c04ffa6d81574362419306ed3f424831305cb5da07ac9b8d2a95f6cfd384812",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "assets/images/og-study-tools-v2026-6-11.png",
+      "type": "image",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 85582,
+      "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
+      "cacheStrategy": "seo"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "type": "webmanifest",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 1066,
+      "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
+      "cacheStrategy": "pwa"
+    },
+    {
+      "path": "service-worker.js",
+      "type": "javascript",
+      "version": "v2026.6.11-r13.10",
+      "sizeBytes": 3887,
+      "sha256": "b3f315280b3d5e79dd5ebc6a3c4c867a8260e16e91bfa2e6b284a569752df368",
+      "cacheStrategy": "pwa"
+    }
+  ]
+}
