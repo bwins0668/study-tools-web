@@ -21,6 +21,8 @@ The Web Public edition is optimized for quick previews, lightweight study, and m
 | **Database & History** | Stored in browser memory | Stored in local SQL database (`study_ai.db`) |
 | **AI Learning Mentor** | Requires user's own API keys | Supports local and remote AI integration |
 
+*Note: AI-backed translation fallback via `/api/i18n/translate` is disabled on the public web runtime to eliminate 405 preflight log noise. It falls back to static multilingual content packs (en/vi/my/fr).*
+
 ---
 
 ## 🚀 Key Features

@@ -77,9 +77,13 @@ def run():
 
         console_errors.clear()
         network_404s.clear()
+        network_405s = []
+        requested_urls = []
 
         page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
         page.on("response", lambda resp: network_404s.append(resp.url) if resp.status == 404 else None)
+        page.on("response", lambda resp: network_405s.append(resp.url) if resp.status == 405 else None)
+        page.on("request", lambda req: requested_urls.append(req.url))
 
         # ---- 1. Homepage HTTP 200 ----
         resp = page.goto(BASE_URL, wait_until="networkidle", timeout=30000)
@@ -163,6 +167,10 @@ def run():
         safe_ok = page.evaluate("""() => {
             var scripts = document.querySelectorAll('script[src]');
             for (var s of scripts) {
+                try {
+                    var url = new URL(s.src);
+                    if (url.origin === location.origin) continue;
+                } catch (e) {}
                 if (s.src.includes('localhost') || s.src.includes('127.0.0.1')) return false;
             }
             return true;
@@ -174,7 +182,6 @@ def run():
         benign_patterns = [
             "favicon.ico",
             "Third-party cookie",
-            "status of 405",       # language pack preflight OPTIONS, not real error
         ]
         real_errors = [e for e in console_errors if not any(b in e for b in benign_patterns)]
         check("Console: no P0 JS errors", len(real_errors) == 0,
@@ -184,6 +191,13 @@ def run():
         real_404s = [u for u in network_404s if "favicon" not in u.lower()]
         check("Network: no core resource 404s", len(real_404s) == 0,
               f"{len(real_404s)} 404s: {real_404s[:5]}")
+
+        # ---- 14. Network 405 & Translate API requests ----
+        translate_requests = [u for u in requested_urls if "/api/i18n/translate" in u]
+        check("Network: no /api/i18n/translate requests", len(translate_requests) == 0,
+              f"calls={len(translate_requests)}")
+        check("Network: no 405 status responses", len(network_405s) == 0,
+              f"{len(network_405s)} 405s: {network_405s[:5]}")
 
         browser.close()
 

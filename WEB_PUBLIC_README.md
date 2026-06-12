@@ -21,6 +21,8 @@
    * 移除了本地 JDK 与 Python 后端，执行代码时接口（`/api/execute`）失败会触发 `code-runner-api.js` 抛出 `"尚未配置"` 错误，从而引导展示 Web Safe Mode 提示并提供完整版下载链接。
 4. **移动端适配优化**
    * `assets/css/index.css` 包含移动端折叠抽屉目录导航，及堆叠对照自适应布局。
+5. **AI 翻译 API 静默降级**
+   * 在公网 Web 运行环境下（通过 `isWebPublicRuntime()` 识别），自动跳过向 `/api/i18n/translate` 发送翻译请求并直接返回空对象以进行静默降级，彻底消除了控制台和 smoke test 中产生的 405 preflight 错误噪音，且不影响已有静态多语言包的渲染与加载。
 
 ---
 
