@@ -8,6 +8,20 @@ let sqlSubMode = 'lessons'; // 'lessons' | 'exam'
 let pythonSubMode = 'lessons'; // 'lessons' | 'exam'
 let javaSubMode = 'lessons'; // 'lessons' | 'exam'
 
+// Mobile navigation drawers toggle helpers
+window.toggleMobileSidebar = function() {
+  document.body.classList.toggle('mobile-sidebar-open');
+  document.body.classList.remove('mobile-playground-open');
+};
+window.toggleMobilePlayground = function() {
+  document.body.classList.toggle('mobile-playground-open');
+  document.body.classList.remove('mobile-sidebar-open');
+};
+window.closeMobileDrawers = function() {
+  document.body.classList.remove('mobile-sidebar-open', 'mobile-playground-open');
+};
+
+
 // SQL Hub original state
 let currentLessonId = 1;
 let completedLessons = [];
@@ -81,187 +95,8 @@ const SG_TEXTBOOK_PDF = "情報セキュリティー.pdf";
 const ITPASS_TEXTBOOK_PDF = "令和08年-イメージ-クレバー方式でよくわかる-かやのき先生のITパスポート教室_00.pdf";
 let currentPdfObjectUrl = null;
 
-// Initialize the SQL Engine (dual-engine: SQLiteAdapter with MockSQLEngine fallback)
+// Initialize the Mock SQL Engine
 const sqlEngine = new MockSQLEngine();
-let sqlEngineType = 'MockSQLEngine';   // 'MockSQLEngine' | 'SQLiteAdapter'
-let sqlEngineReady = true;             // MockSQLEngine is synchronous → always ready
-let sqliteAdapterInstance = null;      // reference to the async SQLiteAdapter
-
-// Expose engine type for Console debugging
-window.getCurrentSqlEngineType = function () {
-  return sqlEngineType;
-};
-
-/**
- * Try to upgrade to SQLiteAdapter asynchronously.
- * On success: sqlEngine switches to SQLiteAdapter.
- * On failure: keeps MockSQLEngine, logs warning.
- */
-function updateSqlRunButtonState() {
-  const btn = document.getElementById("run-query-btn");
-  if (!btn) return;
-  if (!sqlEngineReady) {
-    btn.disabled = true;
-    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> SQL engine loading... / SQLエンジンを読み込み中...`;
-  } else {
-    btn.disabled = false;
-    btn.innerHTML = `<i class="fa-solid fa-play"></i> 実行 SQL <kbd>Ctrl+Enter</kbd>`;
-  }
-}
-
-async function tryInitSQLiteAdapter() {
-  if (typeof window.SQLiteAdapter === 'undefined') {
-    console.warn('[SQL Engine] SQLiteAdapter 未加载，继续使用 MockSQLEngine');
-    return;
-  }
-  if (typeof initSqlJs === 'undefined') {
-    console.warn('[SQL Engine] sql.js 未加载（assets/vendor/sql-wasm.js），继续使用 MockSQLEngine。' +
-      '请将 sql-wasm.js 和 sql-wasm.wasm 放入 assets/vendor/ 目录。');
-    return;
-  }
-
-  // Temporarily mark engine as not ready during async init
-  sqlEngineReady = false;
-  updateSqlRunButtonState();
-
-  const adapter = new window.SQLiteAdapter();
-  try {
-    const ok = await adapter.init();
-    if (ok && adapter.isReady()) {
-      // Swap engines
-      sqliteAdapterInstance = adapter;
-      sqlEngineType = 'SQLiteAdapter';
-      console.log('[SQL Engine] ✅ 已切换为 SQLiteAdapter (sql.js WASM)');
-    } else {
-      console.warn('[SQL Engine] SQLiteAdapter 初始化失败，继续使用 MockSQLEngine。原因: ' +
-        (adapter.getLastError() || 'unknown'));
-    }
-  } catch (e) {
-    console.warn('[SQL Engine] SQLiteAdapter 初始化异常，继续使用 MockSQLEngine。', e);
-  } finally {
-    sqlEngineReady = true;
-    updateSqlRunButtonState();
-  }
-}
-
-/**
- * Execute SQL via the active engine.
- * Delegates to either SQLiteAdapter or MockSQLEngine depending on sqlEngineType.
- *
- * @param {string} sql
- * @returns {{success:boolean, columns?:string[], rows?:any[][], message?:string, error?:string}}
- */
-function executeSqlViaEngine(sql) {
-  if (sqlEngineType === 'SQLiteAdapter' && sqliteAdapterInstance && sqliteAdapterInstance.isReady()) {
-    return sqliteAdapterInstance.execute(sql);
-  }
-  // Fallback to MockSQLEngine
-  return sqlEngine.execute(sql);
-}
-
-// --- Mobile Sidebar Drawer ---
-function openMobileSidebar() {
-  document.body.classList.add('mobile-sidebar-open');
-  const btn = document.getElementById('mobile-sidebar-toggle');
-  if (btn) btn.setAttribute('aria-expanded', 'true');
-}
-
-function closeMobileSidebar() {
-  document.body.classList.remove('mobile-sidebar-open');
-  const btn = document.getElementById('mobile-sidebar-toggle');
-  if (btn) btn.setAttribute('aria-expanded', 'false');
-}
-
-function toggleMobileSidebar() {
-  if (document.body.classList.contains('mobile-sidebar-open')) {
-    closeMobileSidebar();
-  } else {
-    openMobileSidebar();
-  }
-}
-
-// --- Mobile Subject Dropdown (主导航 Dropdown) ---
-
-// Subject metadata for label/icon updates
-const SUBJECT_META = {
-  sql:    { label: 'SQL 学习',            icon: 'fa-solid fa-database' },
-  java:   { label: 'Java 学習',           icon: 'fa-brands fa-java' },
-  python: { label: 'Python 学习',         icon: 'fa-brands fa-python' },
-  itpass: { label: 'ITパスポート 备考', icon: 'fa-solid fa-graduation-cap' },
-  sg:     { label: 'SG 备考',             icon: 'fa-solid fa-shield-halved' },
-  typing: { label: '日本語タイピング',     icon: 'fa-solid fa-keyboard' },
-};
-
-function toggleMobileSubjectMenu() {
-  const panel = document.getElementById('subject-tabs-panel');
-  const btn   = document.getElementById('mobile-subject-toggle');
-  if (!panel || !btn) return;
-  const isOpen = panel.classList.toggle('open');
-  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-}
-
-function closeMobileSubjectMenu() {
-  const panel = document.getElementById('subject-tabs-panel');
-  const btn   = document.getElementById('mobile-subject-toggle');
-  if (panel) panel.classList.remove('open');
-  if (btn)   btn.setAttribute('aria-expanded', 'false');
-}
-
-/** 切换科目后更新手机端导航按钮文字+图标 */
-function updateMobileSubjectLabel(subject) {
-  const meta  = SUBJECT_META[subject];
-  if (!meta) return;
-  const label = document.getElementById('mobile-subject-label');
-  const icon  = document.getElementById('mobile-subject-icon');
-  if (label) label.textContent = meta.label;
-  if (icon)  icon.className = meta.icon;
-  closeMobileSubjectMenu(); // 选完自动关闭
-}
-
-// --- Mobile Sub-Header Dropdown (二级导航 Dropdown) ---
-
-const SUB_MENUS = ['sql', 'itpass', 'sg', 'java', 'python'];
-
-function toggleMobileSubMenu(subject) {
-  const panelId = `${subject}-sub-tabs-panel`;
-  const btnId   = `${subject}-sub-toggle`;
-  const panel   = document.getElementById(panelId);
-  const btn     = document.getElementById(btnId);
-  if (!panel || !btn) return;
-
-  const isOpen = panel.classList.toggle('open');
-  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-
-  // 关闭其他展开的子菜单
-  SUB_MENUS.forEach(s => {
-    if (s !== subject) closeMobileSubMenu(s);
-  });
-}
-
-function closeMobileSubMenu(subject) {
-  const panel = document.getElementById(`${subject}-sub-tabs-panel`);
-  const btn   = document.getElementById(`${subject}-sub-toggle`);
-  if (panel) panel.classList.remove('open');
-  if (btn)   btn.setAttribute('aria-expanded', 'false');
-}
-
-function closeAllMobileSubMenus() {
-  SUB_MENUS.forEach(s => closeMobileSubMenu(s));
-}
-
-/**
- * 切换子模式后更新对应的二级导航按钮文字
- * @param {string} subject - 'sql' | 'itpass' | 'sg' | 'java' | 'python'
- * @param {string} label   - 要显示的文字
- * @param {string} iconClass - FontAwesome class string
- */
-function updateMobileSubLabel(subject, label, iconClass) {
-  const labelEl = document.getElementById(`${subject}-sub-label`);
-  const iconEl  = document.getElementById(`${subject}-sub-icon`);
-  if (labelEl) labelEl.textContent = label;
-  if (iconEl)  iconEl.className = iconClass;
-  closeMobileSubMenu(subject); // 选完自动关闭
-}
 
 // On Document Ready
 document.addEventListener("DOMContentLoaded", () => {
@@ -275,14 +110,12 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProgressUI();
   setupEditorLineNumbers();
   setupKeyboardShortcuts();
-
+  
   // Set default values for calculators in IT Passport Mode
   initItPassCalculators();
 
-  // Start heartbeat to keep local server alive (桌面版专用; Web 公开版跳过)
-  if (!window.STUDY_TOOLS_DISABLE_LOCAL_BACKEND) {
-    startHeartbeat();
-  }
+  // Start heartbeat to keep local server alive
+  startHeartbeat();
 
   // Initialize auth UI (try/catch — feature may not exist)
   try { if (window.StudyAuthUI) window.StudyAuthUI.initAuthUI(); }
@@ -292,75 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
   currentSubject = "";
   switchSubject('sql');
   initTheme();
-
-  // Async: attempt to upgrade to SQLiteAdapter
-  tryInitSQLiteAdapter();
-
-  // --- Mobile sidebar drawer bindings ---
-  const mobileToggle = document.getElementById('mobile-sidebar-toggle');
-  if (mobileToggle) {
-    mobileToggle.addEventListener('click', toggleMobileSidebar);
-  }
-  const mobileBackdrop = document.getElementById('mobile-sidebar-backdrop');
-  if (mobileBackdrop) {
-    mobileBackdrop.addEventListener('click', closeMobileSidebar);
-  }
-  // ESC key closes mobile sidebar
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && document.body.classList.contains('mobile-sidebar-open')) {
-      closeMobileSidebar();
-      closeMobileSubjectMenu();
-      closeAllMobileSubMenus();
-    }
-  });
-  // Close mobile sidebar when clicking a lesson nav item (mobile only)
-  const lessonsNav = document.getElementById('lessons-nav');
-  if (lessonsNav) {
-    lessonsNav.addEventListener('click', (e) => {
-      if (window.innerWidth <= 768 && e.target.closest('.lesson-nav-item')) {
-        closeMobileSidebar();
-      }
-    });
-  }
-  // Close mobile sidebar on window resize past breakpoint
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-      closeMobileSidebar();
-      closeMobileSubjectMenu();
-      closeAllMobileSubMenus();
-    }
-  });
-  // Click outside to close mobile subject/sub dropdowns
-  document.addEventListener('click', (e) => {
-    const subjectSelector = document.getElementById('header-subject-selector');
-    if (subjectSelector && !subjectSelector.contains(e.target)) {
-      closeMobileSubjectMenu();
-    }
-    const subHeaderBars = document.querySelectorAll('.sub-header-bar');
-    let insideSubHeader = false;
-    subHeaderBars.forEach(el => { if (el.contains(e.target)) insideSubHeader = true; });
-    if (!insideSubHeader) {
-      closeAllMobileSubMenus();
-    }
-  });
-
-  // Mobile subject tabs panel click handler (event delegation to ensure mobile click triggers switchSubject)
-  const subjectPanel = document.getElementById('subject-tabs-panel');
-  if (subjectPanel) {
-    subjectPanel.addEventListener('click', (event) => {
-      if (window.innerWidth <= 768) {
-        const btn = event.target.closest('[data-subject]');
-        if (!btn) return;
-        const subject = btn.dataset.subject;
-        if (subject) {
-          event.preventDefault();
-          event.stopPropagation();
-          switchSubject(subject);
-          closeMobileSubjectMenu();
-        }
-      }
-    });
-  }
 });
 
 // Heartbeat function
@@ -498,7 +262,7 @@ function switchSubject(subject) {
   
   // Prompt if a CBT or Coding mock exam is currently active
   if (activeCbtExam && !activeCbtExam.isSubmitted) {
-    if (!confirm("現在実行中のITパスポート試験があります。科目を切り替えると現在の試験は中断され、データが破失します。切り替えますか？\n(当前有正在进行的 IT Passport 考试，切换科目将中断考试且不保存数据，确定要切换吗？)")) {
+    if (!confirmKey("dialog.switchExamConfirm")) {
       return;
     }
     if (cbtTimerInterval) clearInterval(cbtTimerInterval);
@@ -506,9 +270,9 @@ function switchSubject(subject) {
     if (currentSubject === 'itpass') itpassSubMode = 'lessons';
     else if (currentSubject === 'sg') sgSubMode = 'lessons';
   }
-  
+
   if (activeCodingExam && !activeCodingExam.isSubmitted) {
-    if (!confirm("現在実行中の実技模擬試験があります。科目を切り替えると現在の試験は中断され、数据が破失します。切り替えますか？\n(当前有正在进行的实操模拟考试，切换科目将中断考试且不保存数据，确定要切换吗？)")) {
+    if (!confirmKey("dialog.switchExamConfirm")) {
       return;
     }
     if (cbtTimerInterval) clearInterval(cbtTimerInterval);
@@ -563,9 +327,14 @@ function switchSubject(subject) {
   
   if (subject === "typing") {
     if (window.TypingHub) window.TypingHub.open();
+    if (mainTitle) {
+      mainTitle.setAttribute("data-i18n", "nav.typing");
+      mainTitle.innerText = I18n.t("nav.typing");
+    }
   } else if (subject === "sql") {
     logoIcon.className = "fa-solid fa-database logo-icon";
-    mainTitle.innerText = "SQL / MySQL 学习";
+    mainTitle.setAttribute("data-i18n", "nav.sql");
+    mainTitle.innerText = I18n.t("nav.sql");
     
     // Show/hide sub-headers and containers
     document.getElementById("sql-sub-header").style.display = "flex";
@@ -589,14 +358,15 @@ function switchSubject(subject) {
     document.getElementById("lesson-glossary").style.display = "none";
     document.getElementById("example-pre-block").style.display = "block";
     document.getElementById("copy-example-btn").style.display = "inline-flex";
-    document.getElementById("example-header-title").innerHTML = `<i class="fa-solid fa-code"></i> SQL構文例 (SQL示例)`;
+    document.getElementById("example-header-title").innerHTML = `<i class="fa-solid fa-code"></i> <span data-i18n="lesson.sqlExample">${I18n.t("lesson.sqlExample")}</span>`;
     document.getElementById("java-vocab-section").style.display = "none";
     
     // Toggle sub-modes (Textbook vs Exam)
     switchSqlSubMode(sqlSubMode);
   } else if (subject === "java") {
     logoIcon.className = "fa-brands fa-java logo-icon";
-    mainTitle.innerText = "Java 学習";
+    mainTitle.setAttribute("data-i18n", "nav.java");
+    mainTitle.innerText = I18n.t("nav.java");
     document.body.classList.add('mode-java');
     
     document.getElementById("java-sub-header").style.display = "flex";
@@ -619,13 +389,14 @@ function switchSubject(subject) {
     document.getElementById("example-pre-block").style.display = "block";
     document.getElementById("copy-example-btn").style.display = "inline-flex";
     document.getElementById("itpass-quiz-nav").style.display = "none";
-    document.getElementById("example-header-title").innerHTML = `<i class="fa-brands fa-java"></i> Java コード例 (示例代码)`;
+    document.getElementById("example-header-title").innerHTML = `<i class="fa-brands fa-java"></i> <span data-i18n="lesson.javaExample">${I18n.t("lesson.javaExample")}</span>`;
 
     // Toggle sub-modes (Textbook vs Exam)
     switchJavaSubMode(javaSubMode);
   } else if (subject === "python") {
     logoIcon.className = "fa-brands fa-python logo-icon";
-    mainTitle.innerText = "Python 学习";
+    mainTitle.setAttribute("data-i18n", "nav.python");
+    mainTitle.innerText = I18n.t("nav.python");
     document.body.classList.add('mode-python');
     
     document.getElementById("python-sub-header").style.display = "flex";
@@ -647,14 +418,15 @@ function switchSubject(subject) {
     document.getElementById("example-pre-block").style.display = "block";
     document.getElementById("copy-example-btn").style.display = "inline-flex";
     document.getElementById("itpass-quiz-nav").style.display = "none";
-    document.getElementById("example-header-title").innerHTML = `<i class="fa-brands fa-python"></i> Python コード例 (示例代码)`;
+    document.getElementById("example-header-title").innerHTML = `<i class="fa-brands fa-python"></i> <span data-i18n="lesson.pythonExample">${I18n.t("lesson.pythonExample")}</span>`;
     document.getElementById("java-vocab-section").style.display = "none";
 
     // Toggle sub-modes (Textbook vs Exam)
     switchPythonSubMode(pythonSubMode);
   } else if (subject === "sg") {
     logoIcon.className = "fa-solid fa-shield-halved logo-icon";
-    mainTitle.innerText = "情報セキュリティー 备考";
+    mainTitle.setAttribute("data-i18n", "nav.sg");
+    mainTitle.innerText = I18n.t("nav.sg");
     document.body.classList.add('mode-sg');
     
     document.getElementById("sg-sub-header").style.display = "flex";
@@ -677,7 +449,8 @@ function switchSubject(subject) {
     switchSgSubMode(sgSubMode);
   } else {
     logoIcon.className = "fa-solid fa-graduation-cap logo-icon";
-    mainTitle.innerText = "ITパスポート 备考";
+    mainTitle.setAttribute("data-i18n", "nav.itpass");
+    mainTitle.innerText = I18n.t("nav.itpass");
     
     document.getElementById("itpass-sub-header").style.display = "flex";
     document.getElementById("header-challenge").style.display = "none";
@@ -695,8 +468,6 @@ function switchSubject(subject) {
     switchItPassSubMode(itpassSubMode);
   }
   
-  // Update mobile subject dropdown label (mobile-only, no-op on desktop)
-  updateMobileSubjectLabel(subject);
   updateProgressUI();
 }
 
@@ -766,12 +537,6 @@ function switchItPassSubMode(mode) {
       document.getElementById("cbt-results-screen").style.display = "none";
     }
   }
-  // Update mobile sub-header label
-  if (mode === 'lessons') {
-    updateMobileSubLabel('itpass', '教科书章节学习', 'fa-solid fa-book-open');
-  } else {
-    updateMobileSubLabel('itpass', '过去问道场 & 模拟考试', 'fa-solid fa-compass');
-  }
 }
 
 // Switch SG sub modes (lessons vs. dojo/mock exam)
@@ -806,25 +571,18 @@ function switchSgSubMode(mode) {
       document.getElementById("cbt-results-screen").style.display = "none";
     }
   }
-  // Update mobile sub-header label
-  if (mode === 'lessons') {
-    updateMobileSubLabel('sg', '教科书章节学习', 'fa-solid fa-book-open');
-  } else {
-    updateMobileSubLabel('sg', '过去问道场 & 模拟考试', 'fa-solid fa-compass');
-  }
 }
 
 // Reset all progress for the active subject
 function resetAllProgress() {
-  const msgMap = {
-    sql:    "すべての学習進捗をリセットしますか？ (确定要重置所有 SQL 学习进度吗？)",
-    itpass: "ITパスポートの学習進捗をリセットしますか？ (确定要重置所有 IT Passport 学习进度吗？)",
-    java:   "Java学習進捗をリセットしますか？ (确定要重置所有 Java 学习进度吗？)",
-    sg:     "情報セキュリティの学習進捗をリセットします加？ (确定要重置所有 SG 学习进度吗？)",
-    python: "Python学習進捗をリセットしますか？ (确定要重置所有 Python 学习进度吗？)"
+  const subjectNames = {
+    sql: "SQL",
+    itpass: "IT Passport",
+    java: "Java",
+    sg: "SG",
+    python: "Python"
   };
-  const msg = msgMap[currentSubject] || msgMap.sql;
-  if (confirm(msg)) {
+  if (confirmKey("dialog.resetProgressConfirm", { subject: subjectNames[currentSubject] || currentSubject })) {
     if (currentSubject === "sql") {
       completedLessons = [];
       localStorage.removeItem("sql_hub_completed");
@@ -841,9 +599,8 @@ function resetAllProgress() {
     } else if (currentSubject === "python") {
       completedPythonLessons = [];
       localStorage.removeItem("python_completed_lessons");
-      if (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') {
-        const pl = window.PYTHON_LESSONS || PYTHON_LESSONS;
-        pl.forEach(l => localStorage.removeItem('python_progress_' + l.id));
+      if (typeof PYTHON_LESSONS !== 'undefined') {
+        PYTHON_LESSONS.forEach(l => localStorage.removeItem('python_progress_' + l.id));
       }
       initSidebar();
       loadPythonLesson(currentPythonLessonId);
@@ -890,7 +647,7 @@ function updateProgressUI() {
     document.getElementById("progress-fill").style.width = `${pct}%`;
     if (typeof JavaSandbox !== 'undefined') JavaSandbox.updateProgressDisplay();
   } else if (currentSubject === 'python') {
-    const total = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).length : 240;
+    const total = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.length : 240;
     const completedCount = completedPythonLessons.length;
     const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
     document.getElementById("progress-percentage").innerText = `${pct}%`;
@@ -1050,7 +807,7 @@ function initSidebar() {
     renderFlatSidebar(bookLessons, completedJavaLessons, currentJavaLessonId, selectJavaLesson, "java");
   } else if (currentSubject === "python") {
     titleText.innerText = "Python コース (課程目録)";
-    const lessonsList = window.PYTHON_LESSONS || (typeof PYTHON_LESSONS !== 'undefined' ? PYTHON_LESSONS : []);
+    const lessonsList = typeof PYTHON_LESSONS !== 'undefined' ? PYTHON_LESSONS : [];
     renderFlatSidebar(lessonsList, completedPythonLessons, currentPythonLessonId, selectPythonLesson, "python");
   } else if (currentSubject === "sg") {
     titleText.innerText = "テキスト章節 (SG 教科书章节)";
@@ -1244,22 +1001,18 @@ function switchJavaBook(book) {
   
   initSidebar();
   loadJavaLesson(currentJavaLessonId);
-  // Update mobile sub label
-  const bookLabel = book === 'nyumon' ? '入門編 (基础篇)' : '実践編 (进阶篇)';
-  const bookIcon  = book === 'nyumon' ? 'fa-solid fa-seedling' : 'fa-solid fa-rocket';
-  updateMobileSubLabel('java', bookLabel, bookIcon);
 }
 
 // Load Java lesson into content panel
 function loadJavaLesson(id) {
+  document.body.classList.remove('mobile-sidebar-open');
   if (typeof JAVA_LESSONS === 'undefined') return;
   const lesson = JAVA_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-
-  ensureContentPackForCurrentLesson();
-
+  
   currentJavaLessonId = id;
 
+  // Resolve localized title/concept for current subject
   const localized = getLessonLocalizedText("java", lesson);
 
   // Header
@@ -1406,7 +1159,7 @@ function javaQuizPrev() {
     javaQuizIdx--;
     renderJavaQuizQuestion();
   } else {
-    showToast("已经是第一题了。", "info");
+    showToastKey("toast.alreadyFirst", "info");
   }
 }
 
@@ -1416,7 +1169,7 @@ function javaQuizNext() {
     javaQuizIdx++;
     renderJavaQuizQuestion();
   } else {
-    showToast("已经是最后一题了。", "info");
+    showToastKey("toast.alreadyLast", "info");
   }
 }
 
@@ -1484,25 +1237,38 @@ function markJavaProgress(lessonId, action) {
     if (typeof JavaSandbox !== 'undefined') JavaSandbox.updateProgressDisplay();
     
     const title = lesson ? lesson.titleJa : lessonId;
-    showToast(`🏆 ${title} — クイズ合格！章节标记完成！`, "success");
+    showToastKey("toast.lessonQuizPassed", "success", { title: title });
   }
+}
+
+/**
+ * Resolve localized lesson title/concept from external language pack.
+ * Currently supports: subject "sql", language en-US.
+ * Falls back to null silently if ContentI18n is unavailable or no translation exists.
+ */
+function getLessonLocalizedText(subject, lesson) {
+  if (!window.ContentI18n || !lesson || !lesson.id) return null;
+  var lang = window.I18n && typeof window.I18n.getLanguage === "function"
+    ? window.I18n.getLanguage()
+    : "default-ja-zh";
+  return window.ContentI18n.get(subject, lesson.id, lang);
 }
 
 // Load Lesson Details into Content Panel
 function loadLesson(id) {
+  document.body.classList.remove('mobile-sidebar-open');
   const lesson = SQL_LESSONS.find(l => l.id === id);
   if (!lesson) return;
 
-  ensureContentPackForCurrentLesson();
-
+  // Resolve localized title/concept for current subject
   const localized = getLessonLocalizedText("sql", lesson);
-  
+
   // Header
   document.getElementById("lesson-section-badge").innerText = lesson.section;
   document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
   document.getElementById("locate-pdf-btn").style.display = "none";
-  
+
   // Concept Body
   if (localized && localized.concept) {
     document.getElementById("concept-ja-body").innerHTML = formatMarkdown(localized.concept);
@@ -1548,11 +1314,10 @@ function loadLesson(id) {
 
 // Load IT Passport Lesson details into Center
 function loadItPassLesson(id) {
+  document.body.classList.remove('mobile-sidebar-open');
   const lesson = IT_PASSPORT_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-
-  ensureContentPackForCurrentLesson();
-
+  
   // Load checking quizzes completed index array
   const completedItPassQuizSaved = localStorage.getItem(`itpass_quiz_completed_${id}`);
   let completedQuizIndices = [];
@@ -1569,6 +1334,7 @@ function loadItPassLesson(id) {
   itpassQuizIdx = 0;
   selectedItPassQuizOption = null;
   
+  // Resolve localized text for IT Passport (Round 8.1 addition)
   const localized = getLessonLocalizedText("itpass", lesson);
   
   // Header details
@@ -1636,11 +1402,10 @@ function loadItPassLesson(id) {
 
 // Load SG Lesson details into Center
 function loadSgLesson(id) {
+  document.body.classList.remove('mobile-sidebar-open');
   const lesson = SG_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-
-  ensureContentPackForCurrentLesson();
-
+  
   // Load checking quizzes completed index array
   const completedSgQuizSaved = localStorage.getItem(`sg_quiz_completed_${id}`);
   let completedQuizIndices = [];
@@ -1657,6 +1422,7 @@ function loadSgLesson(id) {
   sgQuizIdx = 0;
   selectedSgQuizOption = null;
   
+  // Resolve localized title/concept for current subject
   const localized = getLessonLocalizedText("sg", lesson);
   
   // Header details
@@ -1722,32 +1488,7 @@ function loadSgLesson(id) {
   document.querySelector(".lesson-content").scrollTop = 0;
 }
 
-function getLessonLocalizedText(subject, lesson) {
-  if (!window.ContentI18n || !lesson || !lesson.id) return null;
-  var lang = window.I18n && typeof window.I18n.getLanguage === "function"
-    ? window.I18n.getLanguage()
-    : "default-ja-zh";
-  return window.ContentI18n.get(subject, lesson.id, lang);
-}
-
-// Ensure the content language pack for the current subject+language is loaded.
-// Fires async load; when the pack arrives, refreshes the lesson display.
-function ensureContentPackForCurrentLesson() {
-  if (!window.ContentI18n || typeof window.ContentI18n.loadPack !== "function") return;
-  var lang = window.I18n && typeof window.I18n.getLanguage === "function"
-    ? window.I18n.getLanguage()
-    : "default-ja-zh";
-  var normLang = window.ContentI18n.normalizeLang(lang);
-  if (normLang === "ja" || normLang === "zh" || normLang === "ko") return;
-  var subject = currentSubject;
-  window.ContentI18n.loadPack(subject, lang, true).then(function(loaded) {
-    if (loaded && typeof refreshI18nForCurrentLesson === "function") {
-      refreshI18nForCurrentLesson();
-    }
-  });
-}
-
-// Simple parser to render basic markdown bold and code blocks into HTML safely
+// Simple parser to render basic markdown bold, code blocks, and fenced code blocks into HTML safely
 function formatMarkdown(text) {
   if (!text) return "";
 
@@ -1776,19 +1517,19 @@ function formatMarkdown(text) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-  
+
   // Step 3: Replace **bold** with <strong>bold</strong>
   escaped = escaped.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-  
+
   // Step 4: Replace `code` with <code>code</code>
   escaped = escaped.replace(/`(.*?)`/g, "<code>$1</code>");
-  
+
   // Step 5: Highlight bilingual SQL and IT terms
   escaped = escaped.replace(/([ぁ-んァ-ヶa-zA-Z0-9_ー]+)\s*\((AND|OR|WHERE|SELECT|LIMIT|ORDER BY|GROUP BY|HAVING|JOIN|INNER JOIN|LEFT JOIN|SUM|AVG|COUNT|MAX|MIN|BETWEEN|LIKE|IS NULL|IS NOT NULL|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|COMMIT|ROLLBACK|CPU|RAM|ROM|HDD|SSD|OS|WAF|RAID|MTBF|MTTR|SLA|DNS|DHCP|VoIP|SWOT|PPM|ERP|SCM|CRM|DX|ROI|!=|&lt;&gt;|=|\s*&gt;=\s*|\s*&lt;=\s*|\s*&gt;\s*|\s*&lt;\s*)\)/g, '<span class="vocab-highlight">$1 ($2)</span>');
-  
-  // Step 6: Restore fenced code blocks
+
+  // Step 6: Restore code block placeholders (use callback to avoid $1/$& replacement pattern issues)
   for (let i = 0; i < codeBlocks.length; i++) {
-    escaped = escaped.replace("@@CODE_BLOCK_" + i + "@@", () => codeBlocks[i]);
+    escaped = escaped.replace(new RegExp("@@CODE_BLOCK_" + i + "@@", "g"), function() { return codeBlocks[i]; });
   }
 
   return escaped;
@@ -1836,8 +1577,8 @@ function getCurrentLessonForI18n() {
   if (currentSubject === 'java' && typeof JAVA_LESSONS !== 'undefined') {
     return JAVA_LESSONS.find(l => l.id === currentJavaLessonId);
   }
-  if (currentSubject === 'python' && (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined')) {
-    return (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId);
+  if (currentSubject === 'python' && typeof PYTHON_LESSONS !== 'undefined') {
+    return PYTHON_LESSONS.find(l => l.id === currentPythonLessonId);
   }
   if (currentSubject === 'sg' && typeof SG_LESSONS !== 'undefined') {
     return SG_LESSONS.find(l => l.id === currentSgLessonId);
@@ -1953,7 +1694,7 @@ function itpassQuizPrev() {
     itpassQuizIdx--;
     loadItPassChapterQuiz();
   } else {
-    showToast("已经是第一题了。", "info");
+    showToastKey("toast.alreadyFirst", "info");
   }
 }
 
@@ -1963,7 +1704,7 @@ function itpassQuizNext() {
     itpassQuizIdx++;
     loadItPassChapterQuiz();
   } else {
-    showToast("已经是最后一题了。", "info");
+    showToastKey("toast.alreadyLast", "info");
   }
 }
 
@@ -2012,7 +1753,7 @@ function sgQuizPrev() {
     sgQuizIdx--;
     loadSgChapterQuiz();
   } else {
-    showToast("已经是第一题了。", "info");
+    showToastKey("toast.alreadyFirst", "info");
   }
 }
 
@@ -2022,7 +1763,7 @@ function sgQuizNext() {
     sgQuizIdx++;
     loadSgChapterQuiz();
   } else {
-    showToast("已经是最后一题了。", "info");
+    showToastKey("toast.alreadyLast", "info");
   }
 }
 
@@ -2046,7 +1787,7 @@ function markSgLessonComplete(id) {
     
     const lesson = SG_LESSONS.find(l => l.id === id);
     const displayTitle = lesson ? lesson.titleZh : `第 ${id} 节`;
-    showToast(`🏆 恭喜！${displayTitle} 课后小测已全部通过，本节标记为“已完成”！`, "success");
+    showToastKey("toast.lessonQuizPassed", "success", { title: displayTitle });
   }
 }
 
@@ -2118,7 +1859,7 @@ function checkQuizAnswer() {
       feedback.className = "quiz-feedback error";
     }
   } else if (currentSubject === 'python') {
-    const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId) : null;
+    const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === currentPythonLessonId) : null;
     if (!lesson || !lesson.quizList || lesson.quizList.length === 0) return;
     const quiz = lesson.quizList[pythonQuizIdx];
     const feedback = document.getElementById("quiz-feedback");
@@ -2256,7 +1997,7 @@ function markItPassLessonComplete(id) {
     
     const lesson = IT_PASSPORT_LESSONS.find(l => l.id === id);
     const displayTitle = lesson ? lesson.titleZh : `第 ${id} 节`;
-    showToast(`🏆 恭喜！${displayTitle} 课后小测已全部通过，本节标记为“已完成”！`, "success");
+    showToastKey("toast.lessonQuizPassed", "success", { title: displayTitle });
   }
 }
 
@@ -2338,7 +2079,10 @@ function switchDBGroup(group) {
     header.classList.remove('collapsed');
     icon.style.transform = 'rotate(0deg)';
   }
-  showToast(`🗄️ 切换到《${group === 'shop' ? '书店 / ブック店' : '学校 / 学校'}》数据库——您现在可以查询 ${DB_GROUPS[group].join(', ')} 这些表`, 'info');
+  showToastKey("toast.dbSwitched", "info", {
+    dbName: group === 'shop' ? 'Bookstore / ブック店' : 'School / 学校',
+    tables: DB_GROUPS[group].join(', ')
+  });
 }
 
 function selectSchemaTable(tableName) {
@@ -2415,13 +2159,9 @@ function resetOutputPlaceholder() {
 
 // Reset Database Mock State
 function resetMockDB() {
-  if (confirm("模拟数据库将被重置回初始状态，继续吗？")) {
-    if (sqlEngineType === 'SQLiteAdapter' && sqliteAdapterInstance) {
-      sqliteAdapterInstance.reset();
-    } else {
-      sqlEngine.reset();
-    }
-    showToast('✅ 模拟数据库已重置回初始数据！', 'success');
+  if (confirmKey("dialog.resetDbConfirm")) {
+    sqlEngine.reset();
+    showToastKey("toast.dbReset", "success");
     resetOutputPlaceholder();
   }
 }
@@ -2453,7 +2193,7 @@ function showPlaygroundHint() {
   const exampleCode = isRandomPracticeActive && lesson.randomExercise
     ? lesson.randomExercise.example
     : lesson.example;
-  showToast(`💡 提示：参考以下 SQL 结构：<br><code style="font-family:'Fira Code',monospace;color:#a5f3fc;">${exampleCode}</code>`, 'info');
+  showToastKey("toast.sqlHint", "info", { code: exampleCode });
 }
 
 // Run Query
@@ -2462,7 +2202,7 @@ function runPlaygroundQuery() {
   const sql = editor.value.trim();
   
   if (!sql) {
-    alert("SQLクエリを入力してください。 (请输入 SQL 语句。)");
+    alertKey("message.inputSqlRequired");
     return;
   }
   
@@ -2477,8 +2217,7 @@ function runPlaygroundQuery() {
   const countBadge = document.getElementById("output-row-count");
   
   // Run SQL logic through engine
-  // If SQLiteAdapter still loading, fall back to MockSQLEngine
-  const res = executeSqlViaEngine(sql);
+  const res = sqlEngine.execute(sql);
   
   if (res.success) {
     // Show success status
@@ -2500,7 +2239,7 @@ function runPlaygroundQuery() {
         tableHtml += `<th>${col}</th>`;
       });
       tableHtml += `</tr></thead><tbody>`;
-      
+
       res.rows.forEach(row => {
         tableHtml += `<tr>`;
         row.forEach(cell => {
@@ -2858,7 +2597,7 @@ function buildCrossPool() {
 function startCrossChallenge() {
   const pool = buildCrossPool();
   if (pool.length === 0) {
-    showToast('⚠️ 还没有已完成的课节！请先学习并完成至少一个课节。', 'error');
+    showToastKey("toast.noCompletedLessons", "error");
     return;
   }
   crossChallengeActive = true;
@@ -2872,7 +2611,7 @@ function startCrossChallenge() {
   document.getElementById('challenge-source-tag').style.display = 'inline-block';
 
   renderCrossChallenge();
-  showToast(`🔥 综合挑战开始！共 ${pool.length} 道题来自已完成的 ${completedLessons.length} 个课节。`, 'success');
+  showToastKey("toast.challengeStarted", "success", { lessonCount: completedLessons.length, count: pool.length });
 }
 
 function nextCrossChallenge() {
@@ -2915,7 +2654,7 @@ function stopCrossChallenge() {
 
   updateMissionUI();
   resetOutputPlaceholder();
-  showToast('✅ 综合挑战结束。', 'info');
+  showToastKey("toast.challengeEnded", "info");
 }
 
 const _originalValidateTaskCompletion = validateTaskCompletion;
@@ -2927,7 +2666,7 @@ validateTaskCompletion = function(userSql) {
       if (statusDiv) {
         statusDiv.innerHTML = `<span class="status-success"><i class="fa-solid fa-fire-flame-curved"></i> 综合挑战达成！🎉 (${crossChallengeIndex + 1}/${crossChallengePool.length})</span>`;
       }
-      showToast(`🎉 正确！来自第 ${ex.sourceId} 节的题目已通过！`, 'success');
+      showToastKey("toast.challengeQuestionCorrect", "success", { sourceId: ex.sourceId });
       return;
     }
   }
@@ -3228,152 +2967,18 @@ const CBT_FALLBACK_QUESTIONS = [
   }
 ];
 
-// 确保 Python 课程数据被异步载入（按需 fetch data/python_lessons.json）
-async function ensurePythonLessonsLoaded() {
-  // 1. 已有内存缓存
-  if (window.__PYTHON_LESSONS_CACHE && window.__PYTHON_LESSONS_CACHE.length > 0) {
-    window.PYTHON_LESSONS = window.__PYTHON_LESSONS_CACHE;
-    return window.__PYTHON_LESSONS_CACHE;
-  }
-  // 2. 旧版同步 script 已加载（兼容回滚）
-  if (typeof PYTHON_LESSONS !== 'undefined' && PYTHON_LESSONS.length > 0) {
-    window.__PYTHON_LESSONS_CACHE = PYTHON_LESSONS;
-    window.PYTHON_LESSONS = PYTHON_LESSONS;
-    return PYTHON_LESSONS;
-  }
-
-  // 3. 异步 fetch JSON
-  try {
-    const res = await fetch('./data/python_lessons.json');
-    if (!res.ok) throw new Error('无法读取 Python 课程数据！ / Pythonレッスンデータの取得に失敗しました。');
-    const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error('Python 课程数据格式非法或为空！ / データが無効です。');
-    }
-    window.__PYTHON_LESSONS_CACHE = data;
-    window.PYTHON_LESSONS = data;
-    return data;
-  } catch (err) {
-    console.error('Failed to load Python lessons:', err);
-    showToast('⚠️ Python 课程加载失败，请检查网络连接！\nPythonレッスンの読み込みに失敗しました。接続を確認してください。', 'error');
-    throw err;
-  }
-}
-
-// 确保 SG 历年真题库被异步载入
-async function ensureSgPastExamsLoaded() {
-  if (window.__SG_PAST_EXAMS_CACHE && window.__SG_PAST_EXAMS_CACHE.length > 0) {
-    return window.__SG_PAST_EXAMS_CACHE;
-  }
-
-  // 1. 设置开始按钮为 Loading 状态
-  const startBtn = document.querySelector("#cbt-config-screen .cbt-launch-btn");
-  let originalHtml = "";
-  if (startBtn) {
-    originalHtml = startBtn.innerHTML;
-    startBtn.disabled = true;
-    startBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 読み込み中... / 加载中...';
-  }
-
-  try {
-    const res = await fetch('./data/sg_past_exams.json');
-    if (!res.ok) throw new Error("无法读取 SG 模拟题库数据！ / 題庫の取得に失敗しました。");
-    const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("题库数据格式非法或为空！ / 題庫データが無効です。");
-    }
-    
-    // 2. 写入缓存并做向下兼容
-    window.__SG_PAST_EXAMS_CACHE = data;
-    window.SG_PAST_EXAMS = data;
-    
-    return data;
-  } catch (err) {
-    console.error("Failed to load SG Exam questions:", err);
-    showToast("⚠️ 题库加载失败，请检查网络连接！\n題庫の読み込みに失敗しました。接続を確認してください。", "error");
-    throw err;
-  } finally {
-    // 3. 还原按钮状态
-    if (startBtn) {
-      startBtn.disabled = false;
-      startBtn.innerHTML = originalHtml;
-    }
-  }
-}
-
-// 确保 IT Passport 历年真题库被异步载入
-async function ensureItPassportExamsLoaded() {
-  if (window.__IT_PASSPORT_PAST_EXAMS_CACHE && window.__IT_PASSPORT_PAST_EXAMS_CACHE.length > 0) {
-    return window.__IT_PASSPORT_PAST_EXAMS_CACHE;
-  }
-  if (typeof IT_PASSPORT_PAST_EXAMS !== 'undefined' && IT_PASSPORT_PAST_EXAMS.length > 0) {
-    window.__IT_PASSPORT_PAST_EXAMS_CACHE = IT_PASSPORT_PAST_EXAMS;
-    window.IT_PASSPORT_PAST_EXAMS = IT_PASSPORT_PAST_EXAMS;
-    return IT_PASSPORT_PAST_EXAMS;
-  }
-
-  // 1. 设置开始按钮为 Loading 状态
-  const startBtn = document.querySelector("#cbt-config-screen .cbt-launch-btn");
-  let originalHtml = "";
-  if (startBtn) {
-    originalHtml = startBtn.innerHTML;
-    startBtn.disabled = true;
-    startBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 読み込み中... / 加载中...';
-  }
-
-  try {
-    const res = await fetch('./data/it_passport_past_exams.json');
-    if (!res.ok) throw new Error("无法读取 IT Passport 模拟题库数据！ / 題庫の取得に失敗しました。");
-    const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("题库数据格式非法或为空！ / 題庫データが無効です。");
-    }
-    
-    // 2. 写入缓存并做向下兼容
-    window.__IT_PASSPORT_PAST_EXAMS_CACHE = data;
-    window.IT_PASSPORT_PAST_EXAMS = data;
-    
-    return data;
-  } catch (err) {
-    console.error("Failed to load IT Passport Exam questions:", err);
-    showToast("⚠️ 题库加载失败，请检查网络连接！\n題庫の読み込みに失敗しました。接続を確認してください。", "error");
-    throw err;
-  } finally {
-    // 3. 还原按钮状态
-    if (startBtn) {
-      startBtn.disabled = false;
-      startBtn.innerHTML = originalHtml;
-    }
-  }
-}
-
 const getExamPool = () => {
   if (currentSubject === 'sg') {
-    return window.__SG_PAST_EXAMS_CACHE || window.SG_PAST_EXAMS || [];
+    return (typeof SG_PAST_EXAMS !== 'undefined' && SG_PAST_EXAMS.length > 0) ? SG_PAST_EXAMS : [];
   }
-  return window.__IT_PASSPORT_PAST_EXAMS_CACHE || window.IT_PASSPORT_PAST_EXAMS || (typeof IT_PASSPORT_PAST_EXAMS !== 'undefined' && IT_PASSPORT_PAST_EXAMS.length > 0 ? IT_PASSPORT_PAST_EXAMS : CBT_FALLBACK_QUESTIONS);
+  return (typeof IT_PASSPORT_PAST_EXAMS !== 'undefined' && IT_PASSPORT_PAST_EXAMS.length > 0) ? IT_PASSPORT_PAST_EXAMS : CBT_FALLBACK_QUESTIONS;
 };
 
-// Start CBT Testing session
-async function startCbtExam() {
+function startCbtExam() {
   const yearSelect = document.getElementById("cbt-year-select").value;
   const countSelect = parseInt(document.getElementById("cbt-count-select").value);
   const optShuffle = document.getElementById("cbt-opt-shuffle").checked;
   const optNoCalc = document.getElementById("cbt-opt-nocalc").checked;
-  
-  if (currentSubject === 'sg') {
-    try {
-      await ensureSgPastExamsLoaded();
-    } catch (e) {
-      return; // 加载失败，不开始测试
-    }
-  } else {
-    try {
-      await ensureItPassportExamsLoaded();
-    } catch (e) {
-      return; // 加载失败，不开始测试
-    }
-  }
   
   const fullPool = getExamPool();
   let filtered = [];
@@ -3391,7 +2996,7 @@ async function startCbtExam() {
   }
   
   if (filtered.length === 0) {
-    showToast("⚠️ 符合条件的真题为空，请更改出题选项！", "error");
+    showToastKey("toast.examEmpty", "error");
     return;
   }
   
@@ -3462,7 +3067,7 @@ async function startCbtExam() {
   // Render First Question
   renderCbtQuestion();
   
-  showToast("📝 CBT 模拟考试已生成，考试开始！", "success");
+  showToastKey("toast.examStarted", "success");
 }
 
 function startCbtTimer() {
@@ -3481,7 +3086,7 @@ function startCbtTimer() {
     
     if (activeCbtExam.timeRemaining <= 0) {
       clearInterval(cbtTimerInterval);
-      showToast("⏰ 答题时间已到，系统自动交卷！", "error");
+      showToastKey("toast.examTimeout", "error");
       submitCbtExam(true);
     }
   }, 1000);
@@ -3576,7 +3181,12 @@ function renderCbtQuestion() {
   });
   
   updateCbtNavigatorGridUI();
-  if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
+  // Wrap tables for horizontal scroll
+  if (window.GlossaryWrapper && typeof window.GlossaryWrapper.wrapAllTables === "function") {
+    window.GlossaryWrapper.wrapAllTables();
+  } else {
+    wrapAllTablesWithScrollWrapper();
+  }
 }
 
 function selectCbtAnswer(oIdx) {
@@ -3605,7 +3215,7 @@ function cbtPrevQuestion() {
     activeCbtExam.currentQIdx--;
     renderCbtQuestion();
   } else {
-    showToast("已经是第一题了。", "info");
+    showToastKey("toast.alreadyFirst", "info");
   }
 }
 
@@ -3615,12 +3225,12 @@ function cbtNextQuestion() {
     activeCbtExam.currentQIdx++;
     renderCbtQuestion();
   } else {
-    showToast("已经是最后一题了。", "info");
+    showToastKey("toast.alreadyLast", "info");
   }
 }
 
 function exitCbtExam() {
-  if (confirm("确定要中断退出当前考试吗？进度将不被保存。")) {
+  if (confirmKey("dialog.exitExamConfirm")) {
     clearInterval(cbtTimerInterval);
     activeCbtExam = null;
     switchItPassSubMode("dojo");
@@ -3630,11 +3240,11 @@ function exitCbtExam() {
 function submitCbtExam(auto = false) {
   if (!auto) {
     const unanswered = activeCbtExam.answers.filter(a => a === -1).length;
-    let msg = "确定要提交试卷吗？";
     if (unanswered > 0) {
-      msg = `警告: 还有 ${unanswered} 道题未作答！确定现在就要提交试卷并查看分析报告吗？`;
+      if (!confirmKey("dialog.submitExamUnansweredConfirm", { count: unanswered })) return;
+    } else {
+      if (!confirmKey("dialog.submitExamConfirm")) return;
     }
-    if (!confirm(msg)) return;
   }
   
   clearInterval(cbtTimerInterval);
@@ -3799,7 +3409,7 @@ function submitCbtExam(auto = false) {
   
   activeCbtExam = null;
   
-  showToast(isPassed ? "🎉 恭喜！您已成功通过本次模拟测试！" : "💪 未通过合格标准，请继续努力！", isPassed ? "success" : "info");
+  showToastKey(isPassed ? "toast.examPassed" : "toast.examFailed", isPassed ? "success" : "info");
 }
 
 function buildTextbookPdfHash(page, highlightTerm = null) {
@@ -4023,14 +3633,14 @@ function selectPythonLesson(id) {
 }
 
 function loadPythonLesson(id) {
-  if (!window.PYTHON_LESSONS && typeof PYTHON_LESSONS === 'undefined') return;
-  const lesson = (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === id);
+  document.body.classList.remove('mobile-sidebar-open');
+  if (typeof PYTHON_LESSONS === 'undefined') return;
+  const lesson = PYTHON_LESSONS.find(l => l.id === id);
   if (!lesson) return;
-
-  ensureContentPackForCurrentLesson();
 
   currentPythonLessonId = id;
 
+  // Resolve localized title/concept for current subject
   const localized = getLessonLocalizedText("python", lesson);
 
   // Header
@@ -4039,7 +3649,7 @@ function loadPythonLesson(id) {
   badge.className = "lesson-badge python-badge";
   document.getElementById("lesson-title-ja").innerText = localized && localized.title ? localized.title : lesson.titleJa;
   document.getElementById("lesson-title-zh").innerText = lesson.titleZh;
-  
+
   // Hide locate PDF button
   const pdfBtn = document.getElementById("locate-pdf-btn");
   if (pdfBtn) {
@@ -4172,7 +3782,7 @@ function loadPythonQuiz(lesson) {
 }
 
 function renderPythonQuizQuestion() {
-  const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId) : null;
+  const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === currentPythonLessonId) : null;
   if (!lesson || !lesson.quizList || lesson.quizList.length === 0) return;
 
   const totalQuizzes = lesson.quizList.length;
@@ -4210,17 +3820,17 @@ function pythonQuizPrev() {
     pythonQuizIdx--;
     renderPythonQuizQuestion();
   } else {
-    showToast("已经是第一题了。", "info");
+    showToastKey("toast.alreadyFirst", "info");
   }
 }
 
 function pythonQuizNext() {
-  const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === currentPythonLessonId) : null;
+  const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === currentPythonLessonId) : null;
   if (lesson && pythonQuizIdx < lesson.quizList.length - 1) {
     pythonQuizIdx++;
     renderPythonQuizQuestion();
   } else {
-    showToast("已经是最后一题了。", "info");
+    showToastKey("toast.alreadyLast", "info");
   }
 }
 
@@ -4235,7 +3845,7 @@ function markPythonProgress(lessonId, action) {
     completedPythonLessons.push(lessonId);
     saveProgress();
     
-    const lesson = (window.PYTHON_LESSONS || typeof PYTHON_LESSONS !== 'undefined') ? (window.PYTHON_LESSONS || PYTHON_LESSONS).find(l => l.id === lessonId) : null;
+    const lesson = (typeof PYTHON_LESSONS !== 'undefined') ? PYTHON_LESSONS.find(l => l.id === lessonId) : null;
     if (lesson) {
       const navItem = document.getElementById(`nav-item-python-${lessonId}`);
       if (navItem) {
@@ -4307,16 +3917,10 @@ function switchSqlSubMode(mode) {
   } else {
     initCodingExamSubLayout();
   }
-  // Update mobile sub label
-  if (mode === 'lessons') {
-    updateMobileSubLabel('sql', '教科书与演练沙盒', 'fa-solid fa-book-open');
-  } else {
-    updateMobileSubLabel('sql', '实操模拟考试', 'fa-solid fa-laptop-code');
-  }
 }
 
 // Switch Python sub modes (Lessons/Sandbox vs Mock Exam)
-async function switchPythonSubMode(mode) {
+function switchPythonSubMode(mode) {
   pythonSubMode = mode;
   document.getElementById("python-sub-tab-lessons").classList.toggle("active", mode === "lessons");
   document.getElementById("python-sub-tab-exam").classList.toggle("active", mode === "exam");
@@ -4324,22 +3928,10 @@ async function switchPythonSubMode(mode) {
   handleSubModeViewToggle(mode);
   
   if (mode === "lessons") {
-    try {
-      await ensurePythonLessonsLoaded();
-    } catch (e) {
-      // Error already shown via showToast; abort rendering
-      return;
-    }
     initSidebar();
     loadPythonLesson(currentPythonLessonId);
   } else {
     initCodingExamSubLayout();
-  }
-  // Update mobile sub label
-  if (mode === 'lessons') {
-    updateMobileSubLabel('python', '教科书与演练沙盒', 'fa-solid fa-book-open');
-  } else {
-    updateMobileSubLabel('python', '实操模拟考试', 'fa-solid fa-laptop-code');
   }
 }
 
@@ -4359,14 +3951,6 @@ function switchJavaSubMode(mode) {
     loadJavaLesson(currentJavaLessonId);
   } else {
     initCodingExamSubLayout();
-  }
-  // Update mobile sub label
-  if (mode === 'lessons') {
-    const bookLabel = currentJavaBook === 'nyumon' ? '入門編 (基础篇)' : '実践編 (进阶篇)';
-    const bookIcon  = currentJavaBook === 'nyumon' ? 'fa-solid fa-seedling' : 'fa-solid fa-rocket';
-    updateMobileSubLabel('java', bookLabel, bookIcon);
-  } else {
-    updateMobileSubLabel('java', '实操模拟考试', 'fa-solid fa-laptop-code');
   }
 }
 
@@ -4436,64 +4020,17 @@ function isCodingExamActiveAndRunning() {
   return activeCodingExam && activeCodingExam.subject === currentSubject && !activeCodingExam.isSubmitted;
 }
 
-// 确保 SQL 模拟考试题库被异步载入
-async function ensureSqlExamQuestionsLoaded() {
-  if (window.__SQL_EXAM_QUESTIONS_CACHE && window.__SQL_EXAM_QUESTIONS_CACHE.length > 0) {
-    return window.__SQL_EXAM_QUESTIONS_CACHE;
-  }
-
-  // 1. 设置开始按钮为 Loading 状态
-  const startBtn = document.querySelector(".coding-exam-config .cbt-launch-btn");
-  let originalHtml = "";
-  if (startBtn) {
-    originalHtml = startBtn.innerHTML;
-    startBtn.disabled = true;
-    startBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 読み込み中... / 加载中...';
-  }
-
-  try {
-    const res = await fetch('./data/sql_exam_questions.json');
-    if (!res.ok) throw new Error("无法读取 SQL 模拟题库数据！ / 題庫の取得に失敗しました。");
-    const data = await res.json();
-    if (!Array.isArray(data) || data.length === 0) {
-      throw new Error("题库数据格式非法或为空！ / 題庫データが無効です。");
-    }
-    
-    // 2. 写入独立缓存和兼容全局变量名
-    window.__SQL_EXAM_QUESTIONS_CACHE = data;
-    window.SQL_EXAM_QUESTIONS = data;
-    
-    return data;
-  } catch (err) {
-    console.error("Failed to load SQL Exam questions:", err);
-    showToast("⚠️ 题库加载失败，请检查网络连接！\n題庫の読み込みに失敗しました。接続を確認してください。", "error");
-    throw err;
-  } finally {
-    // 3. 还原按钮状态
-    if (startBtn) {
-      startBtn.disabled = false;
-      startBtn.innerHTML = originalHtml;
-    }
-  }
-}
-
 // Start Coding Exam (Launches the timer and prepares questions)
-async function startCodingExam() {
+function startCodingExam() {
   const countSelect = parseInt(document.getElementById("coding-exam-count").value);
   
   let pool = [];
-  if (currentSubject === 'sql') {
-    try {
-      pool = await ensureSqlExamQuestionsLoaded();
-    } catch (e) {
-      return; // 加载失败，不开始测试
-    }
-  }
+  if (currentSubject === 'sql') pool = [...SQL_EXAM_QUESTIONS];
   else if (currentSubject === 'java') pool = [...JAVA_EXAM_QUESTIONS];
   else if (currentSubject === 'python') pool = [...PYTHON_EXAM_QUESTIONS];
   
   if (pool.length === 0) {
-    showToast("⚠️ 没有找到该科目的考题数据库！", "error");
+    showToastKey("toast.examDbNotFound", "error");
     return;
   }
   
@@ -4545,7 +4082,7 @@ async function startCodingExam() {
   renderCodingQuestion();
   initSidebar();
   
-  showToast("📝 实操模拟考试开始！请根据日文描述完成代码编写。", "success");
+  showToastKey("toast.practicalExamStarted", "success");
 }
 
 // Timer loops every 1 second
@@ -4583,7 +4120,7 @@ function startCodingTimer() {
     
     if (activeCodingExam.timeRemaining <= 0) {
       clearInterval(cbtTimerInterval);
-      showToast("⏰ 答题时间已到，系统自动交卷！", "error");
+      showToastKey("toast.examTimeout", "error");
       submitCodingExam(true);
     }
   }, 1000);
@@ -4682,7 +4219,12 @@ function renderCodingQuestion() {
   
   // Render navigator grid
   renderCodingNavigatorGrid();
-  if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
+  // Wrap tables for horizontal scroll
+  if (window.GlossaryWrapper && typeof window.GlossaryWrapper.wrapAllTables === "function") {
+    window.GlossaryWrapper.wrapAllTables();
+  } else {
+    wrapAllTablesWithScrollWrapper();
+  }
 }
 
 // Render grid navigator indices
@@ -4733,7 +4275,7 @@ function codingPrevQuestion() {
   if (activeCodingExam.currentQIdx > 0) {
     jumpToCodingQuestion(activeCodingExam.currentQIdx - 1);
   } else {
-    showToast("已经是第一题了。", "info");
+    showToastKey("toast.alreadyFirst", "info");
   }
 }
 
@@ -4742,7 +4284,7 @@ function codingNextQuestion() {
   if (activeCodingExam.currentQIdx < activeCodingExam.questions.length - 1) {
     jumpToCodingQuestion(activeCodingExam.currentQIdx + 1);
   } else {
-    showToast("已经是最后一题了。", "info");
+    showToastKey("toast.alreadyLast", "info");
   }
 }
 
@@ -4819,7 +4361,7 @@ async function verifyCurrentCodingQuestion() {
     const countBadge = document.getElementById("output-row-count");
     
     // 1. Run User Code
-    const resUser = executeSqlViaEngine(code);
+    const resUser = sqlEngine.execute(code);
     
     if (!resUser.success) {
       statusDiv.innerHTML = `<span class="status-error"><i class="fa-solid fa-circle-exclamation"></i> 语法错误</span>`;
@@ -4829,7 +4371,7 @@ async function verifyCurrentCodingQuestion() {
       activeCodingExam.userStatuses[q.id] = 'failed';
       renderCodingQuestion();
       initSidebar();
-      showToast("❌ SQL 语法错误，判定未通过！", "error");
+      showToastKey("toast.sqlSyntaxError", "error");
       return;
     }
     
@@ -4839,7 +4381,7 @@ async function verifyCurrentCodingQuestion() {
       countBadge.innerText = `${resUser.rows.length}行`;
       countBadge.style.display = "inline";
       
-      tableHtml += `<div class="table-scroll-wrapper"><table class="result-table"><thead><tr>`;
+      tableHtml += `<table class="result-table"><thead><tr>`;
       resUser.columns.forEach(col => {
         tableHtml += `<th>${col}</th>`;
       });
@@ -4851,7 +4393,7 @@ async function verifyCurrentCodingQuestion() {
         });
         tableHtml += `</tr>`;
       });
-      tableHtml += `</tbody></table></div>`;
+      tableHtml += `</tbody></table>`;
     } else {
       countBadge.style.display = "none";
     }
@@ -4859,18 +4401,18 @@ async function verifyCurrentCodingQuestion() {
     statusDiv.innerHTML = `<span class="status-success"><i class="fa-solid fa-circle-check"></i> 実行成功 (执行成功)</span>`;
     
     // 3. Run Reference Query
-    const resSol = executeSqlViaEngine(q.solutionQuery);
+    const resSol = sqlEngine.execute(q.solutionQuery);
     
     // 4. Compare Results
     const isCorrect = compareSqlResults(resUser, resSol);
     if (isCorrect) {
       activeCodingExam.userStatuses[q.id] = 'passed';
       statusDiv.innerHTML = `<span class="status-success"><i class="fa-solid fa-star"></i> 判定成功 (Passed ✓)</span>`;
-      showToast("🎉 判定通过 (Passed ✓)！已保存答案。", "success");
+    showToastKey("toast.verifySuccess", "success");
     } else {
       activeCodingExam.userStatuses[q.id] = 'failed';
       statusDiv.innerHTML = `<span class="status-error"><i class="fa-solid fa-circle-xmark"></i> 判定失敗 (结果不一致)</span>`;
-      showToast("❌ 运行结果与期望数据不一致，请检查排序、过滤或选择的列数！", "error");
+      showToastKey("toast.sqlOutputMismatch", "error");
     }
     
     renderCodingQuestion();
@@ -4898,7 +4440,15 @@ async function verifyCurrentCodingQuestion() {
     }
     
     try {
-      const res = await window.WebCodeRunner.runJava(code, q.stdinExample || "");
+      const response = await fetch('/runjava', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, stdin: q.stdinExample || "" }),
+        signal: AbortSignal.timeout(15000)
+      });
+      
+      if (!response.ok) throw new Error("HTTP connection error");
+      const res = await response.json();
       
       // Update output display
       let textToShow = "";
@@ -4910,7 +4460,7 @@ async function verifyCurrentCodingQuestion() {
           sandboxStatus.className = "java-sandbox-status java-status-error";
         }
         activeCodingExam.userStatuses[q.id] = 'failed';
-        showToast("❌ 编译错误，判定失败！", "error");
+        showToastKey("toast.compileError", "error");
       } else if (res.runtimeError) {
         textToShow = (res.output ? '// 出力 / Output:\n' + res.output + '\n\n' : '') + "⚠️ 実行エラー / Runtime Error:\n" + res.runtimeError;
         outputContent.className = "java-output-content java-output-error";
@@ -4919,7 +4469,7 @@ async function verifyCurrentCodingQuestion() {
           sandboxStatus.className = "java-sandbox-status java-status-error";
         }
         activeCodingExam.userStatuses[q.id] = 'failed';
-        showToast("❌ 运行错误，判定失败！", "error");
+        showToastKey("toast.runtimeError", "error");
       } else {
         textToShow = res.output || '';
         outputContent.className = "java-output-content java-output-success";
@@ -4932,7 +4482,7 @@ async function verifyCurrentCodingQuestion() {
             sandboxStatus.innerText = "成功 / Success ✓";
             sandboxStatus.className = "java-sandbox-status java-status-success";
           }
-          showToast("🎉 判定通过 (Passed ✓)！已保存答案。", "success");
+        showToastKey("toast.verifySuccess", "success");
         } else {
           activeCodingExam.userStatuses[q.id] = 'failed';
           textToShow += `\n\n[⚠️ 判定失敗 / Incorrect Output]\n-- 期望输出结果 (Expected):\n${q.expectedOutput}`;
@@ -4940,7 +4490,7 @@ async function verifyCurrentCodingQuestion() {
             sandboxStatus.innerText = "不適合 / Failed ✗";
             sandboxStatus.className = "java-sandbox-status java-status-error";
           }
-          showToast("❌ 输出内容不一致，判定失败！", "error");
+          showToastKey("toast.outputMismatch", "error");
         }
       }
       
@@ -4983,7 +4533,15 @@ async function verifyCurrentCodingQuestion() {
     }
     
     try {
-      const res = await window.WebCodeRunner.runPython(code, q.stdinExample || "");
+      const response = await fetch('/runpython', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, stdin: q.stdinExample || "" }),
+        signal: AbortSignal.timeout(15000)
+      });
+      
+      if (!response.ok) throw new Error("HTTP connection error");
+      const res = await response.json();
       
       // Update output display
       let textToShow = "";
@@ -4995,7 +4553,7 @@ async function verifyCurrentCodingQuestion() {
           sandboxStatus.className = "python-sandbox-status python-status-error";
         }
         activeCodingExam.userStatuses[q.id] = 'failed';
-        showToast("❌ Python 语法错误，判定失败！", "error");
+        showToastKey("toast.sqlSyntaxError", "error");
       } else if (res.runtimeError) {
         textToShow = (res.output ? '# 出力 / Output:\n' + res.output + '\n\n' : '') + "⚠️ 実行エラー / Runtime Error:\n" + res.runtimeError;
         outputContent.className = "python-output-content python-output-error";
@@ -5004,7 +4562,7 @@ async function verifyCurrentCodingQuestion() {
           sandboxStatus.className = "python-sandbox-status python-status-error";
         }
         activeCodingExam.userStatuses[q.id] = 'failed';
-        showToast("❌ 运行错误，判定失败！", "error");
+        showToastKey("toast.runtimeError", "error");
       } else {
         textToShow = res.output || '';
         outputContent.className = "python-output-content python-output-success";
@@ -5017,7 +4575,7 @@ async function verifyCurrentCodingQuestion() {
             sandboxStatus.innerText = "成功 / Success ✓";
             sandboxStatus.className = "python-sandbox-status python-status-success";
           }
-          showToast("🎉 判定通过 (Passed ✓)！已保存答案。", "success");
+        showToastKey("toast.verifySuccess", "success");
         } else {
           activeCodingExam.userStatuses[q.id] = 'failed';
           textToShow += `\n\n# [⚠️ 判定失敗 / Incorrect Output]\n# -- 期望输出结果 (Expected):\n# ${q.expectedOutput}`;
@@ -5025,7 +4583,7 @@ async function verifyCurrentCodingQuestion() {
             sandboxStatus.innerText = "不適合 / Failed ✗";
             sandboxStatus.className = "python-sandbox-status python-status-error";
           }
-          showToast("❌ 输出内容不一致，判定失败！", "error");
+          showToastKey("toast.outputMismatch", "error");
         }
       }
       
@@ -5050,7 +4608,7 @@ async function verifyCurrentCodingQuestion() {
 
 // Exit coding exam completely (cleans timer and restores normal book view)
 function exitCodingExam() {
-  if (confirm("确定要中断并退出当前考试吗？已作答的代码和测试状态将不被保存。")) {
+  if (confirmKey("dialog.exitExamConfirm")) {
     if (cbtTimerInterval) clearInterval(cbtTimerInterval);
     activeCodingExam = null;
     
@@ -5070,15 +4628,13 @@ function submitCodingExam(auto = false) {
   if (!activeCodingExam) return;
   
   if (!auto) {
-    const total = activeCodingExam.questions.length;
-    const passed = activeCodingExam.questions.filter(q => activeCodingExam.userStatuses[q.id] === 'passed').length;
     const unanswered = activeCodingExam.questions.filter(q => activeCodingExam.userStatuses[q.id] === 'idle').length;
-    
-    let msg = `确认提交试卷吗？目前已通过 ${passed} / ${total} 题。`;
+
     if (unanswered > 0) {
-      msg = `警告：还有 ${unanswered} 道题完全没有进行过判定尝试！\n` + msg;
+      if (!confirmKey("dialog.submitCodingExamUnansweredConfirm", { count: unanswered })) return;
+    } else {
+      if (!confirmKey("dialog.submitExamConfirm")) return;
     }
-    if (!confirm(msg)) return;
   }
   
   // Save active code of current question
@@ -5116,7 +4672,7 @@ function submitCodingExam(auto = false) {
   renderCodingExamResults();
   initSidebar();
   
-  showToast("🎉 实操考试提交成功！已生成详细成绩单与评定。", "success");
+  showToastKey("toast.practicalExamSubmitted", "success");
 }
 
 // Render scorecard results
@@ -5233,6 +4789,55 @@ function toggleMinimizePdf() {
 }
 
 /* ====================================================
+   Onboarding Guidance (UX-001)
+   ==================================================== */
+
+function dismissGuidance() {
+  var guidance = document.getElementById('first-run-guidance');
+  if (guidance) {
+    guidance.style.display = 'none';
+  }
+}
+
+function startWithSubject(subject) {
+  switchSubject(subject);
+  if (subject === 'sql') {
+    loadLesson(1);
+  } else if (subject === 'itpass') {
+    loadItPassLesson(1);
+  }
+  dismissGuidance();
+}
+
+/* ====================================================
+   Table Scroll Wrapper (UI-005, UI-007)
+   ==================================================== */
+
+function wrapAllTablesWithScrollWrapper() {
+  var containers = [
+    document.getElementById('concept-ja-body'),
+    document.getElementById('concept-zh-body'),
+    document.getElementById('cbt-q-body-text'),
+    document.getElementById('eq-task-ja'),
+    document.getElementById('eq-task-zh'),
+    document.getElementById('quiz-feedback'),
+    document.querySelector('.quiz-section'),
+    document.querySelector('.eq-expected-box')
+  ];
+  containers.forEach(function (container) {
+    if (!container) return;
+    var tables = container.querySelectorAll('table');
+    tables.forEach(function (table) {
+      if (table.parentElement && table.parentElement.classList.contains('table-scroll-wrapper')) return;
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  });
+}
+
+/* ====================================================
    Theme Toggle (Dark / Light)
    ==================================================== */
 
@@ -5328,49 +4933,6 @@ function initTheme() {
     setRuntimeLightThemeOverride(true);
   }
 }
-
-// UX-001: Onboarding Guidance dismissal and initialization
-function dismissGuidance() {
-  const guidance = document.getElementById('first-run-guidance');
-  if (guidance) {
-    guidance.style.display = 'none';
-  }
-}
-
-function startWithSubject(subject) {
-  switchSubject(subject);
-  if (subject === 'sql') {
-    loadLesson(1);
-  } else if (subject === 'itpass') {
-    loadItPassLesson(1);
-  }
-  dismissGuidance();
-}
-
-// UI-005 & UI-007: Dynamic Table Scroll Wrapping
-window.wrapAllTablesWithScrollWrapper = function() {
-  const containers = [
-    document.getElementById('concept-ja-body'),
-    document.getElementById('concept-zh-body'),
-    document.getElementById('cbt-q-body-text'),
-    document.getElementById('eq-task-ja'),
-    document.getElementById('eq-task-zh'),
-    document.getElementById('quiz-feedback'),
-    document.querySelector('.quiz-section'),
-    document.querySelector('.eq-expected-box')
-  ];
-  containers.forEach(container => {
-    if (!container) return;
-    container.querySelectorAll('table').forEach(table => {
-      if (table.parentElement.classList.contains('table-scroll-wrapper')) return;
-      const wrapper = document.createElement('div');
-      wrapper.className = 'table-scroll-wrapper';
-      table.parentNode.insertBefore(wrapper, table);
-      wrapper.appendChild(table);
-    });
-  });
-};
-
 
 
 // Expose StudySync debug entry (no-op if sync-engine.js not loaded)

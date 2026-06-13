@@ -38,8 +38,141 @@ body {
   height: 100vh;
 }
 
-/* Premium Custom Scrollbars */
-::-webkit-scrollbar {
+/* SQL result table: horizontal scroll wrapper */
+.table-scroll-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+  margin: 8px 0;
+  border-radius: 6px;
+}
+.table-scroll-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+/* Onboarding / First-run guidance */
+.first-run-guidance {
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.08), rgba(0, 136, 255, 0.05));
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: guidanceFadeIn 0.4s ease-out;
+}
+
+@keyframes guidanceFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.guidance-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.guidance-close-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-main, #e2e8f0);
+}
+
+.guidance-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.guidance-icon {
+  font-size: 20px;
+  color: var(--neon-cyan, #22d3ee);
+  flex-shrink: 0;
+}
+
+.guidance-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.guidance-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-main, #e2e8f0);
+}
+
+.guidance-desc {
+  font-size: 13px;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.4;
+}
+
+.guidance-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.guidance-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  background: rgba(0, 242, 254, 0.08);
+  color: var(--neon-cyan, #22d3ee);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.guidance-btn:hover {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: var(--neon-cyan, #22d3ee);
+}
+
+/* Light theme overrides for guidance */
+body[data-theme="light"] .first-run-guidance {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+}
+body[data-theme="light"] .guidance-title {
+  color: #000;
+}
+body[data-theme="light"] .guidance-desc {
+  color: #333;
+}
+body[data-theme="light"] .guidance-btn {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+  color: #0369a1;
+}
+body[data-theme="light"] .guidance-btn:hover {
+  background: #bae6fd;
+}
+
+/* ====================================================
+   End of UX batch one style additions
+   ==================================================== */
   width: 6px;
   height: 6px;
 }
@@ -359,17 +492,13 @@ body {
   display: flex;
   gap: 20px;
   transition: var(--transition-smooth);
-  min-width: 0; /* prevent flex overflow */
-  width: 100%;
 }
 
 .concept-col {
   flex: 1;
-  min-width: 0; /* prevent flex child from overflowing */
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow: hidden;
 }
 
 .concept-col h4 {
@@ -395,10 +524,6 @@ body {
   padding: 16px;
   border-radius: 10px;
   white-space: pre-line;
-  /* Fix: prevent long text from breaking card layout */
-  word-break: break-word;
-  overflow-wrap: break-word;
-  min-width: 0;
 }
 .concept-body strong {
   color: var(--neon-cyan);
@@ -651,34 +776,6 @@ body {
 .console-card {
   flex: 1.3;
   min-height: 220px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.console-card-body {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Editor area scrolls, footer stays fixed at bottom */
-.console-card-body .playground-task-desc {
-  flex: 0 0 auto;
-}
-
-.console-card-body .editor-container {
-  flex: 0 1 auto;
-  min-height: 80px;
-  max-height: 300px;
-  overflow: hidden;
-}
-
-/* Keep footer always visible — the key fix for the invisible button */
-.console-card-body .console-footer {
-  flex: 0 0 auto;
 }
 
 .output-card {
@@ -1391,573 +1488,15 @@ body {
   color: var(--error-color);
 }
 
-/* Responsiveness */
-
-/* Mobile sidebar toggle & backdrop — hidden on desktop */
-.mobile-sidebar-toggle,
-.mobile-sidebar-backdrop {
-  display: none;
-}
-
-/* ================================================================
-   断点 1: 1024px – 1200px — 缩窄 sidebar、保证顶部 header 不挤
-   ================================================================ */
-@media (max-width: 1200px) and (min-width: 769px) {
-  .app-sidebar {
-    width: 220px;
-  }
-  .header-logo {
-    flex: 0 0 180px;
-    min-width: 160px;
-  }
-  .logo-text h1 {
-    font-size: 15px;
-    max-width: 140px;
-  }
-  .logo-text span {
-    display: none;
-  }
-  .subject-tab {
-    padding: 5px 10px !important;
-    font-size: 11.5px !important;
-  }
-  .header-challenge-btn-start {
-    padding: 4px 8px;
-    font-size: 11px;
-  }
-  .challenge-control-btn {
-    padding: 2px 6px;
-    font-size: 10px;
-  }
-  .console-card-body .editor-container {
-    max-height: 240px;
+/* Responsiveness overrides for R19.2 off-canvas design */
+@media (max-width: 900px) {
+  .output-card.maximized {
+    width: 96vw;
+    top: 2vh;
+    height: 94vh;
   }
 }
 
-/* ================================================================
-   [Mobile Nav Dropdown] — 手机端主/二级导航 Dropdown 组件基础样式
-   桌面端隐藏触发按钮；手机端隐藏 tabs panel，改为点击展开
-   ================================================================ */
-
-/* 手机端主导航触发按钮 — 桌面默认隐藏 */
-.mobile-subject-toggle {
-  display: none;
-}
-
-/* 手机端二级导航触发按钮 — 桌面默认隐藏 */
-.mobile-sub-toggle {
-  display: none;
-}
-
-/* Mobile nav dropdown animation */
-@keyframes mobileMenuFadeIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ================================================================
-   断点 2: 768px 以下 — 三栏改单栏、sidebar 变左侧抽屉
-   ================================================================ */
-
-@media (max-width: 768px) {
-  .app-body {
-    flex-direction: column;
-    overflow-y: auto;
-  }
-
-  /* Mobile sidebar toggle button */
-  .mobile-sidebar-toggle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    background: rgba(0, 240, 255, 0.08);
-    border: 1px solid rgba(0, 240, 255, 0.2);
-    color: var(--neon-cyan);
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    margin: 8px 14px 0;
-    z-index: 10;
-    transition: var(--transition-smooth);
-  }
-
-  .mobile-sidebar-toggle:hover {
-    background: rgba(0, 240, 255, 0.18);
-    border-color: var(--neon-cyan);
-  }
-
-  /* Sidebar becomes a fixed-position drawer, hidden off-screen by default */
-  .app-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 280px;
-    height: 100vh;
-    z-index: 200;
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-right: 1px solid var(--border-color);
-    flex-shrink: 0;
-    overflow-y: auto;
-  }
-
-  /* Drawer open state */
-  body.mobile-sidebar-open .app-sidebar {
-    transform: translateX(0);
-  }
-
-  /* Backdrop overlay */
-  .mobile-sidebar-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 150;
-  }
-
-  body.mobile-sidebar-open .mobile-sidebar-backdrop {
-    display: block;
-  }
-
-  .lesson-content {
-    flex: 0 0 auto;
-    min-height: auto;
-    max-height: none;
-    overflow-y: visible;
-    padding: 14px;
-    gap: 14px;
-  }
-
-  /* 右栏 playground 取消 overflow:hidden，改为可滚动区域 */
-  .playground-section {
-    overflow-y: visible;
-    overflow-x: hidden;
-    height: auto;
-    min-height: 0;
-    padding: 14px;
-    gap: 14px;
-    flex: 0 0 auto;
-  }
-
-  .playground-card {
-    min-height: 0;
-    flex: 0 0 auto;
-  }
-
-  .console-card {
-    flex: 0 0 auto;
-    min-height: 220px;
-  }
-
-  .output-card {
-    flex: 0 0 auto;
-    min-height: 140px;
-  }
-
-  /* 中日双栏改为上下排列 */
-  .concept-container {
-    flex-direction: column;
-    gap: 14px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .concept-col {
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-  }
-
-  /* concept-body: ensure text and code wrap inside narrow containers */
-  .concept-body {
-    word-break: break-word;
-    overflow-wrap: break-word;
-    overflow-x: hidden;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .concept-body code {
-    word-break: break-all;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-  }
-
-  /* lesson-content and content-card: constrain width */
-  .lesson-content,
-  .content-card {
-    max-width: 100%;
-    overflow-x: hidden;
-    box-sizing: border-box;
-  }
-
-
-  /* SQL editor 缩小 */
-  .console-card-body .editor-container {
-    max-height: 200px;
-  }
-
-  .sql-editor {
-    font-size: 13px !important;
-    padding: 10px !important;
-  }
-
-  .run-query-btn {
-    padding: 8px 14px !important;
-    font-size: 12px !important;
-  }
-}
-
-/* ================================================================
-   断点 3: 480px 以下 — 手机尺寸，全面压缩间距
-   ================================================================ */
-@media (max-width: 480px) {
-  .app-header {
-    padding: 8px 10px;
-    gap: 6px;
-    flex-wrap: wrap;
-    min-height: auto;
-  }
-
-  .header-logo {
-    flex: 0 0 auto;
-    min-width: 0;
-    gap: 6px;
-  }
-
-  .logo-icon {
-    font-size: 20px;
-  }
-
-  .logo-text h1 {
-    font-size: 14px;
-  }
-
-  .logo-text span {
-    display: none;
-  }
-
-
-
-  /* ===== 手机端主导航 Dropdown ===== */
-  /* 隐藏原横向 tab 容器内的 panel，改为 dropdown */
-  .header-subject-selector {
-    position: relative;
-    margin-left: 0;
-    flex: 0 0 auto;
-    order: 2;
-    background: transparent;
-    border: none;
-    padding: 0;
-    gap: 0;
-    overflow: visible !important; /* Prevent dropdown clipping */
-  }
-
-  /* 显示触发按钮 */
-  .mobile-subject-toggle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: rgba(0, 240, 255, 0.08);
-    border: 1px solid rgba(0, 240, 255, 0.25);
-    color: var(--neon-cyan);
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: var(--transition-smooth);
-    min-height: 36px;
-  }
-
-  .mobile-subject-toggle:hover,
-  .mobile-subject-toggle[aria-expanded="true"] {
-    background: rgba(0, 240, 255, 0.18);
-    border-color: var(--neon-cyan);
-  }
-
-  .mobile-subject-chevron {
-    font-size: 10px;
-    transition: transform 0.25s;
-  }
-
-  .mobile-subject-toggle[aria-expanded="true"] .mobile-subject-chevron {
-    transform: rotate(180deg);
-  }
-
-  /* Tab panel — hidden by default on mobile */
-  .subject-tabs-panel {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0; /* Align to the right edge of the toggle */
-    left: auto; /* Prevent left alignment from causing screen overflow */
-    z-index: 9999; /* Higher z-index to stay above other elements */
-    flex-direction: column;
-    background: #0b0f1f;
-    border: 1px solid rgba(0, 240, 255, 0.2);
-    border-radius: 10px;
-    padding: 6px;
-    gap: 3px;
-    min-width: 200px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(12px);
-    animation: mobileMenuFadeIn 0.2s ease;
-  }
-
-  .subject-tabs-panel.open {
-    display: flex;
-  }
-
-  /* Tabs inside mobile dropdown: full-width, slightly larger touch targets */
-  .subject-tabs-panel .subject-tab {
-    width: 100%;
-    justify-content: flex-start;
-    padding: 10px 14px !important;
-    font-size: 13px !important;
-    white-space: nowrap;
-    border-radius: 6px;
-  }
-
-  /* ===== 手机端二级导航 Dropdown ===== */
-  .sub-header-bar {
-    position: relative;
-    padding: 8px 14px;
-    overflow: visible !important; /* allow dropdown to overflow */
-    z-index: 1000; /* Elevate stack level to display dropdown above main contents */
-  }
-
-  /* 显示触发按钮 */
-  .mobile-sub-toggle {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: rgba(168, 85, 247, 0.08);
-    border: 1px solid rgba(168, 85, 247, 0.25);
-    color: #c084fc;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: var(--transition-smooth);
-    min-height: 36px;
-  }
-
-  .mobile-sub-toggle:hover,
-  .mobile-sub-toggle[aria-expanded="true"] {
-    background: rgba(168, 85, 247, 0.18);
-    border-color: #c084fc;
-  }
-
-  .mobile-sub-chevron {
-    font-size: 10px;
-    margin-left: auto;
-    transition: transform 0.25s;
-  }
-
-  .mobile-sub-toggle[aria-expanded="true"] .mobile-sub-chevron {
-    transform: rotate(180deg);
-  }
-
-  /* Sub tabs panel — hidden by default on mobile */
-  .sub-header-tabs {
-    display: none;
-    position: absolute;
-    top: calc(100% + 2px);
-    right: 14px; /* Align to the right edge of the sub-bar */
-    left: auto; /* Prevent left overflow */
-    z-index: 10000; /* Higher z-index to stay above main app contents and toggles */
-    flex-direction: column;
-    background: #0b0f1f;
-    border: 1px solid rgba(168, 85, 247, 0.2);
-    border-radius: 10px;
-    padding: 6px;
-    gap: 3px;
-    min-width: 240px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(12px);
-    animation: mobileMenuFadeIn 0.2s ease;
-  }
-
-  .sub-header-tabs.open {
-    display: flex;
-  }
-
-  /* Tabs inside mobile sub dropdown */
-  .sub-header-tab {
-    width: 100%;
-    justify-content: flex-start;
-    padding: 10px 14px !important;
-    font-size: 13px !important;
-    white-space: normal;
-    border-radius: 6px;
-  }
-
-  /* header-challenge もモバイルでは非表示 */
-  .header-challenge {
-    order: 4;
-    margin-right: 0;
-  }
-
-  .header-challenge-btn-start {
-    padding: 6px 10px;
-    font-size: 11px;
-  }
-
-  .theme-toggle-btn,
-  .reset-all-btn {
-    padding: 4px 8px;
-    font-size: 10px;
-  }
-
-  .sub-header-tab {
-    padding: 6px 10px !important;
-    font-size: 11px !important;
-  }
-
-  /* 480px: 主导航 Dropdown — 触发按钮进一步缩小 */
-  .mobile-subject-toggle {
-    padding: 5px 10px;
-    font-size: 12px;
-    min-height: 34px;
-  }
-
-  /* 480px: 二级导航 Dropdown 触发按钮进一步缩小 */
-  .mobile-sub-toggle {
-    padding: 5px 10px;
-    font-size: 12px;
-    min-height: 34px;
-  }
-
-  /* App body: compact mobile toggle and drawer */
-  .mobile-sidebar-toggle {
-    margin: 6px 10px 0;
-    padding: 7px 10px;
-    font-size: 11px;
-  }
-
-  .app-sidebar {
-    width: 260px;
-  }
-
-  .lesson-content {
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .content-card {
-    padding: 14px;
-    gap: 12px;
-    border-radius: 12px;
-  }
-
-  .lesson-header h2 {
-    font-size: 16px;
-  }
-
-  .lesson-header h3 {
-    font-size: 12px;
-  }
-
-  .playground-section {
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .console-header,
-  .schema-header,
-  .output-header {
-    padding: 8px 14px;
-  }
-
-  .console-card-body .editor-container {
-    max-height: 160px;
-    min-height: 60px;
-  }
-
-  .sql-editor {
-    font-size: 12px !important;
-    line-height: 1.5;
-    padding: 8px !important;
-  }
-
-  .console-footer {
-    padding: 8px 14px;
-  }
-
-  /* SQL 执行按钮 — 触控高度至少 40px */
-  .run-query-btn {
-    padding: 10px 16px !important;
-    font-size: 13px !important;
-    min-height: 40px !important;
-  }
-
-  .run-query-btn kbd {
-    display: none;
-  }
-
-  /* 结果表格横向滚动 */
-  .result-table {
-    font-size: 11px !important;
-  }
-
-  .result-table th,
-  .result-table td {
-    padding: 6px 8px !important;
-  }
-
-  .output-body {
-    overflow-x: auto;
-  }
-
-  .playground-task-desc {
-    font-size: 11px !important;
-    padding: 6px 14px;
-  }
-
-  /* Quiz 按钮触控优化 */
-  .quiz-submit-btn {
-    min-height: 40px;
-    padding: 10px 16px;
-  }
-
-  .quiz-option {
-    padding: 10px 12px;
-  }
-
-  /* Schema card */
-  .schema-card {
-    min-height: 0;
-  }
-
-  /* sub-header-bar: 480px 延续 768px dropdown 方案，只调整尺寸 */
-  .sub-header-bar {
-    padding: 6px 10px;
-  }
-
-  .sub-header-tabs {
-    right: 10px;
-    left: auto;
-    min-width: 220px;
-  }
-
-}
-
-/* ================================================================
-   已有补充断点 — 1500px, 1180px, 1200px fallback
-   （予以精简，避免和上面的断点冲突）
-   ================================================================ */
-
-/* The old max-width:1200px rule (column collapse) is now at 768px.
-   Keep this cleanup-compatible by narrowing its scope to height-only fixes. */
 
 /* Height-based optimizations to reduce scrolling on smaller screens */
 @media (max-height: 850px) {
@@ -2087,7 +1626,6 @@ body {
 /* Subject Selector in Header */
 .header-subject-selector {
   display: flex;
-  align-items: center;
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
@@ -2096,15 +1634,6 @@ body {
   margin-left: 20px;
   margin-right: auto;
 }
-
-/* Desktop: tabs panel is a flex row (the mobile-subject-toggle is hidden) */
-@media (min-width: 481px) {
-  .subject-tabs-panel {
-    display: flex;
-    gap: 3px;
-  }
-}
-
 
 .subject-tab {
   background: transparent;
@@ -2150,11 +1679,9 @@ body {
   animation: fadeIn 0.3s ease;
 }
 
-@media (min-width: 481px) {
-  .sub-header-tabs {
-    display: flex;
-    gap: 12px;
-  }
+.sub-header-tabs {
+  display: flex;
+  gap: 12px;
 }
 
 .sub-header-tab {
@@ -7299,387 +6826,6 @@ body.i18n-active :where(
   white-space: pre-line;
 }
 
-/* =================================================================
-   Mobile Responsive Styles for CBT Exam Simulator (width <= 768px)
-   ================================================================= */
-@media (max-width: 768px) {
-  /* 1. CBT 主容器调整，避免与侧边栏目录按钮视觉重叠 */
-  .cbt-exam-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 400; /* 盖住 z-index: 10 的目录按钮 */
-    height: 100vh;
-    height: -webkit-fill-available;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* 2. CBT 考试配置页面 */
-  .cbt-config-screen {
-    padding: 16px;
-  }
-
-  .cbt-config-card {
-    padding: 20px;
-    gap: 16px;
-  }
-
-  /* 3. CBT 运行界面大布局切换为纵向单栏 */
-  .cbt-testing-screen {
-    height: auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow-y: visible;
-  }
-
-  .cbt-testing-body {
-    flex-direction: column;
-    height: auto;
-    overflow-y: visible;
-  }
-
-  /* 4. 题目区域占满宽度并支持长文本安全折行 */
-  .cbt-question-canvas {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: none;
-    overflow-y: visible;
-    padding: 16px;
-    gap: 14px;
-    background: #05070c;
-    box-sizing: border-box;
-  }
-
-  .cbt-q-body-text {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-break: anywhere;
-  }
-
-  .cbt-q-body-text img {
-    max-width: 100%;
-    height: auto;
-    max-height: 200px;
-  }
-
-  /* 5. 选项卡片自然折行与文字合理包裹 */
-  .cbt-option-item {
-    padding: 10px 14px;
-    gap: 8px;
-    box-sizing: border-box;
-  }
-
-  .cbt-option-text {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-break: anywhere;
-  }
-
-  /* 6. 答题卡移到题目下方，占满宽度 */
-  .cbt-navigator-panel {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: none;
-    border-left: none;
-    border-top: 1px solid var(--border-color);
-    padding: 16px;
-    background: #090d16;
-    box-sizing: border-box;
-  }
-
-  .cbt-grid-canvas {
-    grid-template-columns: repeat(5, 1fr);
-    max-height: 240px; /* 限制最大高度，可内部滚动答题卡，不占太多屏幕 */
-    overflow-y: auto;
-    gap: 6px;
-    flex: none;
-  }
-
-  /* 7. 顶部考试信息及控制条响应式排版 */
-  .cbt-testing-header {
-    height: auto;
-    min-height: 52px;
-    padding: 10px 16px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-    background: #090d16;
-    box-sizing: border-box;
-  }
-
-  .cbt-exam-title-box {
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .cbt-exam-timer-box {
-    justify-content: center;
-    padding: 4px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .cbt-exam-actions {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    gap: 10px;
-  }
-
-  .cbt-btn-action {
-    flex: 1;
-    justify-content: center;
-    padding: 8px 10px;
-    min-height: 40px;
-    font-size: 13px;
-  }
-
-  /* 8. CBT 结果报告界面移动端适配 */
-  .cbt-results-screen {
-    padding: 16px;
-  }
-
-  .cbt-results-card {
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .cbt-results-summary-row {
-    flex-direction: column;
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .cbt-results-total-box {
-    width: 100% !important;
-    border-right: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-right: 0 !important;
-    padding-bottom: 16px;
-  }
-}
-
-/* ==========================================================================
-   Round 14.2: UX/UI Improvements
-   ========================================================================== */
-
-/* UX-001: First Run Onboarding Guidance */
-.first-run-guidance {
-  position: relative;
-  background: linear-gradient(135deg, rgba(18, 24, 36, 0.95), rgba(10, 14, 23, 0.95));
-  border: 1px solid var(--neon-cyan-glow);
-  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 16px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  transition: var(--transition-smooth);
-  z-index: 10;
-}
-
-.first-run-guidance .guidance-close-btn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  color: var(--text-muted);
-  cursor: pointer;
-  font-size: 14px;
-  transition: var(--transition-smooth);
-}
-
-.first-run-guidance .guidance-close-btn:hover {
-  color: var(--error-color);
-}
-
-.first-run-guidance .guidance-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  max-width: 70%;
-}
-
-.first-run-guidance .guidance-icon {
-  font-size: 24px;
-  color: var(--neon-cyan);
-}
-
-.first-run-guidance .guidance-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.first-run-guidance .guidance-title {
-  font-weight: 700;
-  color: var(--neon-cyan);
-  font-size: 14px;
-}
-
-.first-run-guidance .guidance-desc {
-  font-size: 13px;
-  color: var(--text-main);
-  line-height: 1.4;
-}
-
-.first-run-guidance .guidance-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.first-run-guidance .guidance-btn {
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid var(--neon-cyan);
-  color: var(--neon-cyan);
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: var(--transition-smooth);
-}
-
-.first-run-guidance .guidance-btn:hover {
-  background: var(--neon-cyan);
-  color: #000;
-  box-shadow: 0 0 10px var(--neon-cyan);
-}
-
-/* UI-002: Responsive Lang Tab labels support */
-.lang-tab .lang-tab-short {
-  display: none;
-}
-.lang-tab .lang-tab-full {
-  display: inline;
-}
-
-/* UX-004: Soft Warning for Safe Mode console */
-.safe-mode-warning {
-  display: flex;
-  gap: 12px;
-  background: rgba(252, 185, 0, 0.08);
-  border: 1px solid rgba(252, 185, 0, 0.3);
-  border-radius: 8px;
-  padding: 14px 18px;
-  margin: 12px;
-  color: var(--text-main);
-  line-height: 1.5;
-  font-family: inherit;
-  text-align: left;
-}
-
-.safe-mode-warning .warning-icon {
-  font-size: 20px;
-  color: #ffb900;
-  display: flex;
-  align-items: flex-start;
-  padding-top: 2px;
-}
-
-.safe-mode-warning .warning-title {
-  font-weight: 700;
-  color: #ffb900;
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-.safe-mode-warning .warning-desc {
-  font-size: 13px;
-  color: var(--text-main);
-  margin-bottom: 4px;
-}
-
-.safe-mode-warning .warning-desc-ja {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.safe-mode-warning .download-link-box {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.safe-mode-warning .warning-link {
-  color: var(--neon-cyan);
-  text-decoration: underline;
-  font-weight: 600;
-}
-.safe-mode-warning .warning-link:hover {
-  color: #ffb900;
-}
-
-.java-status-warning,
-.python-status-warning {
-  background: rgba(252, 185, 0, 0.15) !important;
-  border-color: #fcb900 !important;
-  color: #ffb900 !important;
-}
-
-/* UI-005 & UI-007: Table Scroll wrappers */
-.table-scroll-wrapper {
-  position: relative;
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background: rgba(5, 8, 16, 0.5);
-  margin-bottom: 8px;
-}
-
-/* Media Query Adaptations */
-@media (max-width: 768px) {
-  .first-run-guidance {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 24px 16px 16px 16px;
-  }
-  .first-run-guidance .guidance-content {
-    max-width: 100%;
-  }
-  .first-run-guidance .guidance-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-  
-  .lang-tab .lang-tab-short {
-    display: inline;
-  }
-  .lang-tab .lang-tab-full {
-    display: none;
-  }
-  .lang-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    width: 100% !important;
-  }
-  
-  .table-scroll-wrapper::after {
-    content: "↔ 左右滑动查看完整表格 / Swipe horizontally";
-    display: block;
-    text-align: right;
-    font-size: 10px;
-    color: var(--text-muted);
-    padding: 4px 8px;
-    background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid var(--border-color);
-  }
-}
-
-
 /* ====== Auth UI Styles (Round 17.2) ====== */
 .auth-user-btn {
   background: transparent;
@@ -7692,12 +6838,19 @@ body.i18n-active :where(
   display: flex;
   align-items: center;
   gap: 6px;
+  transition: var(--transition-smooth);
   white-space: nowrap;
   margin-right: 6px;
 }
 .auth-user-btn:hover {
-  border-color: #00f0ff;
-  color: #00f0ff;
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan-glow);
+}
+.auth-user-icon {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 .auth-panel-backdrop {
   position: fixed;
@@ -7710,6 +6863,8 @@ body.i18n-active :where(
   z-index: 900;
   width: 380px;
   max-width: 90vw;
+  /* Center using flexbox on a fullscreen wrapper approach is fragile;
+     instead use explicit top/left and let overflow scroll naturally */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -7752,6 +6907,12 @@ body.i18n-active :where(
 }
 .auth-status-section {
   margin-bottom: 16px;
+}
+.auth-status-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
 }
 .auth-label {
   font-size: 13px;
@@ -7879,7 +7040,6 @@ body.i18n-active :where(
   border-color: rgba(255,255,255,0.2);
   color: var(--text-main);
 }
-
 /* Round 17.10 auth UI layout slimming styling */
 .auth-panel-section {
   padding: 12px 0;
@@ -8072,8 +7232,252 @@ body.i18n-active :where(
   color: var(--error-color);
 }
 
-@media (max-width: 600px) {
-  .auth-user-btn { padding: 5px 7px; font-size: 11px; }
-  .auth-user-label { display: none; }
-  .auth-panel { width: 95vw; }
+/* ==========================================================================
+   Round 19.2: UI decluttering, details summary styling & drawer system
+   ========================================================================== */
+
+/* 1. Header Actions Grouping */
+.header-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
+
+/* 2. Mobile toggles (hidden on desktop) */
+.mobile-toggle-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: var(--transition-smooth);
+}
+.mobile-toggle-btn:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan-glow);
+}
+
+/* 3. Backdrop for mobile off-canvas drawer */
+.mobile-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: 64px;
+  background: rgba(3, 7, 18, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 840;
+}
+body.mobile-sidebar-open .mobile-backdrop,
+body.mobile-playground-open .mobile-backdrop {
+  display: block;
+}
+
+/* 4. Fine-tune three columns visual weight & borders on desktop */
+@media (min-width: 901px) {
+  .app-sidebar {
+    width: clamp(220px, 16vw, 260px);
+    background: rgba(18, 24, 36, 0.4);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .lesson-content {
+    flex: 1.3;
+    padding: 24px;
+    background: rgba(10, 14, 23, 0.2);
+  }
+  .playground-section {
+    flex: 0.7;
+    padding: 24px 24px 24px 0;
+  }
+  .content-card,
+  .playground-card {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* 5. Auth Panel Details & summary styles */
+.auth-device-details,
+.auth-password-details {
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.auth-details-summary,
+.auth-password-summary {
+  cursor: pointer;
+  color: var(--neon-cyan);
+  font-size: 12px;
+  font-weight: 500;
+  outline: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+.auth-details-summary::-webkit-details-marker,
+.auth-password-summary::-webkit-details-marker {
+  display: none;
+}
+.auth-device-details .auth-info-grid {
+  margin-top: 8px;
+}
+.auth-password-details .auth-password-row {
+  margin-top: 8px;
+}
+.auth-bottom-actions-section {
+  background: rgba(255, 255, 255, 0.01);
+  padding: 12px 20px !important;
+  border-top: 1px solid var(--border-color);
+}
+.auth-actions-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 0 !important;
+}
+.auth-actions-row .auth-btn {
+  flex: 1;
+  font-size: 11px;
+  padding: 8px 10px;
+  height: 34px;
+  min-height: 34px;
+  white-space: nowrap;
+}
+.auth-panel-content::-webkit-scrollbar {
+  width: 4px;
+}
+.auth-panel-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+.auth-panel-content::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
+}
+
+/* 6. Breakpoint media query rules */
+
+/* <= 900px: Playground off-canvas drawer */
+@media (max-width: 900px) {
+  .playground-section {
+    position: fixed;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    width: 450px;
+    max-width: 90vw;
+    z-index: 850;
+    background: #080d1a;
+    border-left: 1px solid var(--border-color);
+    padding: 16px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  body.mobile-playground-open .playground-section {
+    transform: translateX(0);
+  }
+  #mobile-playground-toggle {
+    display: inline-flex;
+  }
+  .reset-all-btn span,
+  #glossary-open-btn span {
+    display: none; /* Hide labels, show only icons */
+  }
+  .reset-all-btn,
+  #glossary-open-btn {
+    padding: 8px;
+    min-width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+  .app-body {
+    flex-direction: row;
+    overflow: hidden;
+  }
+  .lesson-content {
+    flex: 1;
+    padding: 16px;
+  }
+}
+
+/* <= 720px: Sidebar off-canvas drawer */
+@media (max-width: 720px) {
+  .app-sidebar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 80vw;
+    z-index: 860;
+    background: #080d1a;
+    border-right: 1px solid var(--border-color);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  body.mobile-sidebar-open .app-sidebar {
+    transform: translateX(0);
+  }
+  #mobile-sidebar-toggle {
+    display: inline-flex;
+  }
+  #language-switcher .language-toggle-text {
+    display: none; /* Hide language switcher text on mobile */
+  }
+  .auth-user-btn .auth-user-label {
+    display: none; /* Hide account text label */
+  }
+  .auth-user-btn {
+    padding: 8px;
+    min-width: 36px;
+    height: 36px;
+    justify-content: center;
+  }
+}
+
+/* <= 520px: Header and Auth panel compactness */
+@media (max-width: 520px) {
+  .app-header {
+    padding: 8px 12px;
+    min-height: 56px;
+  }
+  .header-logo {
+    flex: 0 0 auto;
+    min-width: 0;
+    gap: 8px;
+  }
+  .logo-text h1 {
+    font-size: 15px;
+  }
+  .logo-text span {
+    display: none;
+  }
+  .mobile-toggle-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .header-actions-right {
+    gap: 6px;
+  }
+  .header-actions-right button,
+  .language-toggle-btn {
+    height: 32px;
+    min-width: 32px;
+    padding: 6px !important;
+  }
+  .auth-panel {
+    width: calc(100vw - 24px);
+    margin: 12px;
+  }
+}
+
