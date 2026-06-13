@@ -1,21 +1,21 @@
 {
-  "assetVersion": "v2026.6.13-r19.6",
-  "generatedAt": "2026-06-13T13:52:07Z",
+  "assetVersion": "v2026.6.13-r20.5",
+  "generatedAt": "2026-06-13T15:08:33Z",
   "webVersion": "v2026.6.13",
   "releaseVersion": "v2026.6.13",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
-      "sizeBytes": 1545,
-      "sha256": "a6842c3fb1e51de72b03ca59dadf13b620e01ba283a5691595d4c160f7b973f4",
+      "version": "v2026.6.13-r20.5",
+      "sizeBytes": 1543,
+      "sha256": "48703356e71b614fbad5f77e4928f40d5a029b87bfd3ef0afcd1e6a9b4795e4a",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 188007,
       "sha256": "d0ea96db4b53d60871a2e3480e2afb2c2a5c09c2ab02945d1b9058b47f1e546e",
       "cacheStrategy": "static"
@@ -23,15 +23,15 @@
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
-      "sizeBytes": 59435,
-      "sha256": "d9f6a881cfe636681c791faffaab814e14b7022ed6e3b5a50f43fd7d4e81806a",
+      "version": "v2026.6.13-r20.5",
+      "sizeBytes": 67195,
+      "sha256": "03debfe767aff0847b9b954b1ac276e59f9df925a548ee6e2de63d89d811b3cb",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 6342,
       "sha256": "0b114614918242a0d0fdf0995c6bfb636ff917fda6441cee5f2bd05980648644",
       "cacheStrategy": "static"
@@ -39,15 +39,15 @@
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
-      "sizeBytes": 187149,
-      "sha256": "dc021b6b8a2fe3c37fda4033efaeeb79f21341eb1d4538a4e4fc6be587c820c2",
+      "version": "v2026.6.13-r20.5",
+      "sizeBytes": 194254,
+      "sha256": "d0717e8ba7b171c0d89d4a82fb9b1693e412b8e8ede4db09f59899798da91b1a",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,7 +55,7 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 1104,
       "sha256": "375e2a58fdf09f274e21876556e2a1997b1dec16978df36a2dae3f497b6debdd",
       "cacheStrategy": "static"
@@ -63,15 +63,15 @@
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.13-r19.6",
-      "sizeBytes": 170185,
-      "sha256": "b267de2a51081670b7dd4bf138825ad9f8b2c37e63d93e1531daea2613d1d13b",
+      "version": "v2026.6.13-r20.5",
+      "sizeBytes": 172399,
+      "sha256": "0df3dfce20b1d374e623cf709d316909328844d478b2c8283b38a7b05fc2fcb6",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -79,7 +79,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -87,7 +87,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.13-r19.6",
+      "version": "v2026.6.13-r20.5",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -95,9 +95,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.6",
-      "sizeBytes": 4045,
-      "sha256": "d4df599805a6505224f8ef350c390fbecfa0daa46879b7febb16ff33b6d1624d",
+      "version": "v2026.6.13-r20.5",
+      "sizeBytes": 4044,
+      "sha256": "a4efabb4e4e675393a5c3b9003ec62639cfc71d018912c226a2f43e704a89e45",
       "cacheStrategy": "pwa"
     }
   ]

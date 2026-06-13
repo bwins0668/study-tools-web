@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "study-tools-web-v2026-6-13-r19-6";
+﻿const CACHE_NAME = "study-tools-web-v2026-6-13-r20-5";
 
 const CORE_ASSETS = [
   "./",
