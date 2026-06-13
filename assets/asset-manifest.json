@@ -1,6 +1,6 @@
 {
   "assetVersion": "v2026.6.13-r20.5",
-  "generatedAt": "2026-06-13T15:08:33Z",
+  "generatedAt": "2026-06-13T15:25:09Z",
   "webVersion": "v2026.6.13",
   "releaseVersion": "v2026.6.13",
   "assets": [
@@ -24,8 +24,8 @@
       "path": "assets/js/i18n.js",
       "type": "javascript",
       "version": "v2026.6.13-r20.5",
-      "sizeBytes": 67195,
-      "sha256": "03debfe767aff0847b9b954b1ac276e59f9df925a548ee6e2de63d89d811b3cb",
+      "sizeBytes": 67781,
+      "sha256": "87c442017b5cc8fe2e49725cd223f35ef895e9d43ffc6546288962f2a0444773",
       "cacheStrategy": "static"
     },
     {
