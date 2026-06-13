@@ -410,13 +410,6 @@
     return style.display !== "none" && style.visibility !== "hidden";
   }
 
-  function isWebPublicRuntime() {
-    return Boolean(
-      window.STUDY_TOOLS_VERSION &&
-      window.STUDY_TOOLS_VERSION.webUrl
-    );
-  }
-
   function translationPriority(el, attribute = false) {
     if (!el) return 20;
     const rect = el.getBoundingClientRect();
@@ -483,10 +476,6 @@
 
   async function translateBatch(items, onProgress) {
     if (!isActive() || !items || !items.length) return {};
-    if (isWebPublicRuntime()) {
-      console.debug("[I18n] Skip AI translation calls in web public runtime.");
-      return {};
-    }
     const requestTargetLang = items[0]?.targetLang || currentLang;
     const requestTargetInfo = langInfo(requestTargetLang);
     const requestTargetLabel = requestTargetLang === "ja" ? "Japanese" : requestTargetInfo.label;
@@ -551,9 +540,6 @@
       return `${leading}${compactVisibleText(cleanOriginal)}${trailing}`;
     }
     if (/[\u3400-\u9fff]/.test(cleanOriginal)) {
-      if (isWebPublicRuntime()) {
-        return source;
-      }
       return `${leading}${isCompactPairContext(contextEl) ? "…" : "翻訳中…"}${trailing}`;
     }
     return source;
@@ -566,9 +552,6 @@
     if (jaText && jaText !== cleanOriginal) return jaText;
     if (/[\u3040-\u30ff\u31f0-\u31ff]/.test(cleanOriginal)) return source;
     if (/[\u3400-\u9fff]/.test(cleanOriginal)) {
-      if (isWebPublicRuntime()) {
-        return source;
-      }
       return attr === "placeholder" ? "入力…" : "翻訳中…";
     }
     return source;
@@ -693,10 +676,9 @@
     const both = document.querySelector('.lang-tab[data-lang="both"]');
     const ja = document.querySelector('.lang-tab[data-lang="ja"]');
     const target = document.querySelector('.lang-tab[data-lang="zh"]');
-    const targetCode = (info.code === 'default-ja-zh') ? 'ZH' : info.code.substring(0, 2).toUpperCase();
-    if (both) both.innerHTML = `<i class="fa-solid fa-columns"></i> <span class="lang-tab-full">${info.native} / 日本語</span><span class="lang-tab-short">${targetCode} / JA</span>`;
-    if (ja) ja.innerHTML = `<span class="lang-tab-full">日本語のみ</span><span class="lang-tab-short">JA</span>`;
-    if (target) target.innerHTML = `<span class="lang-tab-full">${info.native}</span><span class="lang-tab-short">${targetCode}</span>`;
+    if (both) both.innerHTML = `<i class="fa-solid fa-columns"></i> ${info.native} / 日本語`;
+    if (ja) ja.textContent = "日本語のみ";
+    if (target) target.textContent = info.native;
     if (jaHead) jaHead.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> 解説 (日本語)';
     if (targetHead) targetHead.innerHTML = `<i class="fa-solid fa-language"></i> Explanation (${info.native})`;
   }
@@ -737,7 +719,7 @@
       }
       titleJaEl.textContent = lesson.titleJa || "";
       conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
-      if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
+      if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
 
@@ -750,7 +732,7 @@
         conceptTargetEl.innerHTML = renderOriginalConcept(localized.concept || lesson.conceptZh || lesson.conceptJa || "");
         titleJaEl.textContent = lesson.titleJa || "";
         conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
-        if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
+        if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
         return;
       }
     }
@@ -780,7 +762,7 @@
     titleTargetEl.textContent = cachedTitle || lesson.titleZh || lesson.titleJa || "";
     titleJaEl.textContent = lesson.titleJa || "";
     conceptTargetEl.innerHTML = sanitizeHtml(cachedConcept || renderOriginalConcept(lesson.conceptZh || lesson.conceptJa || ""));
-    if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
+    if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
 
     try {
       const translated = await translateBatch([titleItem, conceptItem]);
@@ -792,7 +774,7 @@
     } catch (error) {
       showI18nError(error);
     } finally {
-      if (window.wrapAllTablesWithScrollWrapper) window.wrapAllTablesWithScrollWrapper();
+      if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
     }
   }
 
@@ -1208,6 +1190,7 @@
     if (clean === "zh" || clean === "zh-cn" || clean.startsWith("zh-")) return "zh-CN";
     if (clean === "vi" || clean === "vi-vn" || clean.startsWith("vi-")) return "vi-VN";
     if (clean === "my" || clean === "my-mm" || clean.startsWith("my-")) return "my-MM";
+    if (clean === "ko" || clean === "ko-kr" || clean.startsWith("ko-")) return "ko-KR";
     if (clean === "fr" || clean === "fr-fr" || clean.startsWith("fr-")) return "fr-FR";
     return "en-US";
   }
@@ -1385,19 +1368,6 @@
     if (typeof window.refreshI18nForCurrentLesson === "function") {
       window.refreshI18nForCurrentLesson();
     }
-
-    // Lazy-load content language pack for current subject (en/vi/my/fr only)
-    if (typeof window.ContentI18n !== 'undefined' && typeof window.ContentI18n.loadPack === 'function') {
-      var _subject = typeof getActiveSubject === 'function' ? getActiveSubject() : null;
-      if (_subject) {
-        window.ContentI18n.loadPack(_subject, currentLang).then(function () {
-          if (typeof window.refreshI18nForCurrentLesson === 'function') {
-            window.refreshI18nForCurrentLesson();
-          }
-        });
-      }
-    }
-
     scheduleTranslate(document.body);
   }
 
