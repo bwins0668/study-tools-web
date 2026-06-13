@@ -1,21 +1,21 @@
 {
-  "assetVersion": "v2026.6.13-r19.4",
-  "generatedAt": "2026-06-13T13:24:02Z",
+  "assetVersion": "v2026.6.13-r19.6",
+  "generatedAt": "2026-06-13T13:52:07Z",
   "webVersion": "v2026.6.13",
   "releaseVersion": "v2026.6.13",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 1545,
-      "sha256": "76d75f4039c08ad4719aaf3c97e38d4a75d635bee3d55ad21060f715da073f67",
+      "sha256": "a6842c3fb1e51de72b03ca59dadf13b620e01ba283a5691595d4c160f7b973f4",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 188007,
       "sha256": "d0ea96db4b53d60871a2e3480e2afb2c2a5c09c2ab02945d1b9058b47f1e546e",
       "cacheStrategy": "static"
@@ -23,7 +23,7 @@
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 59435,
       "sha256": "d9f6a881cfe636681c791faffaab814e14b7022ed6e3b5a50f43fd7d4e81806a",
       "cacheStrategy": "static"
@@ -31,7 +31,7 @@
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 6342,
       "sha256": "0b114614918242a0d0fdf0995c6bfb636ff917fda6441cee5f2bd05980648644",
       "cacheStrategy": "static"
@@ -39,15 +39,15 @@
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
-      "sizeBytes": 183975,
-      "sha256": "875f3e87c12ed9fd4d64d53f35c82f2ff08d96d7926e9bf5fad514e71e73a228",
+      "version": "v2026.6.13-r19.6",
+      "sizeBytes": 187149,
+      "sha256": "dc021b6b8a2fe3c37fda4033efaeeb79f21341eb1d4538a4e4fc6be587c820c2",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,7 +55,7 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 1104,
       "sha256": "375e2a58fdf09f274e21876556e2a1997b1dec16978df36a2dae3f497b6debdd",
       "cacheStrategy": "static"
@@ -63,7 +63,7 @@
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 170185,
       "sha256": "b267de2a51081670b7dd4bf138825ad9f8b2c37e63d93e1531daea2613d1d13b",
       "cacheStrategy": "static"
@@ -71,7 +71,7 @@
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -79,7 +79,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -87,7 +87,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -95,9 +95,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.13-r19.4",
+      "version": "v2026.6.13-r19.6",
       "sizeBytes": 4045,
-      "sha256": "5aee9eec37965f3cd0b0a4442588969a7e9525c9c6c5ca5c0c18a5937a53c072",
+      "sha256": "d4df599805a6505224f8ef350c390fbecfa0daa46879b7febb16ff33b6d1624d",
       "cacheStrategy": "pwa"
     }
   ]

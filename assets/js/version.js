@@ -5,10 +5,10 @@
   window.STUDY_TOOLS_VERSION = {
     webVersion: "v2026.6.13",
     desktopVersion: "v2026.6.13",
-    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.13-r19.4",
+    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.13-r19.6",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.13-r19.4"
+    assetVersion: "v2026.6.13-r19.6"
   };
 
   function applyVersionInfo() {
