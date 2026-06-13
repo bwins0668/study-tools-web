@@ -1,14 +1,14 @@
-/* Study Tools Web — Lightweight version metadata (no framework, no app.js dep) */
+﻿/* Study Tools Web 窶・Lightweight version metadata (no framework, no app.js dep) */
 (function () {
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
     webVersion: "v2026.6.13",
     desktopVersion: "v2026.6.13",
-    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.13-r18.0",
+    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.13-r19.4",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.13-r18.0"
+    assetVersion: "v2026.6.13-r19.4"
   };
 
   function applyVersionInfo() {
