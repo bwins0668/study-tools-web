@@ -34,6 +34,9 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.env.local
+*.secret
+assets/js/supabase-config.local.js
 
 # npm lock file (only sql.js dev dependency, vendor copies already committed)
 /package-lock.json
@@ -46,4 +49,3 @@ tools/diag_404.py
 tools/diag_cbt_dom.py
 tools/test_phase9h.py
 tools/test_pwa_phase9h.py
-
