@@ -410,13 +410,6 @@
     return style.display !== "none" && style.visibility !== "hidden";
   }
 
-  function isWebPublicRuntime() {
-    return Boolean(
-      window.STUDY_TOOLS_VERSION &&
-      window.STUDY_TOOLS_VERSION.webUrl
-    );
-  }
-
   function translationPriority(el, attribute = false) {
     if (!el) return 20;
     const rect = el.getBoundingClientRect();
@@ -475,10 +468,6 @@
 
   async function translateBatch(items, onProgress) {
     if (!isActive() || !items || !items.length) return {};
-    if (isWebPublicRuntime()) {
-      console.debug("[I18n] Skip AI translation calls in web public runtime.");
-      return {};
-    }
     const requestTargetLang = items[0]?.targetLang || currentLang;
     const requestTargetInfo = langInfo(requestTargetLang);
     const requestTargetLabel = requestTargetLang === "ja" ? "Japanese" : requestTargetInfo.label;
@@ -543,9 +532,6 @@
       return `${leading}${compactVisibleText(cleanOriginal)}${trailing}`;
     }
     if (/[\u3400-\u9fff]/.test(cleanOriginal)) {
-      if (isWebPublicRuntime()) {
-        return source;
-      }
       return `${leading}${isCompactPairContext(contextEl) ? "…" : "翻訳中…"}${trailing}`;
     }
     return source;
@@ -558,9 +544,6 @@
     if (jaText && jaText !== cleanOriginal) return jaText;
     if (/[\u3040-\u30ff\u31f0-\u31ff]/.test(cleanOriginal)) return source;
     if (/[\u3400-\u9fff]/.test(cleanOriginal)) {
-      if (isWebPublicRuntime()) {
-        return source;
-      }
       return attr === "placeholder" ? "入力…" : "翻訳中…";
     }
     return source;
@@ -730,7 +713,7 @@
       return;
     }
 
-    // 2. Prefer static/dynamic ContentI18n package content if available
+    // 2. Prefer static ContentI18n package content if available
     const subject = getActiveSubject();
     let titleText = "";
     let conceptHtml = "";
@@ -749,7 +732,7 @@
           found = true;
         }
       } else {
-        // Pack is not loaded yet (Web dynamic load). Show loading and return
+        // Pack is not loaded yet (Web dynamic load fallback). Show loading and return
         applyLessonTargetLayout(true);
         const loadingText = (window.I18n && typeof window.I18n.t === "function" ? window.I18n.t("common.loading") : "") || "Loading...";
         titleTargetEl.textContent = loadingText;
@@ -1211,7 +1194,7 @@
   function translateStatic(key, params) {
     if (!key) return "";
     const lang = normalizeLanguageCode(currentLang);
-    const fallbackChain = [lang, "en-US", "ja-JP", "zh-CN"];
+    const fallbackChain = [lang, "ja-JP", "zh-CN", "en-US"];
     let translated = null;
 
     function getNestedValue(obj, path) {
@@ -1381,19 +1364,6 @@
     if (typeof window.refreshI18nForCurrentLesson === "function") {
       window.refreshI18nForCurrentLesson();
     }
-
-    // Lazy-load content language pack for current subject (en/vi/my/fr only)
-    if (typeof window.ContentI18n !== 'undefined' && typeof window.ContentI18n.loadPack === 'function') {
-      var _subject = typeof getActiveSubject === 'function' ? getActiveSubject() : null;
-      if (_subject) {
-        window.ContentI18n.loadPack(_subject, currentLang, true).then(function () {
-          if (typeof window.refreshI18nForCurrentLesson === 'function') {
-            window.refreshI18nForCurrentLesson();
-          }
-        });
-      }
-    }
-
     scheduleTranslate(document.body);
   }
 
@@ -1459,6 +1429,46 @@
       return renderTargetText(source, translated);
     },
   };
+ 
+   /* User translation local storage (Round 20.1 prototype) */
+   var USER_TRANSLATIONS_KEY = "study-tools-user-translations-v1";
+ 
+   function getUserTranslationsData() {
+     try {
+       return JSON.parse(localStorage.getItem(USER_TRANSLATIONS_KEY) || "{}");
+     } catch (_) { return {}; }
+   }
+ 
+   function saveUserTranslationItem(sourceText, sourceLang, targetLang, translatedText, context) {
+     var all = getUserTranslationsData();
+     var key = String(sourceText) + "|" + String(sourceLang) + "|" + String(targetLang) + "|" + String(context || "");
+     all[key] = { translatedText: String(translatedText), updatedAt: new Date().toISOString() };
+     try { localStorage.setItem(USER_TRANSLATIONS_KEY, JSON.stringify(all)); } catch (_) {}
+   }
+ 
+   function deleteUserTranslationItem(sourceText, sourceLang, targetLang, context) {
+     var all = getUserTranslationsData();
+     var key = String(sourceText) + "|" + String(sourceLang) + "|" + String(targetLang) + "|" + String(context || "");
+     if (all[key]) { delete all[key]; }
+     try { localStorage.setItem(USER_TRANSLATIONS_KEY, JSON.stringify(all)); } catch (_) {}
+   }
+ 
+   function getUserTranslationItem(sourceText, sourceLang, targetLang, context) {
+     var all = getUserTranslationsData();
+     var key = String(sourceText) + "|" + String(sourceLang) + "|" + String(targetLang) + "|" + String(context || "");
+     return all[key] || null;
+   }
+ 
+   function getUserTranslationCount() {
+     var all = getUserTranslationsData();
+     return Object.keys(all).length;
+   }
+ 
+   window.getUserTranslationsData = getUserTranslationsData;
+   window.saveUserTranslationItem = saveUserTranslationItem;
+   window.deleteUserTranslationItem = deleteUserTranslationItem;
+   window.getUserTranslationItem = getUserTranslationItem;
+   window.getUserTranslationCount = getUserTranslationCount;
 
   // Global helper functions
   window.showToastKey = function (key, type = "info", params = null) {
