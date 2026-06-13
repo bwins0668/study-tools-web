@@ -1,11 +1,8 @@
 /**
- * Study Tools Auth UI — Prototype (Round 17.2)
+ * Study Tools Auth UI - Supabase Auth and manual sync controls.
  *
- * Local-only auth UI prototype for user login/sync status.
- * - No network requests
- * - No Supabase SDK
- * - No real authentication
- * - Mock sign-in for UI development purposes
+ * Network operations remain explicit user actions and require a configured,
+ * authenticated Supabase client. Mock sign-in remains for UI development.
  *
  * Dependencies: window.StudySync (sync-engine.js)
  * Exposed globally as `window.StudyAuthUI`
@@ -37,6 +34,8 @@
   var supabaseAdapterLoading = null;
   var authMessage = "";
   var authSubscription = null;
+  var syncMessage = "";
+  var syncInProgress = false;
 
   function ensureSupabaseAdapter() {
     if (window.StudySupabase) return Promise.resolve(window.StudySupabase);
@@ -78,6 +77,7 @@
       var v = window.I18n.t(key);
       if (v && v !== key) return v;
     }
+    // Static fallback (English as base)
     var dict = {
       "auth.localMode": "本地模式",
       "auth.notLoggedIn": "未登录",
@@ -106,7 +106,26 @@
   function getLocalAuthState() {
     var state = safeGet(KEYS.AUTH_STATE, null);
     if (!state) {
-      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      // Migrate from old AUTH_MODE if present
+      var oldMode = safeGet(KEYS.AUTH_MODE, null);
+      if (oldMode) {
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        state.mode = oldMode;
+        state.updated_at = new Date().toISOString();
+        if (oldMode === "mock_signed_in") {
+          var mock = safeGet(KEYS.MOCK_USER, null);
+          if (mock) {
+            state.user_id = mock.user_id || "mock-user";
+            state.email = mock.email || "mock@example.com";
+            state.display_name = mock.display_name || "模拟用户";
+            state.provider = "mock";
+          }
+        }
+        setLocalAuthState(state);
+        safeRemove(KEYS.AUTH_MODE);
+      } else {
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
     }
     return state;
   }
@@ -207,6 +226,8 @@
     }
     panel.hidden = false;
     panel.style.display = "block";
+
+    // Populate panel content
     populateAuthPanel(panel, mode || "default");
   }
 
@@ -249,6 +270,9 @@
     if (!content) return;
 
     var syncStatus = window.StudySync ? window.StudySync.getSyncStatus() : null;
+    var syncSummary = window.StudySync && typeof window.StudySync.getSyncSummary === "function"
+      ? window.StudySync.getSyncSummary()
+      : null;
     var qSize = syncStatus ? syncStatus.queue_pending : 0;
     var lastSync = syncStatus ? syncStatus.last_sync_at : null;
     var deviceId = syncStatus ? syncStatus.device_id : (window.StudySync ? window.StudySync.getDeviceId() : "—");
@@ -257,6 +281,14 @@
     var isMock = state.mode === "mock_signed_in";
     var isSupabaseUser = state.mode === "signed_in" && state.provider === "supabase";
     var supabaseReady = window.StudySupabase && window.StudySupabase.getStatus().ready;
+    var canManualSync = isSupabaseUser && supabaseReady && !syncInProgress;
+    var syncStateLabel = syncInProgress
+      ? t("auth.syncingNow", "正在同步")
+      : (syncSummary && syncSummary.status === "success"
+        ? t("auth.syncSuccess", "同步成功")
+        : (syncSummary && syncSummary.status === "error"
+          ? t("auth.syncFailed", "同步失败")
+          : t("auth.syncStatus.local", "本地模式")));
 
     content.innerHTML =
       '<div class="auth-panel-header">' +
@@ -264,6 +296,7 @@
         '<button class="auth-panel-close-btn" data-auth-action="close" title="' + esc(t("auth.close", "关闭")) + '"><i class="fa-solid fa-xmark"></i></button>' +
       '</div>' +
       '<div class="auth-panel-body">' +
+        // Status section
         '<div class="auth-status-section">' +
           '<div class="auth-status-row">' +
             '<span class="auth-label">' + esc(t("auth.syncStatus.local", "状态")) + ':</span>' +
@@ -279,16 +312,22 @@
             '<span class="auth-label">' + esc(t("auth.currentUser", "当前用户")) + ':</span>' +
             '<span class="auth-value">' + esc(isSupabaseUser ? state.email : t("auth.notLoggedIn", "未登录")) + '</span>' +
           '</div>' +
+          '<div class="auth-status-row">' +
+            '<span class="auth-label">' + esc(t("auth.sync", "同步")) + ':</span>' +
+            '<span class="auth-value">' + esc(syncStateLabel) + '</span>' +
+          '</div>' +
         '</div>' +
 
+        // Manual sync notice
         '<div class="auth-notice">' +
           '<i class="fa-solid fa-info-circle"></i> ' +
-          esc(t("auth.syncInDev", "同步功能开发中")) +
+          esc(t("auth.manualSyncOnly", "仅在点击立即同步后同步")) +
         '</div>' +
         '<div class="auth-privacy-note" data-i18n-skip="true">' +
-          '<i class="fa-solid fa-shield-halved"></i> 当前仍是本地原型模式；请勿输入真实密码或发起真实登录。真实 Supabase Auth 将在后续 Round 接入。' +
+          '<i class="fa-solid fa-shield-halved"></i> Supabase 同步是可选功能；默认继续本地优先，不会自动同步。' +
         '</div>' +
 
+        // Device info
         '<div class="auth-info-section">' +
           '<div class="auth-info-row"><span class="auth-label">' + esc(t("auth.deviceId", "设备 ID")) + ':</span>' +
           '<span class="auth-value auth-device-id" title="' + esc(deviceId) + '">' + esc(deviceId ? deviceId.slice(0, 20) + "..." : "—") + '</span></div>' +
@@ -298,9 +337,25 @@
           '<span class="auth-value">' + (lastSync ? esc(lastSync) : "—") + '</span></div>' +
         '</div>' +
 
+        // Privacy note
         '<div class="auth-privacy-note">' +
           '<i class="fa-solid fa-shield-halved"></i> ' +
-          esc(t("auth.noLearningSync", "当前不会同步学习数据")) +
+          esc(t("auth.syncScope", "只同步学习进度和设置")) +
+          '<br><i class="fa-solid fa-key"></i> ' +
+          esc(t("auth.noAiKeyUpload", "不会上传 AI Key")) +
+        '</div>' +
+
+        '<div class="auth-info-section">' +
+          '<button class="auth-btn auth-btn-primary" data-auth-action="manual-sync"' + (canManualSync ? "" : " disabled") + '>' +
+            '<i class="fa-solid fa-rotate"></i> ' +
+            esc(syncInProgress ? t("auth.syncingNow", "正在同步") : t("auth.syncNow", "立即同步")) +
+          '</button>' +
+          (!isSupabaseUser
+            ? '<div class="auth-notice">' + esc(t("auth.signInFirst", "请先登录")) + '</div>'
+            : (!supabaseReady
+              ? '<div class="auth-notice">' + esc(t("auth.supabaseNotConfigured", "Supabase 未配置")) + '</div>'
+              : '')) +
+          (syncMessage ? '<div class="auth-notice" data-i18n-skip="true">' + esc(syncMessage) + '</div>' : '') +
         '</div>' +
 
         '<div class="auth-info-section">' +
@@ -317,6 +372,7 @@
           (authMessage ? '<div class="auth-notice" data-i18n-skip="true">' + esc(authMessage) + '</div>' : '') +
         '</div>' +
 
+        // Action buttons
         '<div class="auth-actions">' +
           (isSupabaseUser ?
             '<button class="auth-btn auth-btn-secondary" data-auth-action="supabase-sign-out">' +
@@ -351,6 +407,7 @@
     var magicLinkButton = qs('[data-auth-action="magic-link"]', content);
     var passwordButton = qs('[data-auth-action="password-sign-in"]', content);
     var supabaseSignOutButton = qs('[data-auth-action="supabase-sign-out"]', content);
+    var manualSyncButton = qs('[data-auth-action="manual-sync"]', content);
 
     if (closeButton) closeButton.addEventListener("click", closeAuthPanel);
     if (signInButton) {
@@ -364,6 +421,7 @@
     if (magicLinkButton) magicLinkButton.addEventListener("click", handleMagicLink);
     if (passwordButton) passwordButton.addEventListener("click", handlePasswordSignIn);
     if (supabaseSignOutButton) supabaseSignOutButton.addEventListener("click", handleSupabaseSignOut);
+    if (manualSyncButton) manualSyncButton.addEventListener("click", handleManualSync);
   }
 
   function getAuthInput(name) {
@@ -401,6 +459,25 @@
     setAnonymousMode();
   }
 
+  async function handleManualSync() {
+    if (syncInProgress || !window.StudySync || typeof window.StudySync.runManualSync !== "function") return;
+    syncInProgress = true;
+    syncMessage = t("auth.syncingNow", "正在同步");
+    populateAuthPanel(el("auth-panel"), "sync-start");
+    try {
+      var result = await window.StudySync.runManualSync();
+      syncMessage = result && result.ok
+        ? t("auth.syncSuccess", "同步成功")
+        : t("auth.syncFailed", "同步失败") + ": " +
+          (result && result.error ? result.error.message : "Unknown error");
+    } catch (error) {
+      syncMessage = t("auth.syncFailed", "同步失败") + ": " + (error.message || "Unknown error");
+    } finally {
+      syncInProgress = false;
+      if (panelVisible) populateAuthPanel(el("auth-panel"), "sync-finished");
+    }
+  }
+
   async function initSupabaseAuth() {
     var api = await ensureSupabaseAdapter();
     if (!api) return;
@@ -417,7 +494,6 @@
     }
   }
 
-  /* ── User menu button ────────────────────────────── */
   function renderUserMenu() {
     var header = qs(".app-header");
     if (!header) return;
@@ -433,11 +509,18 @@
     userBtn.className = "auth-user-btn";
     userBtn.type = "button";
     userBtn.setAttribute("title", t("auth.account", "账号"));
-    userBtn.addEventListener("click", function () { openAuthPanel(); });
+    userBtn.addEventListener("click", function () {
+      openAuthPanel();
+    });
+
+    var state = getLocalAuthState();
+    var isAnonymous = state.mode === "local_anonymous";
+
     userBtn.innerHTML =
       '<span class="auth-user-icon"><i class="fa-solid fa-' + (isAnonymous ? "user" : "user-check") + '"></i></span>' +
       '<span class="auth-user-label">' + esc(isAnonymous ? t("auth.localMode", "本地模式") : t("auth.syncStatus.synced", "已登录")) + '</span>';
 
+    // Insert before theme-toggle
     var themeBtn = el("theme-toggle-btn");
     if (themeBtn && themeBtn.parentNode) {
       themeBtn.parentNode.insertBefore(userBtn, themeBtn);
@@ -471,6 +554,7 @@
 
   /* ── Init ─────────────────────────────────────────── */
   function initAuthUI() {
+    // Ensure StudySync is available
     if (!window.StudySync) {
       console.warn("[AuthUI] StudySync not found, auth UI will be limited");
     }
@@ -478,7 +562,7 @@
     initSupabaseAuth();
   }
 
-  /* ── Utility ─────────────────────────────────────── */
+  /* ── Utility esc ─────────────────────────────────── */
   function esc(str) {
     return String(str || "")
       .replace(/&/g, "&amp;")
