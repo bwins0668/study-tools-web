@@ -410,6 +410,13 @@
     return style.display !== "none" && style.visibility !== "hidden";
   }
 
+  function isWebPublicRuntime() {
+    return Boolean(
+      window.STUDY_TOOLS_VERSION &&
+      window.STUDY_TOOLS_VERSION.webUrl
+    );
+  }
+
   function translationPriority(el, attribute = false) {
     if (!el) return 20;
     const rect = el.getBoundingClientRect();
@@ -476,6 +483,10 @@
 
   async function translateBatch(items, onProgress) {
     if (!isActive() || !items || !items.length) return {};
+    if (isWebPublicRuntime()) {
+      console.debug("[I18n] Skip AI translation calls in web public runtime.");
+      return {};
+    }
     const requestTargetLang = items[0]?.targetLang || currentLang;
     const requestTargetInfo = langInfo(requestTargetLang);
     const requestTargetLabel = requestTargetLang === "ja" ? "Japanese" : requestTargetInfo.label;
@@ -540,6 +551,9 @@
       return `${leading}${compactVisibleText(cleanOriginal)}${trailing}`;
     }
     if (/[\u3400-\u9fff]/.test(cleanOriginal)) {
+      if (isWebPublicRuntime()) {
+        return source;
+      }
       return `${leading}${isCompactPairContext(contextEl) ? "…" : "翻訳中…"}${trailing}`;
     }
     return source;
@@ -552,6 +566,9 @@
     if (jaText && jaText !== cleanOriginal) return jaText;
     if (/[\u3040-\u30ff\u31f0-\u31ff]/.test(cleanOriginal)) return source;
     if (/[\u3400-\u9fff]/.test(cleanOriginal)) {
+      if (isWebPublicRuntime()) {
+        return source;
+      }
       return attr === "placeholder" ? "入力…" : "翻訳中…";
     }
     return source;
@@ -1368,6 +1385,19 @@
     if (typeof window.refreshI18nForCurrentLesson === "function") {
       window.refreshI18nForCurrentLesson();
     }
+
+    // Lazy-load content language pack for current subject (en/vi/my/fr only)
+    if (typeof window.ContentI18n !== 'undefined' && typeof window.ContentI18n.loadPack === 'function') {
+      var _subject = typeof getActiveSubject === 'function' ? getActiveSubject() : null;
+      if (_subject) {
+        window.ContentI18n.loadPack(_subject, currentLang).then(function () {
+          if (typeof window.refreshI18nForCurrentLesson === 'function') {
+            window.refreshI18nForCurrentLesson();
+          }
+        });
+      }
+    }
+
     scheduleTranslate(document.body);
   }
 

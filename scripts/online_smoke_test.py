@@ -30,8 +30,6 @@ except ImportError:
 BASE_URL = "https://study-tools-web-pages.pages.dev"
 if len(sys.argv) > 1:
     BASE_URL = sys.argv[1]
-RELEASE_URL = "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.11"
-
 results = []
 console_errors = []
 network_404s = []
@@ -47,12 +45,19 @@ def check(name, condition, detail=""):
 
 
 def switch_lang(page, code):
-    """Click the language toggle button, then click language option by data-lang."""
+    """Click the language toggle button, filter by code, and click the option."""
     toggle = page.locator("#language-toggle-btn")
     if toggle.count() == 0:
         return False
     toggle.click()
     page.wait_for_timeout(500)
+    
+    # Filter using search input to bring item into view
+    search_input = page.locator("#language-search-input")
+    if search_input.count() > 0 and search_input.is_visible():
+        search_input.fill(code)
+        page.wait_for_timeout(300)
+        
     opt = page.locator(f".language-option[data-lang=\"{code}\"]")
     if opt.count() > 0:
         opt.first.click()
@@ -75,6 +80,8 @@ def run():
             viewport={"width": 1280, "height": 800},
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0",
         )
+        # Disable service worker registration to prevent PWA caching and local server timeouts
+        context.add_init_script("Object.defineProperty(navigator, 'serviceWorker', { get: () => undefined });")
         page = context.new_page()
 
         console_errors.clear()
@@ -92,18 +99,35 @@ def run():
         check("Homepage HTTP 200", resp and resp.status == 200,
               f"status={resp.status if resp else 'None'}")
 
+        # Fetch version metadata dynamically from version.js
+        version_meta = page.evaluate("window.STUDY_TOOLS_VERSION")
+        web_version = version_meta.get("webVersion", "v2026.6.13")
+        desktop_version = version_meta.get("desktopVersion", "v2026.6.13")
+        release_url = version_meta.get("releaseUrl", "")
+        asset_version = version_meta.get("assetVersion", "v2026.6.13-r15.24")
+
+        # Extract actual HTML query version from app.js script tag in DOM
+        app_script = page.locator('script[src*="app.js"]').first
+        actual_html_version = asset_version
+        if app_script.count() > 0:
+            src = app_script.get_attribute("src") or ""
+            if "?v=" in src:
+                actual_html_version = src.split("?v=")[1]
+            elif "&v=" in src:
+                actual_html_version = src.split("&v=")[1]
+
         # ---- 2. Page title ----
         title = page.title()
         check("Page title contains 'Study Tools Web'", "Study Tools Web" in title,
               f"actual='{title}'")
 
         # ---- 3. Version display ----
-        has_ver = page.locator("text=v2026.6.11").count() > 0
-        check("Page shows v2026.6.11", has_ver)
+        has_ver = page.locator(f"text={web_version}").count() > 0
+        check(f"Page shows {web_version}", has_ver)
 
         # ---- 4. Release link ----
-        rel_link = page.locator(f'a[href="{RELEASE_URL}"]')
-        check("Release link present", rel_link.count() > 0)
+        rel_link = page.locator(f'a[href="{release_url}"]')
+        check(f"Release link present: {release_url}", rel_link.count() > 0)
 
         # ---- 5. First-load: no i18n_content scripts in DOM ----
         no_script_packs = page.evaluate(
@@ -151,19 +175,110 @@ def run():
               script_packs_after <= script_packs_before,
               f"scripts: {script_packs_before} -> {script_packs_after}")
 
-        # ---- 10. Glossary modal ----
-        page.goto(BASE_URL, wait_until="domcontentloaded", timeout=30000)
+        # ---- 10. Glossary modal & Korean search/mobile checks ----
+        page.wait_for_timeout(1000)
         glossary_btn = page.locator("#glossary-open-btn")
         g_ok = glossary_btn.count() > 0
         if g_ok:
+            # Switch to Korean first
+            switch_lang(page, "ko")
+            
+            # Click glossary open
             glossary_btn.click()
-            page.wait_for_timeout(800)
-            modal = page.locator(".glossary-dialog, #glossary-modal")
-            g_ok = modal.count() > 0
-            if g_ok:
+            page.wait_for_timeout(1000)
+            
+            modal = page.locator("#glossary-modal")
+            g_ok = modal.is_visible()
+            check("Glossary modal is visible in Korean", g_ok)
+            
+            # 10.1 Check count is 1500
+            cards = page.locator(".glossary-card")
+            card_count = cards.count()
+            check("Glossary contains exactly 1500 terms", card_count == 1500, f"actual count={card_count}")
+            
+            # 10.2 Check 30 random terms
+            import random
+            indices = random.sample(range(card_count), min(30, card_count))
+            forbidden = ["PLACEHOLDER", "TODO", "TBD", "待翻译", "임시 번역", "임시 텍스트", "임시 설명", "임시값", "번역 필요", "나중에 번역", "placeholder"]
+            banned_found = False
+            for idx in indices:
+                card_text = cards.nth(idx).inner_text()
+                for word in forbidden:
+                    if word in card_text:
+                        banned_found = True
+                        print(f"    FAIL: Card text contains banned word '{word}': {card_text[:100]}")
+            check("30 random Korean terms checked (no placeholders)", not banned_found)
+            
+            # 10.3 Search 데이터베이스
+            page.fill("#glossary-search", "데이터베이스")
+            page.wait_for_timeout(500)
+            db_count = page.locator(".glossary-card:visible").count()
+            check("Search for '데이터베이스' returns results", db_count > 0, f"found={db_count}")
+            
+            # 10.4 Search 인증
+            page.fill("#glossary-search", "")
+            page.fill("#glossary-search", "인증")
+            page.wait_for_timeout(500)
+            auth_count = page.locator(".glossary-card:visible").count()
+            check("Search for '인증' returns results", auth_count > 0, f"found={auth_count}")
+            
+            # 10.5 Search 암호화
+            page.fill("#glossary-search", "")
+            page.fill("#glossary-search", "암호화")
+            page.wait_for_timeout(500)
+            enc_count = page.locator(".glossary-card:visible").count()
+            check("Search for '암호화' returns results", enc_count > 0, f"found={enc_count}")
+            
+            # 10.6 Search SQL
+            page.fill("#glossary-search", "")
+            page.fill("#glossary-search", "SQL")
+            page.wait_for_timeout(500)
+            sql_count = page.locator(".glossary-card:visible").count()
+            check("Search for 'SQL' returns results", sql_count > 0, f"found={sql_count}")
+            
+            # 10.7 Search nonexistent
+            page.fill("#glossary-search", "")
+            page.fill("#glossary-search", "nonexistent_random_word_abc")
+            page.wait_for_timeout(500)
+            empty_count = page.locator(".glossary-card:visible").count()
+            empty_msg = page.locator(".glossary-empty").inner_text()
+            check("Search for nonexistent returns 0 results", empty_count == 0)
+            check("Search empty message is '해당 용어가 없습니다'", "해당 용어가 없습니다" in empty_msg, f"actual='{empty_msg}'")
+            
+            # Close glossary
+            close_btn = page.locator(".glossary-close-btn")
+            if close_btn.count() > 0 and close_btn.first.is_visible():
+                close_btn.first.click()
+            else:
                 page.keyboard.press("Escape")
-                page.wait_for_timeout(300)
-        check("Glossary modal works", g_ok)
+            page.wait_for_timeout(300)
+            
+        else:
+            check("Glossary modal works", False, "Glossary button not found")
+
+        # ---- 10.8 Mobile viewport check ----
+        mobile_ok = False
+        try:
+            mobile_context = browser.new_context(
+                viewport={"width": 375, "height": 667},
+                user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1",
+            )
+            mobile_context.add_init_script("Object.defineProperty(navigator, 'serviceWorker', { get: () => undefined });")
+            mobile_page = mobile_context.new_page()
+            mobile_page.goto(BASE_URL, wait_until="domcontentloaded", timeout=30000)
+            mobile_btn = mobile_page.locator("#glossary-open-btn")
+            if mobile_btn.count() > 0:
+                mobile_btn.click()
+                mobile_page.wait_for_timeout(1000)
+                m_dialog = mobile_page.locator(".glossary-dialog")
+                if m_dialog.count() > 0 and m_dialog.is_visible():
+                    # Check if glossary results container is scrollable and visible
+                    m_results = mobile_page.locator("#glossary-results")
+                    mobile_ok = m_results.count() > 0 and m_results.is_visible()
+            mobile_context.close()
+        except Exception as e:
+            print(f"    Mobile check exception: {e}")
+        check("Mobile viewport: Glossary dialog is responsive and scrollable", mobile_ok)
 
         # ---- 11. Web Safe Mode ----
         safe_ok = page.evaluate("""() => {
@@ -205,17 +320,17 @@ def run():
         has_version_param = True
         missing_versions = []
         for file in ["version.js", "app.js", "content-i18n.js"]:
-            matching = [u for u in requested_urls if file in u and "v=v2026.6.11-r14.2" in u]
+            matching = [u for u in requested_urls if file in u and f"v={actual_html_version}" in u]
             if not matching:
                 has_version_param = False
                 missing_versions.append(file)
         check("Cache Busting: core scripts have version query param", has_version_param,
               f"missing={missing_versions}")
 
-        sql_en_versioned = any("sql_en.js" in u and "v=v2026.6.11-r14.2" in u for u in requested_urls)
+        sql_en_versioned = any("sql_en.js" in u and f"v={asset_version}" in u for u in requested_urls)
         check("Cache Busting: sql_en.js loaded with version param", sql_en_versioned)
 
-        python_fr_versioned = any("python_fr.js" in u and "v=v2026.6.11-r14.2" in u for u in requested_urls)
+        python_fr_versioned = any("python_fr.js" in u and f"v={asset_version}" in u for u in requested_urls)
         check("Cache Busting: python_fr.js loaded with version param", python_fr_versioned)
 
         # ---- 16. Manifest checks ----
@@ -234,7 +349,7 @@ def run():
             
             if asset_manifest_json:
                 check("Manifest: asset-manifest.json has correct assetVersion",
-                      asset_manifest_json.get("assetVersion") == "v2026.6.11-r14.2",
+                      asset_manifest_json.get("assetVersion") == asset_version,
                       f"version={asset_manifest_json.get('assetVersion')}")
 
         # 16.2 data/i18n_content/manifest.json HTTP 200 and schema validation
@@ -252,7 +367,7 @@ def run():
                 
             if content_manifest_json:
                 check("Manifest: content manifest has correct assetVersion",
-                      content_manifest_json.get("assetVersion") == "v2026.6.11-r14.2",
+                      content_manifest_json.get("assetVersion") == asset_version,
                       f"version={content_manifest_json.get('assetVersion')}")
                 check("Manifest: content manifest has totalPacks = 20",
                       content_manifest_json.get("totalPacks") == 20,
@@ -288,7 +403,11 @@ def run():
             page.wait_for_timeout(800)
             clear_btn = page.locator("#glossary-search-clear")
             check("UX: Glossary search clear button exists", clear_btn.count() > 0)
-            page.keyboard.press("Escape")
+            close_btn = page.locator(".glossary-close-btn")
+            if close_btn.count() > 0 and close_btn.first.is_visible():
+                close_btn.first.click()
+            else:
+                page.keyboard.press("Escape")
             page.wait_for_timeout(300)
         else:
             check("UX: Glossary search clear button exists", False, "Glossary open button not found")
