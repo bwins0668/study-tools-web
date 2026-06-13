@@ -64,20 +64,41 @@
 
   /**
    * Dynamically load a content language pack.
+   * Supports both (subject, lang) and (lang, subject) argument orders.
    * @param {string} subject — "sql" | "itpass" | "sg" | "java" | "python"
    * @param {string} [lang] — language code, defaults to current UI language
+   * @param {boolean} [isHighPriority] — if true, sets fetchpriority to high, else low
    * @returns {Promise<boolean>} — true if pack was loaded, false if not needed or failed
    */
-  function loadPack(subject, lang) {
+  function loadPack(subject, lang, isHighPriority) {
+    var subjectsList = ["sql", "itpass", "sg", "java", "python"];
+    var langsWithPacks = ["en", "vi", "my", "fr"];
+
+    // Swap arguments if they are passed in reverse order: (lang, subject)
+    if (typeof subject === "string" && typeof lang === "string") {
+      var sLower = subject.toLowerCase();
+      var lLower = lang.toLowerCase();
+      if (subjectsList.indexOf(lLower) !== -1 || langsWithPacks.indexOf(sLower) !== -1 || sLower === "ko" || sLower === "ja" || sLower === "zh") {
+        var temp = subject;
+        subject = lang;
+        lang = temp;
+      }
+    }
+
     if (!lang) lang = getCurrentLang();
     var normLang = normalizeLang(lang);
-    var key = subject + ":" + normLang;
 
-    // ja/zh/ko/default-ja-zh: no external pack needed
-    if (normLang === "ja" || normLang === "zh" || normLang === "ko") {
-      loadedPacks[key] = true;
+    // Validate subject and language to prevent requesting non-existent files (e.g. ko, ja, zh)
+    if (subjectsList.indexOf(subject) === -1) {
       return Promise.resolve(false);
     }
+    if (langsWithPacks.indexOf(normLang) === -1) {
+      var k = subject + ":" + normLang;
+      loadedPacks[k] = true;
+      return Promise.resolve(false);
+    }
+
+    var key = subject + ":" + normLang;
 
     // Already loaded
     if (loadedPacks[key]) {
@@ -96,6 +117,14 @@
         version = "?v=" + encodeURIComponent(window.STUDY_TOOLS_VERSION.assetVersion);
       }
       script.src = "data/i18n_content/" + subject + "_" + normLang + ".js" + version;
+      
+      // Set fetch priority if supported
+      if (typeof isHighPriority !== "undefined") {
+        script.setAttribute("fetchpriority", isHighPriority ? "high" : "low");
+      } else {
+        script.setAttribute("fetchpriority", "low"); // default to low for background preheat
+      }
+
       script.onload = function () {
         loadedPacks[key] = true;
         delete loadingPacks[key];
@@ -121,12 +150,46 @@
     return !!loadedPacks[subject + ":" + normLang];
   }
 
+  /**
+   * Preheat all existing content packs in the background.
+   */
+  function preheatAllPacks() {
+    var subjects = ["sql", "itpass", "sg", "java", "python"];
+    var langs = ["en", "vi", "my", "fr"];
+    
+    var promises = [];
+    for (var i = 0; i < subjects.length; i++) {
+      for (var j = 0; j < langs.length; j++) {
+        promises.push(loadPack(subjects[i], langs[j], false));
+      }
+    }
+    
+    return Promise.all(promises).then(function () {
+      return true;
+    }).catch(function (err) {
+      console.warn("ContentI18n: preheat failed silently —", err);
+      return false;
+    });
+  }
+
+  // Auto-trigger preheating 1.5 seconds after DOMContentLoaded
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(preheatAllPacks, 1500);
+      });
+    } else {
+      setTimeout(preheatAllPacks, 1500);
+    }
+  }
+
   window.ContentI18n = {
     normalizeLang: normalizeLang,
     getCurrentLang: getCurrentLang,
     get: get,
     has: has,
     loadPack: loadPack,
-    isPackLoaded: isPackLoaded
+    isPackLoaded: isPackLoaded,
+    preheatAllPacks: preheatAllPacks
   };
 })();

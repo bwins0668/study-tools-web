@@ -1734,9 +1734,9 @@ function ensureContentPackForCurrentLesson() {
     ? window.I18n.getLanguage()
     : "default-ja-zh";
   var normLang = window.ContentI18n.normalizeLang(lang);
-  if (normLang === "ja" || normLang === "zh") return;
+  if (normLang === "ja" || normLang === "zh" || normLang === "ko") return;
   var subject = currentSubject;
-  window.ContentI18n.loadPack(subject, lang).then(function(loaded) {
+  window.ContentI18n.loadPack(subject, lang, true).then(function(loaded) {
     if (loaded && typeof refreshI18nForCurrentLesson === "function") {
       refreshI18nForCurrentLesson();
     }

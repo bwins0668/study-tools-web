@@ -316,6 +316,11 @@ def run():
         check("Network: no 405 status responses", len(network_405s) == 0,
               f"{len(network_405s)} 405s: {network_405s[:5]}")
 
+        # Check no requests for non-existent *_ko.js packages
+        ko_pack_requests = [u for u in requested_urls if "_ko.js" in u]
+        check("Network: no *_ko.js content pack requests", len(ko_pack_requests) == 0,
+              f"calls={len(ko_pack_requests)}: {ko_pack_requests}")
+
         # ---- 15. Cache Busting checks ----
         has_version_param = True
         missing_versions = []
