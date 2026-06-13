@@ -5368,3 +5368,6 @@ window.wrapAllTablesWithScrollWrapper = function() {
 };
 
 
+
+// Expose StudySync debug entry (no-op if sync-engine.js not loaded)
+window.StudySync = window.StudySync || null;
