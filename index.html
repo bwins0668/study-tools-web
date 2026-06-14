@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="zh-Hans" data-study-tools-version="v2026.6.14-r22.22">
+<html lang="zh-Hans" data-study-tools-version="v2026.6.14-r22.23">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +10,12 @@
   <!-- Google Fonts & FontAwesome Localized -->
   <link rel="stylesheet" href="assets/lib/google-fonts/css/google-fonts.css">
   <link rel="stylesheet" href="assets/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/index.css?v=r22.22">
+  <link rel="stylesheet" href="assets/css/index.css?v=r22.23">
   <link rel="stylesheet" href="assets/css/light-theme.css?v=20260608_i18n_fix">
   <link rel="stylesheet" href="assets/css/japanese-typing.css?v=20260606_v2">
   <link rel="stylesheet" href="assets/css/ai_learning.css?v=20260608_v2">
   <link rel="stylesheet" href="assets/css/glossary.css?v=20260611_v1">
-  <link rel="stylesheet" href="assets/css/coding-typing.css?v=r22.22">
+  <link rel="stylesheet" href="assets/css/coding-typing.css?v=r22.23">
 </head>
 <body>
 
@@ -1050,10 +1050,19 @@
           <div class="cbt-question-canvas">
             <div class="cbt-q-card-header">
               <span class="cbt-q-number" id="cbt-q-number-text">第 1 题 / 問 1</span>
-              <span class="cbt-q-field" id="cbt-q-field-text">テクノロジ系 / ネットワーク</span>
+              <div class="cbt-q-meta-wrap">
+                <span class="cbt-q-field" id="cbt-q-field-text">テクノロジ系 / ネットワーク</span>
+                <button class="cbt-q-meta-toggle" id="cbt-q-meta-toggle" type="button" aria-expanded="false" onclick="toggleCbtQuestionMeta()" hidden>
+                  <span data-i18n="exam.metaExpand">题目信息 <i class="fa-solid fa-chevron-down"></i></span>
+                </button>
+              </div>
               <button class="cbt-q-flag-btn" id="cbt-q-flag-btn" onclick="toggleCbtQuestionFlag()">
                 <i class="fa-regular fa-flag"></i> <span data-i18n="exam.flagReview">标记此题复查</span>
               </button>
+            </div>
+            <div class="cbt-q-meta-full" id="cbt-q-meta-full" hidden>
+              <span class="cbt-q-meta-full-label" data-i18n="exam.metaSource">出典：</span>
+              <span id="cbt-q-meta-full-text"></span>
             </div>
             
             <div class="cbt-q-body-text" id="cbt-q-body-text">
