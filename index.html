@@ -10,12 +10,12 @@
   <!-- Google Fonts & FontAwesome Localized -->
   <link rel="stylesheet" href="assets/lib/google-fonts/css/google-fonts.css">
   <link rel="stylesheet" href="assets/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/index.css?v=r22.11-hotfix4">
+  <link rel="stylesheet" href="assets/css/index.css?v=r22.12">
   <link rel="stylesheet" href="assets/css/light-theme.css?v=20260608_i18n_fix">
   <link rel="stylesheet" href="assets/css/japanese-typing.css?v=20260606_v2">
   <link rel="stylesheet" href="assets/css/ai_learning.css?v=20260608_v2">
   <link rel="stylesheet" href="assets/css/glossary.css?v=20260611_v1">
-  <link rel="stylesheet" href="assets/css/coding-typing.css?v=r22.11-hotfix4">
+  <link rel="stylesheet" href="assets/css/coding-typing.css?v=r22.12">
 </head>
 <body>
 
@@ -1327,6 +1327,22 @@
           <div class="ct-hint" id="ct-hint"></div>
         </div>
 
+        <!-- Exam Insight Card -->
+        <div class="ct-exam-insight" id="ct-exam-insight">
+          <div class="ct-exam-insight__head">
+            <span class="ct-exam-insight__head-label" data-i18n="codingTyping.examInsight">考试理解</span>
+            <span class="ct-exam-insight__badge" id="ct-exam-badge"></span>
+          </div>
+          <div class="ct-exam-insight__body">
+            <div class="ct-exam-insight__tags" id="ct-exam-targets"></div>
+            <div class="ct-exam-insight__tags" id="ct-exam-glossary"></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.meaning">含义</span><span class="ct-exam-insight__text" id="ct-exam-meaning"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.memoryHook">记忆法</span><span class="ct-exam-insight__text" id="ct-exam-memory"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.examPoint">考点</span><span class="ct-exam-insight__text" id="ct-exam-point"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.commonMistake">易错</span><span class="ct-exam-insight__text" id="ct-exam-mistake"></span></div>
+          </div>
+        </div>
+
         <!-- User input -->
         <div class="ct-input-section">
           <label data-i18n="codingTyping.input">输入区</label>
@@ -1434,15 +1450,15 @@
   <script src="data/japanese_typing_library.js?v=20260606_v1"></script>
   <script src="data/japanese_typing_expansion.js?v=20260606_v1"></script>
   <script src="assets/js/japanese_typing.js?v=20260606_v1"></script>
-  <script src="data/coding_typing/coding_symbols.js?v=round21.2"></script>
-  <script src="data/coding_typing/python_basics.js?v=round21.2"></script>
-  <script src="data/coding_typing/java_basics.js?v=round21.2"></script>
-  <script src="data/coding_typing/sql_basics.js?v=v2026.6.14-r21.9"></script>
-  <script src="data/coding_typing/_index.js?v=round21.2"></script>
-  <script src="assets/js/sandbox_bridge.js?v=v2026.6.14-r21.9"></script>
-  <script src="assets/js/coding_typing.js?v=v2026.6.14-r21.9"></script>
-  <script src="assets/js/i18n-ui-dict.js?v=v2026.6.14-r21.9"></script>
-  <script src="assets/js/i18n.js?v=r22.11-hotfix4"></script>
+  <script src="data/coding_typing/coding_symbols.js?v=r22.12"></script>
+  <script src="data/coding_typing/python_basics.js?v=r22.12"></script>
+  <script src="data/coding_typing/java_basics.js?v=r22.12"></script>
+  <script src="data/coding_typing/sql_basics.js?v=r22.12"></script>
+  <script src="data/coding_typing/_index.js?v=r22.12"></script>
+  <script src="assets/js/sandbox_bridge.js?v=r22.12"></script>
+  <script src="assets/js/coding_typing.js?v=r22.12"></script>
+  <script src="assets/js/i18n-ui-dict.js?v=r22.12"></script>
+  <script src="assets/js/i18n.js?v=r22.12"></script>
   <script src="assets/js/content-i18n.js"></script>
   <script src="data/i18n_content/sql_en.js"></script>
   <script src="data/i18n_content/sql_vi.js"></script>
@@ -1471,7 +1487,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase-client.js?v=round17.5"></script>
   <script src="assets/js/auth-ui.js?v=round17.5"></script>
-  <script src="assets/js/app.js?v=r22.11-hotfix4"></script>
+  <script src="assets/js/app.js?v=r22.12"></script>
   <script src="assets/js/ai_assistant.js?v=20260608_global_target"></script>
 </body>
 </html>
