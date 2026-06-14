@@ -16,8 +16,8 @@
   * `web-safe-v1` (安全性/Web限制版本)
   * `pwa-ready-v1` (PWA 离线优化版本)
   * `sql-json-v1` (SQL 动态加载试点版本)
-* **最新线上 Commit**：`dd88e38`
-* **当前已完成阶段**：**阶段 9K：Python 课程数据 JSON 单文件懒加载**
+* **最新线上 Commit**：`4f5fec2`
+* **当前已完成阶段**：**Round 22.x UI / 布局稳定版闭环**
   * **状态**：已完成、已提交、已推送、Cloudflare Pages 已部署成功、线上验证通过
   * **提交 commit**：`dd88e38 perf: lazy-load Python lessons from JSON`
   * **线上验证结果（Cloudflare Pages Production）**：
@@ -80,7 +80,7 @@
   * SG 历年真题：`data/sg_past_exams.json` (体积约 1.05MB)
   * IT Passport 历年真题：`data/it_passport_past_exams.json` (体积约 4.8MB)
 * **双重缓存**：内存中使用 `window.__SQL_EXAM_QUESTIONS_CACHE` / `window.__SG_PAST_EXAMS_CACHE` / `window.__IT_PASSPORT_PAST_EXAMS_CACHE` 进行首轮缓存。PWA 层面通过在 `service-worker.js` 的 `CORE_ASSETS` 中注册 JSON 资源进行预缓存，确保**完全离线状态下所有题库 100% 可用**。
-* **当前 Service Worker 版本**：`study-tools-web-v6`
+* **当前 Service Worker 版本**：`study-tools-web-v2026-6-14-r22-27`
 
 ---
 
@@ -141,10 +141,10 @@
 ## 7. 给下一位 AI 的接手指令
 
 1. **核实当前状态**：
-   * 最新 commit：`dd88e38`，分支 `master`，已推送至 GitHub
-   * Cloudflare Pages 已部署 `dd88e38`，线上验证通过
+   * 最新 commit：`4f5fec2`，分支 `master`，已推送至 GitHub
+   * Cloudflare Pages 已部署 `4f5fec2`，线上版本 r22.27，验证通过
    * `git status` 应为 clean
-2. **已完成阶段 9K** — Python 课程数据 JSON 单文件懒加载已完成上线，无需任何操作。
+2. **已完成 Round 22.x UI / 布局稳定版闭环** — 13 个子轮全部完成，详见下方第 8 节。
 3. **启动下一阶段：剩余首屏大文件按需加载评估与优化**：
    * 确认并梳理当前首屏同步加载的剩余大文件（如 `data/java_lessons.js`）。
    * 采用类似设计，提供平滑降级（同步加载回滚机制）和 Service Worker 离线支持。
@@ -153,3 +153,57 @@
    * 不要动 `functions/api/execute.js`、`assets/js/sqlite-adapter.js`、Java/Python Sandbox 相关逻辑
    * 不要使用 `git add .`，每次只精确 add 计划提交的文件
    * 不要 force push
+
+---
+
+## 8. Round 22.x UI / 布局稳定版闭环（2026-06-14）
+
+**Status**: PASS — 全部 13 个子轮已完成，双仓已推送
+
+### 8.1 子轮摘要
+
+| 子轮 | 内容 | 状态 |
+|---|---|---|
+| 22.1 | 编程打字版块排版修复、裸露 \r\n 修复、三步使用引导 | PASS |
+| 22.1.1 | 编程打字移动端稳定化、沙盒反馈修复 | PASS |
+| 22.2 | 顶部版块选择整合进左上角面板，旧横向按钮移除 | PASS |
+| 22.3 | 模拟考试开始后长题目 metadata 默认折叠 | PASS |
+| 22.4 | 提交考试后结果页改为卡片式，删除结果主列表「考核知识点」列 | PASS |
+| 22.5 | 删除 SQL 学习页新手建议卡片 | PASS |
+| 22.6 | 双仓发布后一致性审计，修复 i18n / CSS / 版本残留 | PASS |
+| 22.7 | 同步 Web 已有的 ct-exam-insight 到 Windows | PASS |
+| 22.8 | 设置 / 术语表 / 重置进度整合进右侧工具抽屉 | PASS |
+| 22.9 | 工具抽屉发布后稳定性审计（只读） | PASS |
+| 22.10 | 工具抽屉 Esc stopPropagation、<480px 全屏适配、legacy CSS | PASS |
+| 22.10.1 | 修复 Web 版本号与缓存一致性，统一到 r22.27 | PASS |
+| 22.10.2 | 线上 Web Smoke 测试，r22.27 资源加载与功能正常 | PASS |
+
+### 8.2 Web 版本状态
+
+| 项目 | 值 |
+|---|---|
+| 稳定版本 | v2026.6.14-r22.27 |
+| Service Worker Cache | study-tools-web-v2026-6-14-r22-27 |
+| CSS/JS 资源参数 | ?v=r22.27 |
+| 线上地址 | https://study-tools-web-pages.pages.dev |
+| 线上 Smoke | Round 22.10.2 全项 PASS |
+
+### 8.3 双仓一致性
+
+6 个关键文件（app.js / i18n-ui-dict.js / coding_typing.js / index.css / coding-typing.css / ai_assistant.js）全部完全一致。
+
+### 8.4 未改动
+
+题库数据、术语表数据、Supabase 配置、sandbox 核心逻辑均未改动。
+
+### 8.5 Commits
+
+- **Windows main**: `a6b232c`
+- **Web master**: `4f5fec2`
+
+### 8.6 后续建议（Round 23）
+
+1. 考试历史记录、错题本、成绩趋势
+2. 移动端真实设备适配（iOS Safari / Android Chrome）
+3. 清理旧 i18n key / legacy CSS 注释
+4. Java 课程数据 JSON 懒加载（Web 首屏优化）
