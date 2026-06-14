@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="zh-Hans" data-study-tools-version="v2026.6.14-r23.1">
+<html lang="zh-Hans" data-study-tools-version="v2026.6.14-r23.2">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
   <!-- Google Fonts & FontAwesome Localized -->
   <link rel="stylesheet" href="assets/lib/google-fonts/css/google-fonts.css">
   <link rel="stylesheet" href="assets/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/index.css?v=r23.1">
+  <link rel="stylesheet" href="assets/css/index.css?v=r23.2">
   <link rel="stylesheet" href="assets/css/light-theme.css?v=20260608_i18n_fix">
   <link rel="stylesheet" href="assets/css/japanese-typing.css?v=20260606_v2">
   <link rel="stylesheet" href="assets/css/ai_learning.css?v=20260608_v2">
@@ -92,6 +92,17 @@
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.glossary">术语表</strong>
               <small data-i18n="tools.glossaryDesc">查询 IT / SQL / 编程术语</small>
+            </span>
+          </button>
+        </div>
+
+        <div class="tools-drawer__section">
+          <div class="tools-drawer__section-title" data-i18n="tools.examTools">考试工具</div>
+          <button type="button" class="tools-drawer-item" data-action="open-exam-history">
+            <span class="tools-drawer-item__icon">📝</span>
+            <span class="tools-drawer-item__text">
+              <strong data-i18n="tools.examHistory">考试历史</strong>
+              <small data-i18n="tools.examHistoryDesc">查看最近的模拟考试记录</small>
             </span>
           </button>
         </div>
@@ -1522,6 +1533,29 @@
     </section>
   </div>
 
+  <!-- Exam History Modal (Round 23.2) -->
+  <div id="exam-history-modal" class="exam-history-modal" hidden>
+    <div class="exam-history-modal__backdrop" data-exam-history-close></div>
+    <section class="exam-history-modal__panel" role="dialog" aria-modal="true" aria-labelledby="exam-history-title">
+      <header class="exam-history-modal__header">
+        <div>
+          <h2 id="exam-history-title" data-i18n="examHistory.title">最近考试历史</h2>
+          <p data-i18n="examHistory.subtitle">查看已保存的模拟考试结果</p>
+        </div>
+        <button type="button" class="exam-history-modal__close" data-exam-history-close>
+          <i class="fa-solid fa-xmark"></i>
+          <span class="sr-only" data-i18n="examHistory.close">关闭</span>
+        </button>
+      </header>
+      <div class="exam-history-modal__filters" id="exam-history-filters">
+        <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="examHistory.filterAll">全部</button>
+        <button type="button" class="exam-history-filter-btn" data-filter="itpass">IT Passport</button>
+        <button type="button" class="exam-history-filter-btn" data-filter="sg">SG</button>
+      </div>
+      <div id="exam-history-list" class="exam-history-list"></div>
+    </section>
+  </div>
+
   <!-- Lesson Data & JS Scripts -->
   <script src="data/db.js?v=20260604"></script>
   <script src="data/lessons.js?v=20260604"></script>
@@ -1546,7 +1580,7 @@
   <script src="data/coding_typing/_index.js?v=r23.1"></script>
   <script src="assets/js/sandbox_bridge.js?v=r23.1"></script>
   <script src="assets/js/coding_typing.js?v=r23.1"></script>
-  <script src="assets/js/i18n-ui-dict.js?v=r23.1"></script>
+  <script src="assets/js/i18n-ui-dict.js?v=r23.2"></script>
   <script src="assets/js/i18n.js?v=r23.1"></script>
   <script src="assets/js/content-i18n.js"></script>
   <script src="data/i18n_content/sql_en.js"></script>
@@ -1576,7 +1610,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase-client.js?v=round17.5"></script>
   <script src="assets/js/auth-ui.js?v=round17.5"></script>
-  <script src="assets/js/app.js?v=r23.1"></script>
+  <script src="assets/js/app.js?v=r23.2"></script>
   <script src="assets/js/ai_assistant.js?v=20260608_global_target"></script>
 </body>
 </html>

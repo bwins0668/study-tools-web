@@ -271,7 +271,6 @@
         submitExamUnansweredConfirm: "未解答の問題が {count} 問あります。本当に今提出しますか？",
         submitCodingExamUnansweredConfirm: "未解答または判定未合格の問題が {count} 問あります。本当に今提出しますか？"
       },
-
       tools: {
         tools: "ツール",
         openMenu: "ツールメニューを開く",
@@ -287,7 +286,36 @@
         confirmResetTitle: "進捗をリセットしますか？",
         confirmResetBody: "現在の学習進捗が消去されます。続行しますか？",
         cancel: "キャンセル",
-        confirmReset: "リセットする"
+        confirmReset: "リセットする",
+        examTools: "試験ツール",
+        examHistory: "試験履歴",
+        examHistoryDesc: "最近の模擬試験記録を確認"
+      },
+      examHistory: {
+        title: "最近の試験履歴",
+        subtitle: "保存された模擬試験結果を確認",
+        close: "閉じる",
+        filterAll: "すべて",
+        empty: "試験履歴はまだありません",
+        emptyHint: "模擬試験を完了すると、ここに記録が表示されます",
+        questions: "問題数",
+        correct: "正解",
+        accuracy: "正答率",
+        score: "点数",
+        passed: "合格",
+        failed: "不合格",
+        time: "所要時間",
+        viewDetails: "詳細を見る",
+        hideDetails: "詳細を閉じる",
+        examConfig: "試験設定",
+        fieldScores: "分野別スコア",
+        questionResults: "問題別結果",
+        yearFilter: "年度フィルター",
+        submittedAt: "提出日時",
+        yourAnswer: "あなたの答え",
+        correctAnswer: "正解",
+        unanswered: "未回答",
+        questionNotFound: "問題データが見つかりません"
       },
       message: {
         inputSqlRequired: "SQLクエリを入力してください。"
@@ -681,7 +709,6 @@
         submitExamUnansweredConfirm: "还有 {count} 道题未作答，确定现在交卷吗？",
         submitCodingExamUnansweredConfirm: "还有 {count} 道题未作答或未判定成功，确定现在交卷吗？"
       },
-
       tools: {
         tools: "工具",
         openMenu: "打开工具菜单",
@@ -697,7 +724,36 @@
         confirmResetTitle: "确认重置进度？",
         confirmResetBody: "此操作会清空当前学习进度，是否继续？",
         cancel: "取消",
-        confirmReset: "确认重置"
+        confirmReset: "确认重置",
+        examTools: "考试工具",
+        examHistory: "考试历史",
+        examHistoryDesc: "查看最近的模拟考试记录"
+      },
+      examHistory: {
+        title: "最近考试历史",
+        subtitle: "查看已保存的模拟考试结果",
+        close: "关闭",
+        filterAll: "全部",
+        empty: "还没有考试历史",
+        emptyHint: "完成一次模拟考试后，这里会显示记录",
+        questions: "题量",
+        correct: "正确",
+        accuracy: "正确率",
+        score: "分数",
+        passed: "合格",
+        failed: "未合格",
+        time: "用时",
+        viewDetails: "查看详情",
+        hideDetails: "收起详情",
+        examConfig: "考试配置",
+        fieldScores: "分类子分",
+        questionResults: "逐题结果",
+        yearFilter: "年度筛选",
+        submittedAt: "提交时间",
+        yourAnswer: "用户答案",
+        correctAnswer: "正确答案",
+        unanswered: "未答",
+        questionNotFound: "题目数据未找到"
       },
       message: {
         inputSqlRequired: "请输入 SQL 语句."
@@ -1090,7 +1146,6 @@
         submitExamUnansweredConfirm: "There are still {count} unanswered questions. Are you sure you want to submit now?",
         submitCodingExamUnansweredConfirm: "There are still {count} unanswered or failed questions. Are you sure you want to submit now?"
       },
-
       tools: {
         tools: "Tools",
         openMenu: "Open tools menu",
@@ -1106,7 +1161,36 @@
         confirmResetTitle: "Reset progress?",
         confirmResetBody: "This will clear your current learning progress. Continue?",
         cancel: "Cancel",
-        confirmReset: "Confirm reset"
+        confirmReset: "Confirm reset",
+        examTools: "Exam Tools",
+        examHistory: "Exam History",
+        examHistoryDesc: "View recent mock exam records"
+      },
+      examHistory: {
+        title: "Recent Exam History",
+        subtitle: "View saved mock exam results",
+        close: "Close",
+        filterAll: "All",
+        empty: "No exam history yet",
+        emptyHint: "Complete a mock exam and records will appear here",
+        questions: "Questions",
+        correct: "Correct",
+        accuracy: "Accuracy",
+        score: "Score",
+        passed: "Passed",
+        failed: "Failed",
+        time: "Time spent",
+        viewDetails: "View details",
+        hideDetails: "Hide details",
+        examConfig: "Exam config",
+        fieldScores: "Field scores",
+        questionResults: "Question results",
+        yearFilter: "Year filter",
+        submittedAt: "Submitted at",
+        yourAnswer: "Your answer",
+        correctAnswer: "Correct answer",
+        unanswered: "Unanswered",
+        questionNotFound: "Question data not found"
       },
       message: {
         inputSqlRequired: "Please enter an SQL query."
@@ -1470,7 +1554,6 @@
         submitExamUnansweredConfirm: "မဖြေရသေးသော မေးခွန်း {count} ခု ကျန်ရှိနေပါသေးသည်။ တင်သွင်းရန် သေချာပါသလား။",
         submitCodingExamUnansweredConfirm: "မဖြေရသေးသော သို့မဟုတ် မအောင်မြင်သော မေးခွန်း {count} ခု ကျန်ရှိနေပါသေးသည်။ တင်သွင်းရန် သေချာပါသလား။"
       },
-
       tools: {
         tools: "Tools",
         openMenu: "Open tools menu",
@@ -1486,7 +1569,36 @@
         confirmResetTitle: "Reset progress?",
         confirmResetBody: "This will clear your current learning progress. Continue?",
         cancel: "Cancel",
-        confirmReset: "Confirm reset"
+        confirmReset: "Confirm reset",
+        examTools: "စာမေးပွဲ ကိရိယာများ",
+        examHistory: "စာမေးပွဲ မှတ်တမ်း",
+        examHistoryDesc: "မကြာသေးမီ စာမေးပွဲမှတ်တမ်းများ ကြည့်ရှုရန်"
+      },
+      examHistory: {
+        title: "Recent Exam History",
+        subtitle: "View saved mock exam results",
+        close: "Close",
+        filterAll: "All",
+        empty: "No exam history yet",
+        emptyHint: "Complete a mock exam and records will appear here",
+        questions: "Questions",
+        correct: "Correct",
+        accuracy: "Accuracy",
+        score: "Score",
+        passed: "Passed",
+        failed: "Failed",
+        time: "Time spent",
+        viewDetails: "View details",
+        hideDetails: "Hide details",
+        examConfig: "Exam config",
+        fieldScores: "Field scores",
+        questionResults: "Question results",
+        yearFilter: "Year filter",
+        submittedAt: "Submitted at",
+        yourAnswer: "Your answer",
+        correctAnswer: "Correct answer",
+        unanswered: "Unanswered",
+        questionNotFound: "Question data not found"
       },
       message: {
         inputSqlRequired: "SQL query ထည့်ပါ။"
@@ -1850,7 +1962,6 @@
         submitExamUnansweredConfirm: "Vẫn còn {count} câu hỏi chưa trả lời. Bạn có chắc chắn muốn nộp bài bây giờ không?",
         submitCodingExamUnansweredConfirm: "Vẫn còn {count} câu hỏi chưa trả lời hoặc chưa đạt. Bạn có chắc chắn muốn nộp bài bây giờ không?"
       },
-
       tools: {
         tools: "Công cụ",
         openMenu: "Mở menu công cụ",
@@ -1866,7 +1977,36 @@
         confirmResetTitle: "Đặt lại tiến trình?",
         confirmResetBody: "Thao tác này sẽ xóa tiến trình học hiện tại. Tiếp tục?",
         cancel: "Hủy",
-        confirmReset: "Xác nhận đặt lại"
+        confirmReset: "Xác nhận đặt lại",
+        examTools: "Công cụ thi",
+        examHistory: "Lịch sử thi",
+        examHistoryDesc: "Xem kết quả thi thử gần đây"
+      },
+      examHistory: {
+        title: "Lịch sử thi gần đây",
+        subtitle: "Xem kết quả thi thử đã lưu",
+        close: "Đóng",
+        filterAll: "Tất cả",
+        empty: "Chưa có lịch sử thi",
+        emptyHint: "Hoàn thành bài thi thử để xem kết quả tại đây",
+        questions: "Số câu",
+        correct: "Đúng",
+        accuracy: "Tỉ lệ đúng",
+        score: "Điểm",
+        passed: "Đậu",
+        failed: "Rớt",
+        time: "Thời gian",
+        viewDetails: "Xem chi tiết",
+        hideDetails: "Ẩn chi tiết",
+        examConfig: "Cấu hình thi",
+        fieldScores: "Điểm theo lĩnh vực",
+        questionResults: "Kết quả từng câu",
+        yearFilter: "Lọc theo năm",
+        submittedAt: "Thời gian nộp",
+        yourAnswer: "Câu trả lời của bạn",
+        correctAnswer: "Đáp án đúng",
+        unanswered: "Chưa trả lời",
+        questionNotFound: "Không tìm thấy dữ liệu câu hỏi"
       },
       message: {
         inputSqlRequired: "Vui lòng nhập câu lệnh SQL."
@@ -2230,7 +2370,6 @@
         submitExamUnansweredConfirm: "Il reste {count} questions sans réponse. Voulez-vous vraiment soumettre maintenant ?",
         submitCodingExamUnansweredConfirm: "Il reste {count} questions sans réponse ou échouées. Voulez-vous vraiment soumettre maintenant ?"
       },
-
       tools: {
         tools: "Outils",
         openMenu: "Ouvrir le menu des outils",
@@ -2246,7 +2385,36 @@
         confirmResetTitle: "Réinitialiser la progression ?",
         confirmResetBody: "Cette action effacera votre progression actuelle. Continuer ?",
         cancel: "Annuler",
-        confirmReset: "Confirmer la réinitialisation"
+        confirmReset: "Confirmer la réinitialisation",
+        examTools: "Outils d'examen",
+        examHistory: "Historique d'examens",
+        examHistoryDesc: "Voir les résultats d'examens récents"
+      },
+      examHistory: {
+        title: "Historique récent",
+        subtitle: "Voir les résultats d'examens simulés enregistrés",
+        close: "Fermer",
+        filterAll: "Tout",
+        empty: "Aucun historique d'examen",
+        emptyHint: "Terminez un examen simulé pour voir les résultats ici",
+        questions: "Questions",
+        correct: "Correct",
+        accuracy: "Précision",
+        score: "Score",
+        passed: "Réussi",
+        failed: "Échoué",
+        time: "Durée",
+        viewDetails: "Voir les détails",
+        hideDetails: "Masquer les détails",
+        examConfig: "Configuration",
+        fieldScores: "Scores par domaine",
+        questionResults: "Résultats par question",
+        yearFilter: "Filtre par année",
+        submittedAt: "Soumis le",
+        yourAnswer: "Votre réponse",
+        correctAnswer: "Bonne réponse",
+        unanswered: "Sans réponse",
+        questionNotFound: "Données de question introuvables"
       },
       message: {
         inputSqlRequired: "Vui lòng nhập câu lệnh SQL."
@@ -2606,25 +2774,54 @@
         resetProgressConfirm: "모든 {subject} 학습 진행도를 초기화하시겠습니까?",
         submitExamConfirm: "시험을 종료하고 제출하시겠습니까?",
         submitExamUnansweredConfirm: "미답 문제가 {count}문 있습니다. 정말 지금 제출하시겠습니까?",
-        submitCodingExamUnansweredConfirm: "미답 또는 판정 미통과 문제가 {count}문 있습니다. 정말 지금 제출하시겠습니까?"
-      },
 
       tools: {
-        tools: "Tools",
-        openMenu: "Open tools menu",
-        closeMenu: "Close tools menu",
-        learningTools: "Learning Tools",
-        glossary: "Glossary",
-        glossaryDesc: "Search IT / SQL / programming terms",
-        settings: "Settings",
-        settingsDesc: "Adjust learning tool preferences",
-        dangerous: "Dangerous Actions",
-        resetProgress: "Reset Progress",
-        resetProgressDesc: "Clear current learning progress. Confirmation required",
-        confirmResetTitle: "Reset progress?",
-        confirmResetBody: "This will clear your current learning progress. Continue?",
-        cancel: "Cancel",
-        confirmReset: "Confirm reset"
+        tools: "도구",
+        openMenu: "도구 메뉴 열기",
+        closeMenu: "도구 메뉴 닫기",
+        learningTools: "학습 도구",
+        glossary: "용어집",
+        glossaryDesc: "IT / SQL / 프로그래밍 용어 검색",
+        settings: "설정",
+        settingsDesc: "학습 도구 환경 설정 조정",
+        dangerous: "위험 작업",
+        resetProgress: "진행도 초기화",
+        resetProgressDesc: "현재 학습 진행도를 지웁니다. 확인 필요",
+        confirmResetTitle: "진행도를 초기화하시겠습니까?",
+        confirmResetBody: "현재 학습 진행도가 지워집니다. 계속하시겠습니까?",
+        cancel: "취소",
+        confirmReset: "초기화 확인",
+        examTools: "시험 도구",
+        examHistory: "시험 기록",
+        examHistoryDesc: "최근 모의고사 기록 보기"
+      },
+      examHistory: {
+        title: "최근 시험 기록",
+        subtitle: "저장된 모의고사 결과 보기",
+        close: "닫기",
+        filterAll: "전체",
+        empty: "시험 기록이 없습니다",
+        emptyHint: "모의고사를 완료하면 여기에 기록이 표시됩니다",
+        questions: "문제 수",
+        correct: "정답",
+        accuracy: "정답률",
+        score: "점수",
+        passed: "합격",
+        failed: "불합격",
+        time: "소요 시간",
+        viewDetails: "상세 보기",
+        hideDetails: "상세 숨기기",
+        examConfig: "시험 설정",
+        fieldScores: "분야별 점수",
+        questionResults: "문제별 결과",
+        yearFilter: "연도 필터",
+        submittedAt: "제출 일시",
+        yourAnswer: "내 답안",
+        correctAnswer: "정답",
+        unanswered: "미답변",
+        questionNotFound: "문제 데이터를 찾을 수 없습니다"
+      },
+        submitCodingExamUnansweredConfirm: "미답 또는 판정 미통과 문제가 {count}문 있습니다. 정말 지금 제출하시겠습니까?"
       },
       message: {
         inputSqlRequired: "SQL 쿼리를 입력해 주세요."
