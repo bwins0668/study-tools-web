@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="zh-Hans" data-study-tools-version="v2026.6.14-r23.5">
+<html lang="zh-Hans" data-study-tools-version="v2026.6.14-r23.6">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +10,8 @@
   <!-- Google Fonts & FontAwesome Localized -->
   <link rel="stylesheet" href="assets/lib/google-fonts/css/google-fonts.css">
   <link rel="stylesheet" href="assets/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/index.css?v=r23.5">
-  <link rel="stylesheet" href="assets/css/light-theme.css?v=r23.5">
+  <link rel="stylesheet" href="assets/css/index.css?v=r23.6">
+  <link rel="stylesheet" href="assets/css/light-theme.css?v=r23.6">
   <link rel="stylesheet" href="assets/css/japanese-typing.css?v=20260606_v2">
   <link rel="stylesheet" href="assets/css/ai_learning.css?v=20260608_v2">
   <link rel="stylesheet" href="assets/css/glossary.css?v=20260611_v1">
@@ -72,6 +72,7 @@
         <i class="fa-solid fa-screwdriver-wrench"></i>
         <span class="tools-trigger-label" data-i18n="tools.tools">工具</span>
       </button>
+      <div class="top-utility-cluster" id="top-utility-cluster"></div>
     </header>
 
     <!-- Tools Drawer -->
@@ -252,6 +253,7 @@
         </button>
       </div>
     </div>
+    <div class="secondary-action-row" id="secondary-action-row"></div>
 
     <!-- Main Workspace -->
     <div class="app-body" id="main-app-body">
@@ -1560,12 +1562,22 @@
         <div id="exam-history-list" class="exam-history-list"></div>
       </div>
       <div id="wrong-book-view" class="exam-history-view" hidden>
-        <div class="exam-history-modal__filters" id="wrong-book-filters">
-          <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="wrongBook.all">全部</button>
-          <button type="button" class="exam-history-filter-btn" data-filter="unmastered" data-i18n="wrongBook.unmastered">未掌握</button>
-          <button type="button" class="exam-history-filter-btn" data-filter="mastered" data-i18n="wrongBook.mastered">已掌握</button>
+        <div id="wrong-book-browser">
+          <div class="wrong-book-toolbar">
+            <div class="exam-history-modal__filters" id="wrong-book-filters">
+              <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="wrongBook.all">全部</button>
+              <button type="button" class="exam-history-filter-btn" data-filter="unmastered" data-i18n="wrongBook.unmastered">未掌握</button>
+              <button type="button" class="exam-history-filter-btn" data-filter="mastered" data-i18n="wrongBook.mastered">已掌握</button>
+            </div>
+            <label class="wrong-book-module-filter">
+              <span data-i18n="wrongBook.moduleFilter">模块</span>
+              <select id="wrong-book-module-select" data-i18n-aria-label="wrongBook.moduleFilter"></select>
+            </label>
+            <button type="button" class="wrong-book-retry-start" id="wrong-book-retry-start" data-i18n="wrongBook.startRetry">开始重练</button>
+          </div>
+          <div id="wrong-book-list" class="exam-history-list wrong-book-list"></div>
         </div>
-        <div id="wrong-book-list" class="exam-history-list wrong-book-list"></div>
+        <div id="wrong-book-retry-view" class="wrong-book-retry-view" hidden></div>
       </div>
     </section>
   </div>
@@ -1594,7 +1606,7 @@
   <script src="data/coding_typing/_index.js?v=r23.1"></script>
   <script src="assets/js/sandbox_bridge.js?v=r23.1"></script>
   <script src="assets/js/coding_typing.js?v=r23.1"></script>
-  <script src="assets/js/i18n-ui-dict.js?v=r23.5"></script>
+  <script src="assets/js/i18n-ui-dict.js?v=r23.6"></script>
   <script src="assets/js/i18n.js?v=r23.1"></script>
   <script src="assets/js/content-i18n.js"></script>
   <script src="data/i18n_content/sql_en.js"></script>
@@ -1624,7 +1636,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase-client.js?v=round17.5"></script>
   <script src="assets/js/auth-ui.js?v=round17.5"></script>
-  <script src="assets/js/app.js?v=r23.5"></script>
+  <script src="assets/js/app.js?v=r23.6"></script>
   <script src="assets/js/ai_assistant.js?v=20260608_global_target"></script>
 </body>
 </html>
