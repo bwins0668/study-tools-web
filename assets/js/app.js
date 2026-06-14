@@ -4903,27 +4903,6 @@ function toggleMinimizePdf() {
 }
 
 /* ====================================================
-   Onboarding Guidance (UX-001)
-   ==================================================== */
-
-function dismissGuidance() {
-  var guidance = document.getElementById('first-run-guidance');
-  if (guidance) {
-    guidance.style.display = 'none';
-  }
-}
-
-function startWithSubject(subject) {
-  switchSubject(subject);
-  if (subject === 'sql') {
-    loadLesson(1);
-  } else if (subject === 'itpass') {
-    loadItPassLesson(1);
-  }
-  dismissGuidance();
-}
-
-/* ====================================================
    Module Switch Panel (Round 22.2)
    ==================================================== */
 
