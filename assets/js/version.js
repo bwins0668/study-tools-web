@@ -1,30 +1,27 @@
-﻿/* Study Tools Web 窶・Lightweight version metadata (no framework, no app.js dep) */
+﻿/* Study Tools Web ・ Lightweight version metadata (no framework, no app.js dep) */
 (function () {
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
-    webVersion: "v2026.6.13",
-    desktopVersion: "v2026.6.13",
-    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.13-r20.5",
+    webVersion: "v2026.6.14-r22.1",
+    desktopVersion: "v2026.6.14-r22.1",
+    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.14-r22.1",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
     assetVersion: "v2026.6.14-r22.1"
   };
 
   function applyVersionInfo() {
-    // Update [data-study-tools-version] with web version
     var versionEls = document.querySelectorAll("[data-study-tools-version]");
     versionEls.forEach(function (el) {
       el.textContent = window.STUDY_TOOLS_VERSION.webVersion;
     });
 
-    // Update [data-study-tools-desktop-version] with desktop version
     var desktopEls = document.querySelectorAll("[data-study-tools-desktop-version]");
     desktopEls.forEach(function (el) {
       el.textContent = window.STUDY_TOOLS_VERSION.desktopVersion;
     });
 
-    // Wire up [data-study-tools-release-link] anchors
     var releaseLinks = document.querySelectorAll("[data-study-tools-release-link]");
     releaseLinks.forEach(function (link) {
       link.setAttribute("href", window.STUDY_TOOLS_VERSION.releaseUrl);
