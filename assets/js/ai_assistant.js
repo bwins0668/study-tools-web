@@ -26,7 +26,10 @@ window.StudyAI = (() => {
   }
 
   function escapeText(value) {
-    return String(value == null ? '' : value);
+    var str = String(value == null ? "" : value);
+    // [R22.11] Remove mojibake patterns
+    str = str.replace(/[\u9B2B\u9B2E\u9B77\u9B6C\u9B54\u9B36\u9B30\u9B2C\u9B3B\u9B48\u9B41\u9B3E\u9B32\u9B44\u9B34\u9B6B]/g, "");
+    return str;
   }
 
   const ERROR_HINTS = {
