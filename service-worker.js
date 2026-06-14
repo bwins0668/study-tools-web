@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v2026-6-14-r22-6";
+const CACHE_NAME = "study-tools-web-v2026-6-14-r22-9";
 
 const CORE_ASSETS = [
   "./",
@@ -62,7 +62,7 @@ self.addEventListener("fetch", (event) => {
   if (isApiRequest(event.request.url)) {
     event.respondWith(
       fetch(event.request).catch(() =>
-        new Response(JSON.stringify({ error: "offline", message: "鄂醍ｻ應ｸ榊庄逕ｨ・瑚ｯｷ譽譟･霑樊磁" }), {
+        new Response(JSON.stringify({ error: "offline", message: "驗る・・ｻ諛会ｽｸ讎雁ｺ・包ｽｨ繝ｻ迹夲ｽｯ・ｷ隴ｽﾂ隴滂ｽ･髴第ｨ顔｣・ }), {
           status: 503,
           headers: { "Content-Type": "application/json" },
         })
