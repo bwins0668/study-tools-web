@@ -1153,6 +1153,12 @@
         python: "Python", java: "Java", sql: "SQL", symbols: "သင်္ကေတ",
         normalizeFullWidth: "အပြည့်→တစ်ဝက်", lenientIndent: "အင်တင်အာလျော့",
         sendToSandbox: "Send to Sandbox",        runInSandbox: "Run in Sandbox",        sandboxUnavailable: "Sandbox unavailable",        sentToSandbox: "Sent to sandbox",        openSandbox: "Open sandbox",        shortcutHelp: "Alt+N နောက် / Alt+R ပြန်စ / Alt+S ကျပန်း",
+        emptyFilteredList: "No practice item matches the current filters",
+        examInsight: "Exam Insight",
+        examRelevance: "Exam Relevance",
+        examTargets: "Exam Targets",
+        relatedTerms: "Related Terms",
+        high: "High", medium: "Medium", low: "Low",
         summaryLine: "CPM: {cpm} | တိကျမှု: {acc}% | အမှား: {err} | အချိန်: {time}"
       },
       subnav: {
@@ -1489,6 +1495,12 @@
         python: "Python", java: "Java", sql: "SQL", symbols: "Ký hiệu",
         normalizeFullWidth: "Toàn→Bán sừng", lenientIndent: "Thụt lề linh hoạt",
         sendToSandbox: "Send to Sandbox",        runInSandbox: "Run in Sandbox",        sandboxUnavailable: "Sandbox unavailable",        sentToSandbox: "Sent to sandbox",        openSandbox: "Open sandbox",        shortcutHelp: "Phím tắt: Alt+N Tiếp / Alt+R Làm lại / Alt+S Ngẫu nhiên",
+        emptyFilteredList: "Không có bài luyện tập phù hợp với bộ lọc hiện tại",
+        examInsight: "Thẻ hiểu bài thi",
+        examRelevance: "Mức độ liên quan đến kỳ thi",
+        examTargets: "Mục tiêu thi",
+        relatedTerms: "Thuật ngữ liên quan",
+        high: "Cao", medium: "Trung bình", low: "Thấp",
         summaryLine: "CPM: {cpm} | Độ chính xác: {acc}% | Lỗi: {err} | TG: {time}"
       },
       subnav: {
@@ -1825,6 +1837,12 @@
         python: "Python", java: "Java", sql: "SQL", symbols: "Symboles",
         normalizeFullWidth: "Pleine→Demi-chasse", lenientIndent: "Indentation souple",
         sendToSandbox: "Send to Sandbox",        runInSandbox: "Run in Sandbox",        sandboxUnavailable: "Sandbox unavailable",        sentToSandbox: "Sent to sandbox",        openSandbox: "Open sandbox",        shortcutHelp: "Raccourcis: Alt+N Suivant / Alt+R Reco. / Alt+S Aléatoire",
+        emptyFilteredList: "Aucun exercice ne correspond aux filtres actuels",
+        examInsight: "Carte de compréhension d'examen",
+        examRelevance: "Pertinence pour l'examen",
+        examTargets: "Examens ciblés",
+        relatedTerms: "Termes associés",
+        high: "Élevée", medium: "Moyenne", low: "Faible",
         summaryLine: "CPM: {cpm} | Précision: {acc}% | Err: {err} | Temps: {time}"
       },
       subnav: {
@@ -2161,6 +2179,12 @@
         python: "Python", java: "Java", sql: "SQL", symbols: "기호",
         normalizeFullWidth: "전각→반각", lenientIndent: "들여쓰기 허용",
         sendToSandbox: "Send to Sandbox",        runInSandbox: "Run in Sandbox",        sandboxUnavailable: "Sandbox unavailable",        sentToSandbox: "Sent to sandbox",        openSandbox: "Open sandbox",        shortcutHelp: "단축키: Alt+N 다음 / Alt+R 다시 / Alt+S 랜덤",
+        emptyFilteredList: "현재 필터 조건에 맞는 연습 문제가 없습니다",
+        examInsight: "시험 이해 카드",
+        examRelevance: "시험 관련도",
+        examTargets: "시험 대상",
+        relatedTerms: "관련 용어",
+        high: "높음", medium: "중간", low: "낮음",
         summaryLine: "CPM: {cpm} | 정확도: {acc}% | 오류: {err} | 시간: {time}"
       },
       subnav: {
