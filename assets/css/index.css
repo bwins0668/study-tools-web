@@ -56,11 +56,12 @@ body {
   border-radius: 3px;
 }
 
-/* ====================================================
-   End of UX batch one style additions
-   ==================================================== */
-  width: 6px;
+.table-scroll-wrapper::-webkit-scrollbar {
   height: 6px;
+}
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -2700,7 +2701,9 @@ body {
 /* Keep old .results-table styles for backward compat, but hide them */
 .results-table-container { display: none; }
 
-/* CBT Results Sheet */
+/* ==========================================================================
+   CBT Results Sheet (kept for score summary area)
+   ========================================================================== */
 .cbt-results-screen {
   flex: 1;
   overflow-y: auto;
@@ -6770,13 +6773,6 @@ body[data-i18n-dir="rtl"].i18n-active .language-option-main {
 /* Round 22.2: Hide the old subject tab selector from visual layout */
 .header-subject-selector {
   display: none !important;
-}
-  align-items: stretch;
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 1010px;
-  overflow-x: auto;
-  scrollbar-width: none;
 }
 
 .header-subject-selector::-webkit-scrollbar {

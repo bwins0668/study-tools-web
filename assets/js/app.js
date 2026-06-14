@@ -3201,7 +3201,7 @@ function renderCbtQuestion() {
     metaFullSection.hidden = true;
     if (metaFullText.length > 0 && (q.subcategory || q.topic)) {
       toggleBtn.removeAttribute("hidden");
-      toggleBtn.innerHTML = `<span data-i18n="exam.metaExpand">${I18n.t("exam.metaExpand")}</span>`;
+      toggleBtn.innerHTML = `${I18n.t("exam.metaExpand")}`;
     } else {
       toggleBtn.setAttribute("hidden", "");
     }
