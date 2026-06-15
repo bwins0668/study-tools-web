@@ -323,10 +323,39 @@ window.PythonSandbox = (() => {
             '    <p class="warning-desc">Web 版为了安全不会真实执行本地代码，这里展示的是安全模拟输出 / 学习提示。</p>' +
             '    <p class="warning-desc-ja">セキュリティ制限のため、Web版では実際のローカルコード実行は行いません。ここでは安全なシミュレーション出力/学習ヒントを表示しています。</p>' +
             '    <p class="download-link-box">如需完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" class="warning-link">Windows PC 端完整版下载页面</a>。</p>' +
+            '    <p class="diagnostics-link"><button onclick="PythonSandbox.showDiagnostics()" class="ai-debug-btn" style="margin-top:8px;"><i class="fa-solid fa-stethoscope"></i> 环境诊断 / Diagnostics</button></p>' +
             '  </div>' +
             '</div>';
         }
         return;
+      }
+      if (err.name === 'TimeoutError') {
+        setStatus('error', 'タイムアウト / Timeout');
+        displayOutput('# タイムアウトエラー / Timeout Error\n# コードの実行が25秒を超えました。\n# 无限循环或输入挂起，请检查代码。\n\n💡 提示：尝试减小循环次数或检查递归深度', 'error');
+      } else if (err.message.includes('fetch') || err.message.includes('Failed')) {
+        setStatus('error', 'サーバー未起動 / Server Off');
+        const errorMsg = 
+          '# ⚠️ ローカルサーバーが起動していません / Local server not running\n\n' +
+          '# アプリを正しく起動してください：\n' +
+          '# 1. Launcher.exe または 启动.bat を実行して起動\n' +
+          '# 2. ブラウザからアクセス（http://127.0.0.1:PORT）\n\n' +
+          '# ※ ブラウザから直接 index.html を開いた場合はサーバー機能が使えません。\n\n' +
+          '💡 下载完整版：https://github.com/bwins0668/it-study-tools/releases/latest\n';
+        displayOutput(errorMsg, 'error');
+      } else if (err.message.includes('Python') && err.message.includes('not found')) {
+        setStatus('error', 'Python未安装 / Python Not Found');
+        const errorMsg =
+          '# ⚠️ ローカル環境に Python が見つかりません / Python not found\n\n' +
+          '# 解决方案 / Solutions：\n' +
+          '# 1. 安装 Python：https://www.python.org/downloads/\n' +
+          '# 2. 确保 python.exe 在 PATH 环境变量中\n' +
+          '# 3. 重启应用使环境变量生效\n\n' +
+          '# 检查命令：在命令行输入 python --version\n';
+        displayOutput(errorMsg, 'error');
+      } else {
+        setStatus('error', 'エラー / Error');
+        displayOutput(`# エラー / Error:\n${err.message}\n\n💡 如需要详细诊断，请点击「環境診断」按钮`, 'error');
+      }
       }
       if (err.name === 'TimeoutError') {
         setStatus('error', 'タイムアウト / Timeout');
@@ -671,7 +700,8 @@ window.PythonSandbox = (() => {
       renderVocabCard();
     },
     updateProgressDisplay,
-    toggleTemplate
+    toggleTemplate,
+    showDiagnostics: showPythonDiagnostics
   };
 })();
 
