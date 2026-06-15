@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v2026-6-15-r27-0";
+const CACHE_NAME = "study-tools-web-v2026-6-15-r28-0";
 
 const CORE_ASSETS = [
   "./",
@@ -18,9 +18,19 @@ const CORE_ASSETS = [
   "./data/python_lessons.json",
 ];
 
+// Install: cache each asset individually so a single failure
+// (e.g. 404, 405) doesn't break the entire service worker install.
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(
+        CORE_ASSETS.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn("[SW] Failed to cache:", url, err.message);
+          })
+        )
+      )
+    )
   );
   self.skipWaiting();
 });
