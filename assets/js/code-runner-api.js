@@ -17,7 +17,10 @@
     const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      throw new Error(data.message || data.error || "远程代码执行服务尚未配置 (404/Local Dev)");
+      if ([404, 405, 501, 503].includes(res.status)) {
+        throw new Error("远程代码执行服务尚未配置");
+      }
+      throw new Error(data.message || data.error || `远程代码执行服务请求失败 (${res.status})`);
     }
 
     return {

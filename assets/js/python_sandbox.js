@@ -306,27 +306,29 @@ window.PythonSandbox = (() => {
     displayOutput('# 実行中 / Running...\n# しばらくお待ちください / Please wait...', 'idle');
 
     try {
+      if (!window.WebCodeRunner || typeof window.WebCodeRunner.runPython !== 'function') {
+        throw new Error('ONLINE_EXECUTION_SERVICE_UNAVAILABLE');
+      }
       const result = await window.WebCodeRunner.runPython(code, stdin);
       handleRunResult(result);
 
     } catch (err) {
-      if (err.message && (err.message.includes('尚未配置') || err.message.includes('未配置'))) {
-        setStatus('warning', 'Web安全模式 / Webセーフモード');
-        displayOutput('', 'idle');
-        const out = getOutput();
-        if (out) {
-          out.innerHTML = 
-            '<div class="safe-mode-warning">' +
-            '  <div class="warning-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
-            '  <div class="warning-text">' +
-            '    <p class="warning-title">Web安全模式 / Webセーフモード</p>' +
-            '    <p class="warning-desc">Web 版为了安全不会真实执行本地代码，这里展示的是安全模拟输出 / 学习提示。</p>' +
-            '    <p class="warning-desc-ja">セキュリティ制限のため、Web版では実際のローカルコード実行は行いません。ここでは安全なシミュレーション出力/学習ヒントを表示しています。</p>' +
-            '    <p class="download-link-box">如需完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" class="warning-link">Windows PC 端完整版下载页面</a>。</p>' +
-            '    <p class="diagnostics-link"><button onclick="PythonSandbox.showDiagnostics()" class="ai-debug-btn" style="margin-top:8px;"><i class="fa-solid fa-stethoscope"></i> 环境诊断 / Diagnostics</button></p>' +
-            '  </div>' +
-            '</div>';
-        }
+      const message = String(err && err.message || '');
+      if (
+        message === 'ONLINE_EXECUTION_SERVICE_UNAVAILABLE' ||
+        message.includes('尚未配置') ||
+        message.includes('未配置') ||
+        message.includes('503') ||
+        message.includes('Service Unavailable')
+      ) {
+        setStatus('warning', '在线执行服务暂不可用 / Online service unavailable');
+        displayOutput(
+          '# 在线执行服务暂不可用，请稍后再试或使用 Windows 完整版本地运行。\n' +
+          '# オンライン実行サービスは現在利用できません。しばらくしてから再試行するか、Windows 完整版でローカル実行してください。\n' +
+          '# The online execution service is currently unavailable. Try again later or use the Windows full version for local execution.\n' +
+          '# 온라인 실행 서비스를 현재 사용할 수 없습니다. 나중에 다시 시도하거나 Windows 정식 버전에서 로컬 실행을 사용하세요。',
+          'error'
+        );
         return;
       }
       if (err.name === 'TimeoutError') {
@@ -355,24 +357,6 @@ window.PythonSandbox = (() => {
       } else {
         setStatus('error', 'エラー / Error');
         displayOutput(`# エラー / Error:\n${err.message}\n\n💡 如需要详细诊断，请点击「環境診断」按钮`, 'error');
-      }
-      }
-      if (err.name === 'TimeoutError') {
-        setStatus('error', 'タイムアウト / Timeout');
-        displayOutput('# タイムアウトエラー / Timeout Error\n# コードの実行が25秒を超えました。\n# 无限循环或输入挂起，请检查代码。', 'error');
-      } else if (err.message.includes('fetch') || err.message.includes('Failed')) {
-        setStatus('error', 'サーバー未起動 / Server Off');
-        displayOutput(
-          '# ⚠️ ローカルサーバーが起動していません / Local server not running\n\n' +
-          '# アプリを正しく起動してください：\n' +
-          '# 1. Launcher.exe または 启动.bat を実行して起動\n' +
-          '# 2. ブラウザからアクセス（http://127.0.0.1:PORT）\n\n' +
-          '# ※ ブラウザから直接 index.html を開いた場合はサーバー機能が使えません。',
-          'error'
-        );
-      } else {
-        setStatus('error', 'エラー / Error');
-        displayOutput(`# エラー / Error:\n${err.message}`, 'error');
       }
     } finally {
       isRunning = false;
@@ -465,6 +449,8 @@ window.PythonSandbox = (() => {
       if (panelEl) panelEl.style.display = tab === tabName ? '' : 'none';
     });
   }
+
+  window.switchPythonOutputTab = switchPythonOutputTab;
   // ─── Output Display ──────────────────────────────────────────────────────
   function displayOutput(text, type) {
     const out = getOutput();

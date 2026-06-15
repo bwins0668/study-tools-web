@@ -226,29 +226,32 @@ window.JavaSandbox = (() => {
     setStatus('running', '実行中... / Running...');
     displayOutput('// コンパイル中 / Compiling...\n// しばらくお待ちください / Please wait...', 'idle');
 
-    try {
+    try {
+      if (!window.WebCodeRunner || typeof window.WebCodeRunner.runJava !== 'function') {
+        throw new Error('ONLINE_EXECUTION_SERVICE_UNAVAILABLE');
+      }
       const result = await window.WebCodeRunner.runJava(code, stdin);
-      handleRunResult(result);
-
+      handleRunResult(result);
+
     } catch (err) {
-      if (err.message && (err.message.includes('尚未配置') || err.message.includes('未配置'))) {
-        setStatus('warning', 'Web安全模式 / Webセーフモード');
-        displayOutput('', 'idle');
-        const out = getOutput();
-        if (out) {
-          out.innerHTML = 
-            '<div class="safe-mode-warning">' +
-            '  <div class="warning-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>' +
-            '  <div class="warning-text">' +
-            '    <p class="warning-title">Web安全模式 / Webセーフモード</p>' +
-            '    <p class="warning-desc">Web 版为了安全不会真实执行本地代码，这里展示的是安全模拟输出 / 学习提示。</p>' +
-            '    <p class="warning-desc-ja">セキュリティ制限のため、Web版では実際のローカルコード実行は行いません。ここでは安全なシミュレーション出力/学習ヒントを表示しています。</p>' +
-            '    <p class="download-link-box">如需完整本地运行功能，请前往 <a href="https://github.com/bwins0668/it-study-tools/releases/latest" target="_blank" rel="noopener noreferrer" class="warning-link">Windows PC 端完整版下载页面</a>。</p>' +
-            '  </div>' +
-            '</div>';
-        }
+      const message = String(err && err.message || '');
+      if (
+        message === 'ONLINE_EXECUTION_SERVICE_UNAVAILABLE' ||
+        message.includes('尚未配置') ||
+        message.includes('未配置') ||
+        message.includes('503') ||
+        message.includes('Service Unavailable')
+      ) {
+        setStatus('warning', '在线执行服务暂不可用 / Online service unavailable');
+        displayOutput(
+          '// 在线执行服务暂不可用，请稍后再试或使用 Windows 完整版本地运行。\n' +
+          '// オンライン実行サービスは現在利用できません。しばらくしてから再試行するか、Windows 完整版でローカル実行してください。\n' +
+          '// The online execution service is currently unavailable. Try again later or use the Windows full version for local execution.\n' +
+          '// 온라인 실행 서비스를 현재 사용할 수 없습니다. 나중에 다시 시도하거나 Windows 정식 버전에서 로컬 실행을 사용하세요。',
+          'error'
+        );
         return;
-      }
+      }
       if (err.name === 'TimeoutError') {
         setStatus('error', 'タイムアウト / Timeout');
         displayOutput('// タイムアウトエラー / Timeout Error\n// コードの実行が25秒を超えました。\n// 無限ループなどがないか確認してください。\n// 代码执行超过25秒，请检查是否有死循环。', 'error');
@@ -358,7 +361,9 @@ window.JavaSandbox = (() => {
       if (panelEl) panelEl.style.display = tab === tabName ? '' : 'none';
     });
   }
-  // ─── Output Display ──────────────────────────────────────────────────────
+
+  window.switchJavaOutputTab = switchJavaOutputTab;
+  // ─── Output Display ──────────────────────────────────────────────────────
   function displayOutput(text, type) {
     const out = getOutput();
     if (!out) return;
