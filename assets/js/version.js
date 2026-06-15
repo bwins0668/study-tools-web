@@ -3,12 +3,12 @@
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
-    webVersion: "v2026.6.14-r23.10",
+    webVersion: "v2026.6.14-r23.11",
     desktopVersion: "v2026.6.14-r22.19",
     releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.14-r22.1",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.14-r23.10"
+    assetVersion: "v2026.6.14-r23.11"
   };
 
   function applyVersionInfo() {
