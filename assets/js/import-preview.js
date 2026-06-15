@@ -172,6 +172,7 @@
   /* ── Preview builder (read-only comparison) ──────────── */
   function buildImportPreview(backup) {
     var sections = backup.sections || {};
+    var manifest = backup.manifest || null;
     var result = {
       appVersion: backup.appVersion || "unknown",
       exportedAt: backup.exportedAt || "unknown",
@@ -183,7 +184,8 @@
       optIn: [],
       totalNew: 0,
       totalConflict: 0,
-      totalSkipped: 0
+      totalSkipped: 0,
+      manifest: manifest
     };
 
     // Calculate days since export
@@ -506,6 +508,19 @@
     }
     if (preview.warnings.length > 0) {
       metaItems.push(["Warnings", preview.warnings.join(", ")]);
+    }
+    // Round 46.0: display manifest counts if available
+    if (preview.manifest && preview.manifest.counts) {
+      var counts = preview.manifest.counts;
+      var countsStr = [
+        "Lessons: " + (counts.completedLessons || 0),
+        "Quiz: " + (counts.quizResults || 0),
+        "Wrong Book: " + (counts.wrongBook || 0),
+        "Bookmarks: " + (counts.bookmarks || 0),
+        "Typing: " + (counts.typingHistory || 0),
+        "Exam: " + (counts.examHistory || 0)
+      ].join(", ");
+      metaItems.push(["Manifest Counts", countsStr]);
     }
     metaItems.forEach(function (pair) {
       var row = h("div", { className: "import-preview-meta-row" });
