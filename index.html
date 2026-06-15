@@ -929,7 +929,10 @@
         <!-- Java Output Card (replacing Java Info Card) -->
         <div class="playground-card output-card java-widget" id="java-output-card" style="display: none;">
           <div class="output-header java-output-header" onclick="toggleJavaOutputDetails()">
-            <span><i class="fa-solid fa-terminal"></i> <span data-i18n="console.output">実行結果 (执行结果)</span></span>
+                                    <span><i class="fa-solid fa-terminal"></i> <span data-i18n="console.output">実行結果 (执行结果)</span></span>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span id="python-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
+              <span id="java-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
             <div style="display:flex; align-items:center; gap:8px;">
               <div class="output-actions" onclick="event.stopPropagation()">
                 <span class="java-sandbox-status" id="java-sandbox-status">準備完了 / Ready</span>
