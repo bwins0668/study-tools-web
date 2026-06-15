@@ -25,6 +25,7 @@
 __pycache__/
 *.pyc
 *.log
+/.claude/
 /.wrangler/
 /node_modules/
 
