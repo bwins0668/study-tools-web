@@ -360,7 +360,9 @@ window.PythonSandbox = (() => {
     if (!hasCompileError && !hasRuntimeError) {
       const code = getEditor().value;
       loadTraceSteps('python', code);
-      switchPythonOutputTab('console');
+      if (typeof switchPythonOutputTab === 'function') {
+              switchPythonOutputTab('console');
+      }
     }
 
     // Mark lesson as completed if success (update progress)
@@ -369,6 +371,22 @@ window.PythonSandbox = (() => {
     }
   }
 
+
+  // ─── Output Tab Switching ─────────────────────────────────────────
+  function switchPythonOutputTab(tabName) {
+    // Ensure output card is visible
+    const outputCard = document.getElementById('python-output-card');
+    if (outputCard) outputCard.style.display = '';
+    
+    // Switch between tabs if they exist
+    const tabs = ['console', 'stepper', 'ai-debugger'];
+    tabs.forEach(tab => {
+      const tabEl = document.getElementById('python-tab-' + tab);
+      const panelEl = document.getElementById('python-panel-' + tab);
+      if (tabEl) tabEl.classList.toggle('active', tab === tabName);
+      if (panelEl) panelEl.style.display = tab === tabName ? '' : 'none';
+    });
+  }
   // ─── Output Display ──────────────────────────────────────────────────────
   function displayOutput(text, type) {
     const out = getOutput();
