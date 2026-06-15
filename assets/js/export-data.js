@@ -1,22 +1,23 @@
 /**
- * Study Tools Export Data — Round 32.0 MVP
+ * Study Tools learning-data export.
  *
- * Collects local learning data from localStorage and triggers
- * a JSON download. Read-only — no writes, no uploads, no Supabase.
- *
- * Globally accessible via `window.StudyExport.exportData()`.
- * Called from the Tools Drawer "Export Data" entry.
+ * Reads only the explicitly supported local learning-data keys and downloads
+ * a JSON backup. It never writes storage, uploads data, or contacts Supabase.
  */
 (function () {
   "use strict";
 
-  /* ── Sensitive key denylist ───────────────────── */
-  var DENY_PREFIXES = [
+  var SCHEMA_VERSION = 1;
+  var SOURCE = "study-tools-local-backup";
+  var APP_VERSION = "v2026.6.15-r33.0";
+
+  var DENY_PARTS = [
     "supabase", "sb-", "workbuddy", "codebuddy",
     "ai_provider", "openai", "anthropic", "gemini",
-    "deepseek", "AI_", "ai_api", "api_key", "token",
-    "session", "jwt", "cookie", "password", "credential",
-    "private_key", "secret", "auth_token"
+    "deepseek", "ai_", "ai_api", "api_key", "apikey",
+    "token", "session", "jwt", "cookie", "password",
+    "credential", "private_key", "secret", "auth_token",
+    "device_id", "deviceid", "installation_id", "installationid"
   ];
 
   var DENY_EXACT = [
@@ -26,27 +27,50 @@
     "study-tools-typing-synced-keys",
     "study-tools-exam-synced-keys",
     "study-tools-typing-bookmarks-sync-v1",
-    "study-tools-wrong-book-sync-meta-v1",
+    "study-tools-wrong-book-sync-meta-v1"
   ];
 
   function isDenied(key) {
-    if (DENY_EXACT.indexOf(key) !== -1) return true;
-    var lower = key.toLowerCase();
-    for (var i = 0; i < DENY_PREFIXES.length; i++) {
-      if (lower.indexOf(DENY_PREFIXES[i]) !== -1) return true;
+    var lower = String(key || "").toLowerCase();
+    if (DENY_EXACT.indexOf(lower) !== -1) return true;
+    for (var i = 0; i < DENY_PARTS.length; i++) {
+      if (lower.indexOf(DENY_PARTS[i]) !== -1) return true;
     }
     return false;
   }
 
-  /* ── Data collection ──────────────────────────── */
+  function addWarning(warnings, section) {
+    if (warnings.indexOf(section) === -1) warnings.push(section);
+  }
+
+  function sanitize(value) {
+    if (Array.isArray(value)) {
+      return value.map(sanitize);
+    }
+    if (!value || typeof value !== "object") {
+      return value;
+    }
+
+    var clean = {};
+    Object.keys(value).forEach(function (key) {
+      if (!isDenied(key)) clean[key] = sanitize(value[key]);
+    });
+    return clean;
+  }
+
+  function safeGet(key, fallback, section, warnings) {
+    try {
+      var raw = localStorage.getItem(key);
+      return raw !== null ? sanitize(JSON.parse(raw)) : fallback;
+    } catch (_) {
+      addWarning(warnings, section);
+      return fallback;
+    }
+  }
+
   function collectData() {
-    var data = {
-      _meta: {
-        exportedAt: new Date().toISOString(),
-        appVersion: (window.STUDY_TOOLS_VERSION && window.STUDY_TOOLS_VERSION.webVersion) || "unknown",
-        deviceId: safeGet("study_tools_device_id", null),
-        formatVersion: 1,
-      },
+    var warnings = [];
+    var sections = {
       completedLessons: {},
       quizResults: {},
       wrongBook: [],
@@ -55,173 +79,211 @@
       examHistory: [],
       dashboardGoals: null,
       syncSummary: {},
-      userSettings: {},
+      userSettings: {}
     };
 
-    /* Completed lessons */
-    var completedKeys = [
+    [
       "sql_hub_completed",
       "itpass_completed_lessons",
       "sg_completed_lessons",
       "python_completed_lessons",
-      "java_completed_lessons",
-    ];
-    completedKeys.forEach(function (k) {
-      var val = safeGet(k, null);
-      if (val !== null) data.completedLessons[k] = val;
+      "java_completed_lessons"
+    ].forEach(function (key) {
+      var value = safeGet(key, null, "completedLessons", warnings);
+      if (value !== null) sections.completedLessons[key] = value;
     });
 
-    /* Quiz results (all quiz_completed_* keys) */
     try {
       for (var i = 0; i < localStorage.length; i++) {
-        var lk = localStorage.key(i);
-        if (lk && lk.indexOf("_quiz_completed_") !== -1 && !isDenied(lk)) {
-          var qz = safeGet(lk, null);
-          if (qz !== null) data.quizResults[lk] = qz;
+        var quizKey = localStorage.key(i);
+        if (quizKey && quizKey.indexOf("_quiz_completed_") !== -1 && !isDenied(quizKey)) {
+          var quizValue = safeGet(quizKey, null, "quizResults", warnings);
+          if (quizValue !== null) sections.quizResults[quizKey] = quizValue;
         }
       }
-    } catch (_) {}
 
-    /* Java/Python sandbox progress keys */
-    try {
       for (var j = 0; j < localStorage.length; j++) {
-        var pk = localStorage.key(j);
-        if (pk && (pk.indexOf("_progress_") !== -1) && !isDenied(pk)) {
-          var pv = safeGet(pk, null);
-          if (pv !== null) data.quizResults[pk] = pv;
+        var progressKey = localStorage.key(j);
+        if (progressKey && progressKey.indexOf("_progress_") !== -1 && !isDenied(progressKey)) {
+          var progressValue = safeGet(progressKey, null, "quizResults", warnings);
+          if (progressValue !== null) sections.quizResults[progressKey] = progressValue;
         }
       }
-    } catch (_) {}
-
-    /* Wrong book */
-    data.wrongBook = safeGet("study-tools-exam-wrong-book-v1", []);
-
-    /* Bookmarks (from typing favorites) */
-    try {
-      var typingData = safeGet("study-tools-japanese-typing-v1", {});
-      var favs = Array.isArray(typingData.favorites) ? typingData.favorites : [];
-      data.bookmarks = favs;
     } catch (_) {
-      data.bookmarks = [];
+      addWarning(warnings, "quizResults");
     }
 
-    /* Typing history */
-    var typingKeys = [
+    sections.wrongBook = safeGet(
+      "study-tools-exam-wrong-book-v1",
+      [],
+      "wrongBook",
+      warnings
+    );
+
+    var typingData = safeGet(
       "study-tools-japanese-typing-v1",
-      "study-tools-coding-typing-history-v1",
-    ];
-    typingKeys.forEach(function (tk) {
-      var tv = safeGet(tk, null);
-      if (tv !== null) data.typingHistory[tk] = tv;
+      {},
+      "typingHistory",
+      warnings
+    );
+    sections.bookmarks = Array.isArray(typingData.favorites)
+      ? sanitize(typingData.favorites)
+      : [];
+
+    [
+      "study-tools-japanese-typing-v1",
+      "study-tools-coding-typing-history-v1"
+    ].forEach(function (key) {
+      var value = safeGet(key, null, "typingHistory", warnings);
+      if (value !== null) sections.typingHistory[key] = value;
     });
 
-    /* Exam history */
-    data.examHistory = safeGet("study-tools-exam-history-v1", []);
+    sections.examHistory = safeGet(
+      "study-tools-exam-history-v1",
+      [],
+      "examHistory",
+      warnings
+    );
+    sections.dashboardGoals = safeGet(
+      "study-tools-dashboard-goals-v1",
+      null,
+      "dashboardGoals",
+      warnings
+    );
+    sections.syncSummary.lastSyncAt = safeGet(
+      "study_tools_last_sync_at",
+      null,
+      "syncSummary",
+      warnings
+    );
+    sections.syncSummary.lastSyncResult = safeGet(
+      "study_tools_last_sync_result",
+      null,
+      "syncSummary",
+      warnings
+    );
 
-    /* Dashboard goals */
-    data.dashboardGoals = safeGet("study-tools-dashboard-goals-v1", null);
-
-    /* Sync summary (non-sensitive) */
-    data.syncSummary.lastSyncAt = safeGet("study_tools_last_sync_at", null);
-    data.syncSummary.lastSyncResult = safeGet("study_tools_last_sync_result", null);
-
-    /* User settings (language and theme only) */
     try {
-      var lang = localStorage.getItem("study-tools-language");
-      if (lang) data.userSettings.language = lang;
+      var language = localStorage.getItem("study-tools-language");
+      if (language) sections.userSettings.language = language;
       var theme = localStorage.getItem("study-tools-theme");
-      if (theme) data.userSettings.theme = theme;
-    } catch (_) {}
-
-    /* Wrong book retry settings */
-    var retrySettings = safeGet("study-tools-wrong-book-retry-settings-v1", null);
-    if (retrySettings !== null) data.userSettings.wrongBookRetrySettings = retrySettings;
-
-    return data;
-  }
-
-  /* ── Helpers ──────────────────────────────────── */
-  function safeGet(key, fallback) {
-    try {
-      var raw = localStorage.getItem(key);
-      return raw !== null ? JSON.parse(raw) : fallback;
+      if (theme) sections.userSettings.theme = theme;
     } catch (_) {
-      return fallback;
+      addWarning(warnings, "userSettings");
     }
+
+    var retrySettings = safeGet(
+      "study-tools-wrong-book-retry-settings-v1",
+      null,
+      "userSettings",
+      warnings
+    );
+    if (retrySettings !== null) {
+      sections.userSettings.wrongBookRetrySettings = retrySettings;
+    }
+
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      exportedAt: new Date().toISOString(),
+      appVersion: (
+        window.STUDY_TOOLS_VERSION &&
+        window.STUDY_TOOLS_VERSION.webVersion
+      ) || APP_VERSION,
+      source: SOURCE,
+      warnings: warnings,
+      sections: sections
+    };
   }
 
   function fmtDate() {
-    var d = new Date();
-    var y = d.getFullYear();
-    var m = String(d.getMonth() + 1).padStart(2, "0");
-    var day = String(d.getDate()).padStart(2, "0");
-    return y + m + day;
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, "0");
+    var day = String(date.getDate()).padStart(2, "0");
+    return year + month + day;
   }
 
-  /* ── I18n helpers ─────────────────────────────── */
   function t(key, fallback) {
     try {
-      if (window.I18N && typeof window.I18N.t === "function") {
-        return window.I18N.t(key) || fallback;
+      if (window.I18n && typeof window.I18n.t === "function") {
+        var translated = window.I18n.t(key);
+        return translated && translated !== key ? translated : fallback;
       }
     } catch (_) {}
     return fallback;
   }
 
-  function showExportToast(type, msg) {
-    if (typeof showToast === "function") {
-      showToast(msg, type);
+  function showExportToast(type, message) {
+    if (typeof window.showToast === "function") {
+      window.showToast(message, type);
     } else {
-      try { window.alert(msg); } catch (_) {}
+      try {
+        window.alert(message);
+      } catch (_) {}
     }
   }
 
-  /* ── Public API ───────────────────────────────── */
   function exportData() {
     var data;
+    var json;
+    var blob;
+
     try {
       data = collectData();
-    } catch (e) {
-      showExportToast("error", t("tools.exportFailed", "Export failed") + ": " + (e.message || "unknown error"));
-      return;
-    }
-
-    var json;
-    try {
       json = JSON.stringify(data, null, 2);
-    } catch (e) {
-      showExportToast("error", t("tools.exportFailed", "Export failed") + ": JSON serialization error");
+      blob = new Blob([json], { type: "application/json" });
+    } catch (error) {
+      showExportToast(
+        "error",
+        t("tools.exportFailed", "Export failed") +
+          ": " +
+          (error && error.message ? error.message : "unknown error")
+      );
       return;
     }
 
     var filename = "study-tools-backup-" + fmtDate() + ".json";
-    var blob;
+    var url;
+    var link;
+
     try {
-      blob = new Blob([json], { type: "application/json" });
-    } catch (_) {
-      showExportToast("error", t("tools.exportFailed", "Export failed") + ": cannot create file");
+      url = URL.createObjectURL(blob);
+      link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      showExportToast(
+        "error",
+        t("tools.exportFailed", "Export failed") +
+          ": " +
+          (error && error.message ? error.message : "cannot create file")
+      );
       return;
+    } finally {
+      if (link && link.parentNode) link.parentNode.removeChild(link);
+      if (url) {
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }
     }
 
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    // Clean up blob URL after a short delay
-    setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
-
-    showExportToast("success", t("tools.exportSuccess", "Exported successfully") + " — " + filename);
+    var messageKey = data.warnings.length
+      ? "tools.exportPartialSuccess"
+      : "tools.exportSuccess";
+    var fallback = data.warnings.length
+      ? "Exported with some damaged data skipped"
+      : "Export successful";
+    showExportToast("success", t(messageKey, fallback) + " - " + filename);
   }
 
   function getExportInfo() {
     return {
+      schemaVersion: SCHEMA_VERSION,
+      source: SOURCE,
       scope: [
         "completedLessons",
         "quizResults",
@@ -231,22 +293,22 @@
         "examHistory",
         "dashboardGoals",
         "syncSummary (non-sensitive)",
-        "userSettings (language, theme, retry settings)",
+        "userSettings (language, theme, retry settings)"
       ],
       excluded: [
         "passwords, tokens, JWTs, sessions",
         "Supabase keys, API keys",
         "AI provider keys",
+        "device identifiers",
         "auth sessions, cookies",
         "sync queue internals",
-        "synced-keys metadata",
-      ],
+        "synced-keys metadata"
+      ]
     };
   }
 
-  /* ── Export ───────────────────────────────────── */
   window.StudyExport = {
     exportData: exportData,
-    getExportInfo: getExportInfo,
+    getExportInfo: getExportInfo
   };
 })();
