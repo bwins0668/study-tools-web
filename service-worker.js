@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v2026-6-15-r46-0";
+const CACHE_NAME = "study-tools-web-v2026-6-15-r84-0";
 
 const CORE_ASSETS = [
   "./",
@@ -137,4 +137,11 @@ self.addEventListener("fetch", (event) => {
       return cached || fetchPromise;
     })
   );
+});
+
+// Listen for SKIP_WAITING message from the client
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
