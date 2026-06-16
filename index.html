@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hans" data-study-tools-version="v2026.6.16-r136.2">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
-  <meta name="description" content="SQL / MySQL, IT銉戙偣銉濄兗銉?& Java 澶氱増鍧楄亴涓氬涔犻棬鎴枫€傚寘鍚玈QL浜や簰娌欑洅銆両T Passport涓棩鍙岃鏁欑▼銆丆BT妯℃嫙鑰冭瘯鍙奐ava缂栫▼娌欑洅銆?>
+  <meta name="description" content="SQL / MySQL, ITパスポート & Java 多版块职业学习门户。包含SQL交互沙盒、IT Passport中日双语教程、CBT模拟考试及Java编程沙盒。">
   <title>Study Tools</title>
   <link rel="icon" href="app.ico">
   <!-- Google Fonts & FontAwesome Localized -->
@@ -26,7 +26,7 @@
     <!-- Header Panel -->
     <header class="app-header">
       <div class="header-logo">
-        <button id="mobile-sidebar-toggle" class="mobile-toggle-btn" onclick="toggleMobileSidebar()" title="鐩綍" data-i18n-title="sidebar.unitList">
+        <button id="mobile-sidebar-toggle" class="mobile-toggle-btn" onclick="toggleMobileSidebar()" title="目录" data-i18n-title="sidebar.unitList">
           <i class="fa-solid fa-bars"></i>
         </button>
         <button class="module-switch-trigger" id="module-switch-trigger" type="button"
@@ -35,34 +35,34 @@
           <i class="fa-solid fa-graduation-cap logo-icon" id="main-logo-icon"></i>
           <div class="logo-text">
             <h1 id="main-title-text">Study Tools</h1>
-            <span><span data-i18n="common.subtitle">閰嶅澶囪€冨钩鍙?/span> &nbsp;鈥?nbsp; By: Coco</span>
+            <span><span data-i18n="common.subtitle">配套备考平台</span> &nbsp;•&nbsp; By: Coco</span>
           </div>
-          <span class="brand-caret" aria-hidden="true">鈻?/span>
+          <span class="brand-caret" aria-hidden="true">▾</span>
         </button>
       </div>
 
       <!-- Header Challenge Widget (SQL only) -->
       <div class="header-challenge" id="header-challenge">
         <button class="header-challenge-btn-start" id="challenge-start-btn" onclick="startCrossChallenge()">
-          <i class="fa-solid fa-fire-flame-curved"></i> <span data-i18n="nav.sqlChallenge">缁煎悎闅忔満鎸戞垬</span>
+          <i class="fa-solid fa-fire-flame-curved"></i> <span data-i18n="nav.sqlChallenge">综合随机挑战</span>
         </button>
         <div class="challenge-active-controls" id="challenge-controls" style="display: none;">
-          <span class="challenge-status-text" id="challenge-status-text">鎸戞垬涓?(1/1)</span>
+          <span class="challenge-status-text" id="challenge-status-text">挑战中 (1/1)</span>
           <span class="challenge-source-tag" id="challenge-source-tag" style="display: none;"></span>
           <button class="challenge-control-btn" id="challenge-next-btn" onclick="nextCrossChallenge()" style="display: none;">
-            <i class="fa-solid fa-forward"></i> <span data-i18n="common.changeQuestion">鎹竴棰?/span>
+            <i class="fa-solid fa-forward"></i> <span data-i18n="common.changeQuestion">换一题</span>
           </button>
           <button class="challenge-control-btn stop-btn" id="challenge-stop-btn" onclick="stopCrossChallenge()" style="display: none;">
-            <i class="fa-solid fa-stop"></i> <span data-i18n="common.stop">缁撴潫</span>
+            <i class="fa-solid fa-stop"></i> <span data-i18n="common.stop">结束</span>
           </button>
         </div>
       </div>
 
-      <button id="mobile-playground-toggle" class="mobile-toggle-btn" onclick="toggleMobilePlayground()" title="娌欑洅" data-i18n-title="sandbox.playground">
+      <button id="mobile-playground-toggle" class="mobile-toggle-btn" onclick="toggleMobilePlayground()" title="沙盒" data-i18n-title="sandbox.playground">
         <i class="fa-solid fa-terminal"></i>
       </button>
 
-      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="鍒囨崲娴呰壊/娣辫壊妯″紡" aria-label="鍒囨崲娴呰壊鎴栨繁鑹叉ā寮? data-i18n-title="common.themeToggle" data-i18n-aria-label="common.themeToggle">
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="切换浅色/深色模式" aria-label="切换浅色或深色模式" data-i18n-title="common.themeToggle" data-i18n-aria-label="common.themeToggle">
         <i class="fa-solid fa-sun"></i>
       </button>
 
@@ -71,7 +71,7 @@
         aria-expanded="false" aria-controls="tools-drawer"
         data-i18n-aria-label="tools.openMenu" data-i18n-title="tools.openMenu">
         <i class="fa-solid fa-screwdriver-wrench"></i>
-        <span class="tools-trigger-label" data-i18n="tools.tools">宸ュ叿</span>
+        <span class="tools-trigger-label" data-i18n="tools.tools">工具</span>
       </button>
       <div class="top-utility-cluster" id="top-utility-cluster"></div>
     </header>
@@ -83,86 +83,86 @@
         <!-- Hidden glossary-open-btn for glossary.js event binding -->
         <button id="glossary-open-btn" hidden aria-hidden="true" tabindex="-1"></button>
         <div class="tools-drawer__header">
-          <strong data-i18n="tools.tools">宸ュ叿</strong>
+          <strong data-i18n="tools.tools">工具</strong>
           <button type="button" class="tools-drawer__close" id="tools-drawer-close" aria-label="Close" data-i18n-aria-label="tools.closeMenu">&times;</button>
         </div>
 
         <div class="tools-drawer__section">
-          <div class="tools-drawer__section-title" data-i18n="tools.quickStart">蹇€熷紑濮?/div>
+          <div class="tools-drawer__section-title" data-i18n="tools.quickStart">快速开始</div>
           <div class="tools-drawer__quick-start">
-            <strong data-i18n="tools.quickStartTitle">瀛︿範娴佺▼</strong>
-            <span data-i18n="tools.quickStartDesc">閫夋嫨绉戠洰 鈫?瀛︿範璇剧▼ 鈫?鍋氱粌涔犻 鈫?鏌ョ湅缁熻</span>
+            <strong data-i18n="tools.quickStartTitle">学习流程</strong>
+            <span data-i18n="tools.quickStartDesc">选择科目 → 学习课程 → 做练习题 → 查看统计</span>
           </div>
         </div>
 
         <div class="tools-drawer__section">
-          <div class="tools-drawer__section-title" data-i18n="tools.learningTools">瀛︿範宸ュ叿</div>
+          <div class="tools-drawer__section-title" data-i18n="tools.learningTools">学习工具</div>
           <button type="button" class="tools-drawer-item" data-action="open-dashboard">
-            <span class="tools-drawer-item__icon">馃搳</span>
+            <span class="tools-drawer-item__icon">📊</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.dashboard">瀛︿範缁熻</strong>
-              <small data-i18n="tools.dashboardDesc">鏌ョ湅瀛︿範杩涘害涓庢暟鎹瑙?/small>
+              <strong data-i18n="tools.dashboard">学习统计</strong>
+              <small data-i18n="tools.dashboardDesc">查看学习进度与数据概览</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="continue-learning">
-            <span class="tools-drawer-item__icon">鈻讹笍</span>
+            <span class="tools-drawer-item__icon">▶️</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.continueLearning">缁х画瀛︿範</strong>
-              <small data-i18n="tools.continueLearningDesc">浠庝笂娆¤繘搴︾户缁?/small>
+              <strong data-i18n="tools.continueLearning">继续学习</strong>
+              <small data-i18n="tools.continueLearningDesc">从上次进度继续</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="export-data">
-            <span class="tools-drawer-item__icon">馃捑</span>
+            <span class="tools-drawer-item__icon">💾</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.exportData">瀵煎嚭瀛︿範鏁版嵁</strong>
-              <small data-i18n="tools.exportDataDesc">涓嬭浇鏈湴瀛︿範鏁版嵁澶囦唤 (JSON)</small>
+              <strong data-i18n="tools.exportData">导出学习数据</strong>
+              <small data-i18n="tools.exportDataDesc">下载本地学习数据备份 (JSON)</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="import-preview">
-            <span class="tools-drawer-item__icon">馃摜</span>
+            <span class="tools-drawer-item__icon">📥</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.importPreview">棰勮瀵煎叆澶囦唤</strong>
-              <small data-i18n="tools.importPreviewDesc">鍙棰勮锛屼笉浼氫慨鏀瑰綋鍓嶆暟鎹?/small>
+              <strong data-i18n="tools.importPreview">预览导入备份</strong>
+              <small data-i18n="tools.importPreviewDesc">只读预览，不会修改当前数据</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="open-glossary">
-            <span class="tools-drawer-item__icon">馃摉</span>
+            <span class="tools-drawer-item__icon">📖</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.glossary">鏈琛?/strong>
-              <small data-i18n="tools.glossaryDesc">鏌ヨ IT / SQL / 缂栫▼鏈</small>
+              <strong data-i18n="tools.glossary">术语表</strong>
+              <small data-i18n="tools.glossaryDesc">查询 IT / SQL / 编程术语</small>
             </span>
           </button>
         </div>
 
         <div class="tools-drawer__section">
-          <div class="tools-drawer__section-title" data-i18n="tools.examTools">鑰冭瘯宸ュ叿</div>
+          <div class="tools-drawer__section-title" data-i18n="tools.examTools">考试工具</div>
           <button type="button" class="tools-drawer-item" data-action="open-exam-history">
-            <span class="tools-drawer-item__icon">馃摑</span>
+            <span class="tools-drawer-item__icon">📝</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.examHistory">鑰冭瘯鍘嗗彶</strong>
-              <small data-i18n="tools.examHistoryDesc">鏌ョ湅鏈€杩戠殑妯℃嫙鑰冭瘯璁板綍</small>
+              <strong data-i18n="tools.examHistory">考试历史</strong>
+              <small data-i18n="tools.examHistoryDesc">查看最近的模拟考试记录</small>
             </span>
           </button>
         </div>
 
         <div class="tools-drawer__section">
-          <div class="tools-drawer__section-title" data-i18n="tools.settings">璁剧疆</div>
+          <div class="tools-drawer__section-title" data-i18n="tools.settings">设置</div>
           <button type="button" class="tools-drawer-item" data-action="open-settings">
-            <span class="tools-drawer-item__icon">鈿欙笍</span>
+            <span class="tools-drawer-item__icon">⚙️</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.settings">璁剧疆</strong>
-              <small data-i18n="tools.settingsDesc">璋冩暣瀛︿範宸ュ叿鍋忓ソ</small>
+              <strong data-i18n="tools.settings">设置</strong>
+              <small data-i18n="tools.settingsDesc">调整学习工具偏好</small>
             </span>
           </button>
         </div>
 
         <div class="tools-drawer__section tools-drawer__section--danger">
-          <div class="tools-drawer__section-title" data-i18n="tools.dangerous">鍗遍櫓鎿嶄綔</div>
+          <div class="tools-drawer__section-title" data-i18n="tools.dangerous">危险操作</div>
           <button type="button" class="tools-drawer-item tools-drawer-item--danger" data-action="reset-progress">
-            <span class="tools-drawer-item__icon">鈫╋笍</span>
+            <span class="tools-drawer-item__icon">↩️</span>
             <span class="tools-drawer-item__text">
-              <strong data-i18n="tools.resetProgress">閲嶇疆杩涘害</strong>
-              <small data-i18n="tools.resetProgressDesc">娓呯┖褰撳墠瀛︿範杩涘害锛岄渶瑕佺‘璁?/small>
+              <strong data-i18n="tools.resetProgress">重置进度</strong>
+              <small data-i18n="tools.resetProgressDesc">清空当前学习进度，需要确认</small>
             </span>
           </button>
         </div>
@@ -172,57 +172,57 @@
     <!-- Module Switch Panel -->
     <div class="module-switch-panel" id="module-switch-panel" hidden role="dialog" aria-modal="true" data-i18n-aria-label="moduleSwitch.title">
       <div class="module-switch-panel__header">
-        <strong data-i18n="moduleSwitch.title">閫夋嫨瀛︿範鐗堝潡</strong>
+        <strong data-i18n="moduleSwitch.title">选择学习版块</strong>
         <button type="button" class="module-switch-close" aria-label="Close" data-i18n-aria-label="moduleSwitch.close">&times;</button>
       </div>
       <div class="module-switch-panel__body">
         <button class="module-switch-option active" data-module="sql" onclick="switchSubject('sql')">
           <span class="module-switch-option__icon"><i class="fa-solid fa-database"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.sql">SQL 瀛︿範</strong>
-            <span data-i18n="moduleDesc.sql">鏁版嵁搴撳熀纭€銆佹煡璇€佺粌涔犱笌娌欑洅</span>
+            <strong data-i18n="nav.sql">SQL 学习</strong>
+            <span data-i18n="moduleDesc.sql">数据库基础、查询、练习与沙盒</span>
           </span>
         </button>
         <button class="module-switch-option" data-module="sg" onclick="switchSubject('sg')">
           <span class="module-switch-option__icon"><i class="fa-solid fa-shield-halved"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.sg">SG 澶囪€?/strong>
-            <span data-i18n="moduleDesc.sg">鎯呭牨銈汇偔銉ャ儶銉嗐偅銉炪儘銈搞儭銉炽儓瑭﹂〒瀵剧瓥</span>
+            <strong data-i18n="nav.sg">SG 备考</strong>
+            <span data-i18n="moduleDesc.sg">情報セキュリティマネジメント試験対策</span>
           </span>
         </button>
         <button class="module-switch-option" data-module="itpass" onclick="switchSubject('itpass')">
           <span class="module-switch-option__icon"><i class="fa-solid fa-graduation-cap"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.itpass">IT Passport 澶囪€?/strong>
-            <span data-i18n="moduleDesc.itpass">IT Passport 鍩虹涓庣湡棰樼粌涔?/span>
+            <strong data-i18n="nav.itpass">IT Passport 备考</strong>
+            <span data-i18n="moduleDesc.itpass">IT Passport 基础与真题练习</span>
           </span>
         </button>
         <button class="module-switch-option" data-module="typing" onclick="switchSubject('typing')">
           <span class="module-switch-option__icon"><i class="fa-solid fa-keyboard"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.typing">鏃ユ湰瑾炪偪銈ゃ償銉炽偘</strong>
-            <span data-i18n="moduleDesc.typing">鏃ユ湰璇緭鍏ヤ笌鎵撳瓧缁冧範</span>
+            <strong data-i18n="nav.typing">日本語タイピング</strong>
+            <span data-i18n="moduleDesc.typing">日本语输入与打字练习</span>
           </span>
         </button>
         <button class="module-switch-option" data-module="coding-typing" onclick="switchSubject('coding-typing')">
           <span class="module-switch-option__icon"><i class="fa-solid fa-laptop-code"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.codingTyping">缂栫▼鎵撳瓧</strong>
-            <span data-i18n="moduleDesc.codingTyping">浠ｇ爜杈撳叆涓庤娉曠粌涔?/span>
+            <strong data-i18n="nav.codingTyping">编程打字</strong>
+            <span data-i18n="moduleDesc.codingTyping">代码输入与语法练习</span>
           </span>
         </button>
         <button class="module-switch-option" data-module="java" onclick="switchSubject('java')">
           <span class="module-switch-option__icon"><i class="fa-brands fa-java"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.java">Java 瀛︿範</strong>
-            <span data-i18n="moduleDesc.java">Java 鍩虹銆佽娉曚笌缁冧範</span>
+            <strong data-i18n="nav.java">Java 学习</strong>
+            <span data-i18n="moduleDesc.java">Java 基础、语法与练习</span>
           </span>
         </button>
         <button class="module-switch-option" data-module="python" onclick="switchSubject('python')">
           <span class="module-switch-option__icon"><i class="fa-brands fa-python"></i></span>
           <span class="module-switch-option__text">
-            <strong data-i18n="nav.python">Python 瀛︿範</strong>
-            <span data-i18n="moduleDesc.python">Python 鍩虹銆佽娉曚笌缁冧範</span>
+            <strong data-i18n="nav.python">Python 学习</strong>
+            <span data-i18n="moduleDesc.python">Python 基础、语法与练习</span>
           </span>
         </button>
       </div>
@@ -232,10 +232,10 @@
     <div class="sub-header-bar" id="sql-sub-header" style="display: none;">
       <div class="sub-header-tabs">
         <button class="sub-header-tab active" id="sql-sub-tab-lessons" onclick="switchSqlSubMode('lessons')">
-          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.lessons">鏁欑涔︿笌婕旂粌娌欑洅 (銉嗐偔銈广儓銉绘紨缈?</span>
+          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.lessons">教科书与演练沙盒 (テキスト・演習)</span>
         </button>
         <button class="sub-header-tab" id="sql-sub-tab-exam" onclick="switchSqlSubMode('exam')">
-          <i class="fa-solid fa-laptop-code"></i> <span data-i18n="subnav.practicalExam">瀹炴搷妯℃嫙鑰冭瘯 (瀹熸妧妯℃摤瑭﹂〒)</span>
+          <i class="fa-solid fa-laptop-code"></i> <span data-i18n="subnav.practicalExam">实操模拟考试 (実技模擬試験)</span>
         </button>
       </div>
     </div>
@@ -244,10 +244,10 @@
     <div class="sub-header-bar" id="itpass-sub-header" style="display: none;">
       <div class="sub-header-tabs">
         <button class="sub-header-tab active" id="sub-tab-lessons" onclick="switchItPassSubMode('lessons')">
-          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.study">鏁欑涔︾珷鑺傚涔?(銉嗐偔銈广儓瀛︾繏)</span>
+          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.study">教科书章节学习 (テキスト学習)</span>
         </button>
         <button class="sub-header-tab" id="sub-tab-dojo" onclick="switchItPassSubMode('dojo')">
-          <i class="fa-solid fa-compass"></i> <span data-i18n="subnav.pastExams">杩囧幓闂亾鍦?& 妯℃嫙鑰冭瘯 (閬庡幓鍟忛亾鍫?</span>
+          <i class="fa-solid fa-compass"></i> <span data-i18n="subnav.pastExams">过去问道场 & 模拟考试 (過去問道場)</span>
         </button>
       </div>
     </div>
@@ -256,25 +256,25 @@
     <div class="sub-header-bar" id="sg-sub-header" style="display: none;">
       <div class="sub-header-tabs">
         <button class="sub-header-tab active" id="sg-sub-tab-lessons" onclick="switchSgSubMode('lessons')">
-          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.study">鏁欑涔︾珷鑺傚涔?(銉嗐偔銈广儓瀛︾繏)</span>
+          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.study">教科书章节学习 (テキスト学習)</span>
         </button>
         <button class="sub-header-tab" id="sg-sub-tab-dojo" onclick="switchSgSubMode('dojo')">
-          <i class="fa-solid fa-compass"></i> <span data-i18n="subnav.pastExams">杩囧幓闂亾鍦?& 妯℃嫙鑰冭瘯 (閬庡幓鍟忛亾鍫?</span>
+          <i class="fa-solid fa-compass"></i> <span data-i18n="subnav.pastExams">过去问道场 & 模拟考试 (過去問道場)</span>
         </button>
       </div>
     </div>
 
-    <!-- Java Sub-Header (鍏ラ杸绶?/ 瀹熻返绶?switch + Exam) -->
+    <!-- Java Sub-Header (入門編 / 実践編 switch + Exam) -->
     <div class="sub-header-bar" id="java-sub-header" style="display: none;">
       <div class="sub-header-tabs">
         <button class="sub-header-tab active" id="java-sub-tab-nyumon" onclick="switchJavaBook('nyumon')">
-          <i class="fa-solid fa-seedling"></i> <span data-i18n="subnav.javaIntro">鍏ラ杸绶?(鍩虹绡? 鈥?绗?銆?绔?/span>
+          <i class="fa-solid fa-seedling"></i> <span data-i18n="subnav.javaIntro">入門編 (基础篇) — 第1〜8章</span>
         </button>
         <button class="sub-header-tab" id="java-sub-tab-jissen" onclick="switchJavaBook('jissen')">
-          <i class="fa-solid fa-rocket"></i> <span data-i18n="subnav.javaPractice">瀹熻返绶?(杩涢樁绡? 鈥?绗?銆?1绔?/span>
+          <i class="fa-solid fa-rocket"></i> <span data-i18n="subnav.javaPractice">実践編 (进阶篇) — 第1〜11章</span>
         </button>
         <button class="sub-header-tab" id="java-sub-tab-exam" onclick="switchJavaSubMode('exam')">
-          <i class="fa-solid fa-laptop-code"></i> <span data-i18n="subnav.practicalExam">瀹炴搷妯℃嫙鑰冭瘯 (瀹熸妧妯℃摤瑭﹂〒)</span>
+          <i class="fa-solid fa-laptop-code"></i> <span data-i18n="subnav.practicalExam">实操模拟考试 (実技模擬試験)</span>
         </button>
       </div>
     </div>
@@ -283,10 +283,10 @@
     <div class="sub-header-bar" id="python-sub-header" style="display: none;">
       <div class="sub-header-tabs">
         <button class="sub-header-tab active" id="python-sub-tab-lessons" onclick="switchPythonSubMode('lessons')">
-          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.lessons">鏁欑涔︿笌婕旂粌娌欑洅 (銉嗐偔銈广儓銉绘紨缈?</span>
+          <i class="fa-solid fa-book-open"></i> <span data-i18n="subnav.lessons">教科书与演练沙盒 (テキスト・演習)</span>
         </button>
         <button class="sub-header-tab" id="python-sub-tab-exam" onclick="switchPythonSubMode('exam')">
-          <i class="fa-solid fa-laptop-code"></i> <span data-i18n="subnav.practicalExam">瀹炴搷妯℃嫙鑰冭瘯 (瀹熸妧妯℃摤瑭﹂〒)</span>
+          <i class="fa-solid fa-laptop-code"></i> <span data-i18n="subnav.practicalExam">实操模拟考试 (実技模擬試験)</span>
         </button>
       </div>
     </div>
@@ -301,7 +301,7 @@
         <!-- Sidebar Progress -->
         <div class="sidebar-progress" id="sidebar-progress-wrapper">
           <div class="progress-info">
-            <span><span data-i18n="sidebar.progress">閫叉崡鐘舵硜 (瀛︿範杩涘害)</span>: <strong id="progress-percentage">0%</strong></span>
+            <span><span data-i18n="sidebar.progress">進捗状況 (学习进度)</span>: <strong id="progress-percentage">0%</strong></span>
             <span id="progress-fraction">(0 / 36)</span>
           </div>
           <div class="progress-bar-container">
@@ -311,7 +311,7 @@
 
         <div class="sidebar-title">
           <i class="fa-solid fa-list-check"></i>
-          <span id="sidebar-title-text" data-i18n="sidebar.unitList">鍗樺厓銉偣銉?(璇剧▼鐩綍)</span>
+          <span id="sidebar-title-text" data-i18n="sidebar.unitList">単元リスト (课程目录)</span>
         </div>
         <nav class="lessons-nav" id="lessons-nav">
           <!-- Dynamically populated via JS -->
@@ -319,7 +319,7 @@
         <div class="sidebar-pdf-container" id="sidebar-pdf-container" style="display: none;">
           <button class="sidebar-pdf-btn" onclick="openTextbookPdf()">
             <i class="fa-solid fa-file-pdf"></i>
-            <span data-i18n="lesson.showPdf">鏄剧ず鍘熶功 PDF</span>
+            <span data-i18n="lesson.showPdf">显示原书 PDF</span>
           </button>
         </div>
       </aside>
@@ -331,39 +331,39 @@
           <!-- Lesson Header -->
           <div class="lesson-header">
             <div class="lesson-header-top">
-              <span class="lesson-badge" id="lesson-section-badge">銈儐銈淬儶銉?/span>
+              <span class="lesson-badge" id="lesson-section-badge">カテゴリー</span>
               <button class="locate-pdf-btn" id="locate-pdf-btn" style="display: none;" onclick="openTextbookPdfForCurrentLesson()">
                 <i class="fa-solid fa-location-crosshairs"></i>
-                <span data-i18n="lesson.locateBookPage">瀹氫綅鍘熶功椤?/span>
+                <span data-i18n="lesson.locateBookPage">定位原书页</span>
               </button>
             </div>
-            <h2 id="lesson-title-ja">01-SQL銈勩儑銉笺偪銉欍兗銈广仺銇綍銇嬶紵</h2>
-            <h3 id="lesson-title-zh">01-浠€涔堟槸鏁版嵁搴?and SQL锛?/h3>
+            <h2 id="lesson-title-ja">01-SQLやデータベースとは何か？</h2>
+            <h3 id="lesson-title-zh">01-什么是数据库 and SQL？</h3>
           </div>
 
           <!-- Language Selector Tabs -->
           <div class="lang-tabs">
             <button class="lang-tab active" data-lang="both" onclick="setLangView('both')">
-              <i class="fa-solid fa-columns"></i> <span data-i18n="lesson.compareMode">宸﹀彸瀵圭収 (鏃?涓?</span>
+              <i class="fa-solid fa-columns"></i> <span data-i18n="lesson.compareMode">左右对照 (日/中)</span>
             </button>
             <button class="lang-tab" data-lang="ja" onclick="setLangView('ja')" data-i18n="lesson.japaneseOnly">
-              鏃ユ湰瑾炪伄銇?
+              日本語のみ
             </button>
             <button class="lang-tab" data-lang="zh" onclick="setLangView('zh')" data-i18n="lesson.chineseOnly">
-              涓枃绠€浣?
+              中文简体
             </button>
           </div>
 
           <!-- Concept Text Body -->
           <div class="concept-container" id="concept-container">
             <div class="concept-col ja-col">
-              <h4><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="lesson.explanationJa">瑙ｈ (鏃ユ湰瑾?</span></h4>
+              <h4><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="lesson.explanationJa">解説 (日本語)</span></h4>
               <div class="concept-body" id="concept-ja-body">
                 <!-- Loaded dynamically -->
               </div>
             </div>
             <div class="concept-col zh-col">
-              <h4><i class="fa-solid fa-language"></i> <span data-i18n="lesson.explanationZh">璁茶В (涓枃)</span></h4>
+              <h4><i class="fa-solid fa-language"></i> <span data-i18n="lesson.explanationZh">讲解 (中文)</span></h4>
               <div class="concept-body" id="concept-zh-body">
                 <!-- Loaded dynamically -->
               </div>
@@ -374,18 +374,18 @@
           <div class="analogy-card">
             <div class="card-icon"><i class="fa-solid fa-lightbulb"></i></div>
             <div class="card-content">
-              <h5 id="analogy-title-text" data-i18n="lesson.analogy">韬繎銇緥銇?(褰㈣薄姣斿柣)</h5>
-              <p id="lesson-analogy">姣斿柀琛ㄧ従銇屻亾銇撱伀鍏ャ倞銇俱仚銆?/p>
+              <h5 id="analogy-title-text" data-i18n="lesson.analogy">身近な例え (形象比喻)</h5>
+              <p id="lesson-analogy">比喩表現がここに入ります。</p>
             </div>
           </div>
 
           <!-- Code Example Card / Glossary Card -->
           <div class="example-card collapsed" id="example-card">
             <div class="example-header" onclick="toggleExampleCard()" style="cursor: pointer; user-select: none;">
-              <span id="example-header-title"><i class="fa-solid fa-code"></i> <span data-i18n="lesson.sqlExample">SQL妲嬫枃渚?(SQL绀轰緥)</span></span>
+              <span id="example-header-title"><i class="fa-solid fa-code"></i> <span data-i18n="lesson.sqlExample">SQL構文例 (SQL示例)</span></span>
               <div style="display:flex; align-items:center; gap:12px;">
                 <button class="copy-example-btn" id="copy-example-btn" onclick="event.stopPropagation(); copyExampleToPlayground()">
-                  <i class="fa-solid fa-copy"></i> <span data-i18n="lesson.copyToEditor">銈ㄣ儑銈ｃ偪銇搞偝銉斻兗 (澶嶅埗鍒扮紪杈戝櫒)</span>
+                  <i class="fa-solid fa-copy"></i> <span data-i18n="lesson.copyToEditor">エディタへコピー (复制到编辑器)</span>
                 </button>
                 <i class="fa-solid fa-chevron-down toggle-icon" id="example-toggle-icon" style="transform: rotate(-90deg); transition: transform 0.25s;"></i>
               </div>
@@ -400,8 +400,8 @@
           <div class="java-vocab-section" id="java-vocab-section" style="display: none;">
             <div class="java-vocab-header">
               <i class="fa-solid fa-cards"></i>
-              <span data-i18n="flashcard.title">鍗樿獮銈兗銉?/ 璇嶆眹闂崱</span>
-              <button class="java-vocab-flip-btn" onclick="javaFlipCard()" data-i18n="flashcard.flip">缈昏浆 / Flip</button>
+              <span data-i18n="flashcard.title">単語カード / 词汇闪卡</span>
+              <button class="java-vocab-flip-btn" onclick="javaFlipCard()" data-i18n="flashcard.flip">翻转 / Flip</button>
               <button class="java-vocab-nav-btn" onclick="javaVocabPrev()"><i class="fa-solid fa-chevron-left"></i></button>
               <button class="java-vocab-nav-btn" onclick="javaVocabNext()"><i class="fa-solid fa-chevron-right"></i></button>
               <span id="java-vocab-counter" class="java-vocab-counter">1 / 1</span>
@@ -409,12 +409,12 @@
             <div class="java-flashcard-wrapper" onclick="javaFlipCard()">
               <div class="java-flashcard" id="java-flashcard">
                 <div class="java-flashcard-front">
-                  <div class="java-card-term" id="java-card-term">銈儵銈?/div>
-                  <div class="java-card-hint" data-i18n="flashcard.clickToFlipHint">銈儶銉冦偗銇椼仸瑁忋倰瑕嬨倠 / Click to flip</div>
+                  <div class="java-card-term" id="java-card-term">クラス</div>
+                  <div class="java-card-hint" data-i18n="flashcard.clickToFlipHint">クリックして裏を見る / Click to flip</div>
                 </div>
                 <div class="java-flashcard-back">
-                  <div class="java-card-zh" id="java-card-zh">绫?/div>
-                  <div class="java-card-desc" id="java-card-desc">銈儢銈搞偋銈儓銇ō瑷堝洺銆?/div>
+                  <div class="java-card-zh" id="java-card-zh">类</div>
+                  <div class="java-card-desc" id="java-card-desc">オブジェクトの設計図。</div>
                 </div>
               </div>
             </div>
@@ -424,8 +424,8 @@
           <div class="python-vocab-section" id="python-vocab-section" style="display: none;">
             <div class="python-vocab-header">
               <i class="fa-solid fa-cards"></i>
-              <span data-i18n="flashcard.title">鍗樿獮銈兗銉?/ 璇嶆眹闂崱</span>
-              <button class="python-vocab-flip-btn" onclick="pythonFlipCard()" data-i18n="flashcard.flip">缈昏浆 / Flip</button>
+              <span data-i18n="flashcard.title">単語カード / 词汇闪卡</span>
+              <button class="python-vocab-flip-btn" onclick="pythonFlipCard()" data-i18n="flashcard.flip">翻转 / Flip</button>
               <button class="python-vocab-nav-btn" onclick="pythonVocabPrev()"><i class="fa-solid fa-chevron-left"></i></button>
               <button class="python-vocab-nav-btn" onclick="pythonVocabNext()"><i class="fa-solid fa-chevron-right"></i></button>
               <span id="python-vocab-counter" class="python-vocab-counter">1 / 1</span>
@@ -433,12 +433,12 @@
             <div class="python-flashcard-wrapper" onclick="pythonFlipCard()">
               <div class="python-flashcard" id="python-flashcard">
                 <div class="python-flashcard-front">
-                  <div class="python-card-term" id="python-card-term">銉偣銉?/div>
-                  <div class="python-card-hint" data-i18n="flashcard.clickToFlipHint">銈儶銉冦偗銇椼仸瑁忋倰瑕嬨倠 / Click to flip</div>
+                  <div class="python-card-term" id="python-card-term">リスト</div>
+                  <div class="python-card-hint" data-i18n="flashcard.clickToFlipHint">クリックして裏を見る / Click to flip</div>
                 </div>
                 <div class="python-flashcard-back">
-                  <div class="python-card-zh" id="python-card-zh">鍒楄〃</div>
-                  <div class="python-card-desc" id="python-card-desc">瑜囨暟銇儑銉笺偪銈掋伨銇ㄣ倎銇︾鐞嗐仚銈嬨偝銉偗銈枫儳銉炽€?/div>
+                  <div class="python-card-zh" id="python-card-zh">列表</div>
+                  <div class="python-card-desc" id="python-card-desc">複数のデータをまとめて管理するコレクション。</div>
                 </div>
               </div>
             </div>
@@ -446,24 +446,24 @@
 
           <!-- Quiz Section -->
           <div class="quiz-section">
-            <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="quiz.title">鐞嗚В搴︺儐銈广儓 (绔犺妭灏忔祴)</span></h4>
+            <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="quiz.title">理解度テスト (章节小测)</span></h4>
             
             <!-- Quiz Navigator (IT Passport Mode Only) -->
             <div class="quiz-nav-header" id="itpass-quiz-nav" style="display: none;">
-              <span class="quiz-nav-text" id="itpass-quiz-progress-text">闂 1 / 鍏?2 棰?/span>
+              <span class="quiz-nav-text" id="itpass-quiz-progress-text">问题 1 / 共 2 题</span>
               <div class="quiz-nav-buttons">
-                <button class="quiz-nav-btn" onclick="quizPrev()"><i class="fa-solid fa-chevron-left"></i> <span data-i18n="quiz.previous">涓婁竴棰?/span></button>
-                <button class="quiz-nav-btn" onclick="quizNext()"><span data-i18n="quiz.next">涓嬩竴棰?/span> <i class="fa-solid fa-chevron-right"></i></button>
+                <button class="quiz-nav-btn" onclick="quizPrev()"><i class="fa-solid fa-chevron-left"></i> <span data-i18n="quiz.previous">上一题</span></button>
+                <button class="quiz-nav-btn" onclick="quizNext()"><span data-i18n="quiz.next">下一题</span> <i class="fa-solid fa-chevron-right"></i></button>
               </div>
             </div>
 
-            <p class="quiz-question" id="quiz-question">銈偆銈哄晱椤屻亴銇撱亾銇叆銈娿伨銇欍€?/p>
+            <p class="quiz-question" id="quiz-question">クイズ問題がここに入ります。</p>
             <div class="quiz-options" id="quiz-options">
               <!-- Loaded dynamically -->
             </div>
             <div class="quiz-footer">
               <button class="quiz-submit-btn" id="quiz-submit-btn" onclick="checkQuizAnswer()">
-                <i class="fa-solid fa-circle-check"></i> <span data-i18n="quiz.submitAnswer">鍥炵瓟銇欍倠 (鎻愪氦鍥炵瓟)</span>
+                <i class="fa-solid fa-circle-check"></i> <span data-i18n="quiz.submitAnswer">回答する (提交回答)</span>
               </button>
               <div id="quiz-feedback" class="quiz-feedback hidden">
                 <!-- Feedback text -->
@@ -478,34 +478,34 @@
           <div class="cbt-config-card">
             <div class="cbt-config-header-main" style="text-align: center; margin-bottom: 24px;">
               <i class="fa-solid fa-laptop-code cbt-logo-icon" style="font-size: 48px; margin-bottom: 12px; display: inline-block;"></i>
-              <h2 id="coding-config-title" style="font-size: 24px; font-weight: 700;" data-i18n="exam.ruleTitleCoding">瀹炴搷缂栫▼妯℃嫙鑰冭瘯 (瀹熸妧妯¤│)</h2>
-              <p id="coding-config-desc" style="color: var(--text-muted); margin-top: 8px;" data-i18n="exam.ruleDescCoding">妯℃嫙鏃ユ湰 IT 涓撻棬瀛︽牎鐨勭紪绋嬭€冭瘯鐜銆傚湪闄愬畾鏃堕棿鍐呭畬鎴愮粰瀹氱殑缂栫爜鎴栨暟鎹簱浠诲姟銆?/p>
+              <h2 id="coding-config-title" style="font-size: 24px; font-weight: 700;" data-i18n="exam.ruleTitleCoding">实操编程模拟考试 (実技模試)</h2>
+              <p id="coding-config-desc" style="color: var(--text-muted); margin-top: 8px;" data-i18n="exam.ruleDescCoding">模拟日本 IT 专门学校的编程考试环境。在限定时间内完成给定的编码或数据库任务。</p>
             </div>
 
             <div class="cbt-config-options" style="background: rgba(0,0,0,0.15); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 24px;">
               <div class="cbt-option-row" style="margin-bottom: 16px;">
-                <label style="font-weight: 600; display: block; margin-bottom: 8px; color: var(--neon-cyan);"><i class="fa-solid fa-list-check"></i> <span data-i18n="exam.ruleDetailTitle">鑰冭瘯瑙勫垯 (瑭﹂〒瑕忓墖):</span></label>
+                <label style="font-weight: 600; display: block; margin-bottom: 8px; color: var(--neon-cyan);"><i class="fa-solid fa-list-check"></i> <span data-i18n="exam.ruleDetailTitle">考试规则 (試験規則):</span></label>
                 <ul class="exam-rules-list" style="padding-left: 20px; font-size: 13px; line-height: 1.8; color: var(--text-main);">
-                  <li data-i18n="exam.ruleDetail1">棰樼洰鍧囦负<strong>瀹炴搷缂栫▼棰?鏁版嵁搴撴煡璇㈤</strong>锛岀粰鏃ユ枃鏂囧瓧浠诲姟 or 棰勬湡杈撳嚭缁撴灉銆?/li>
-                  <li data-i18n="exam.ruleDetail2">鏀寔鍦ㄥ彸渚х殑<strong>妯℃嫙娌欑洅缂栬緫鍣?/strong>涓嵆鏃剁紪鍐欍€佽繍琛屻€佸拰璋冭瘯浠ｇ爜銆?/li>
-                  <li data-i18n="exam.ruleDetail3">瀹屾垚浠ｇ爜鍚庯紝鐐瑰嚮<strong>鈥滈獙璇佸苟淇濆瓨绛旀 (鍒ゅ畾)鈥?/strong>杩涜娴嬭瘯鐢ㄤ緥鏍￠獙銆?/li>
-                  <li data-i18n="exam.ruleDetail4">娴嬭瘯鎴愬姛锛圥assed 鉁擄級璁″叆寰楀垎锛屽彲浠ュ弽澶嶄慨鏀圭洿鍒板垽瀹氶€氳繃銆?/li>
-                  <li data-i18n="exam.ruleDetail5">璇峰湪鍊掕鏃剁粨鏉熷墠鐐瑰嚮<strong>鈥滅粨鏉熻€冭瘯骞朵氦鍗封€?/strong>锛岃秴鏃剁郴缁熷皢鑷姩鏀跺嵎銆?/li>
+                  <li data-i18n="exam.ruleDetail1">题目均为<strong>实操编程题/数据库查询题</strong>，给日文文字任务 or 预期输出结果。</li>
+                  <li data-i18n="exam.ruleDetail2">支持在右侧的<strong>模拟沙盒编辑器</strong>中即时编写、运行、和调试代码。</li>
+                  <li data-i18n="exam.ruleDetail3">完成代码后，点击<strong>“验证并保存答案 (判定)”</strong>进行测试用例校验。</li>
+                  <li data-i18n="exam.ruleDetail4">测试成功（Passed ✓）计入得分，可以反复修改直到判定通过。</li>
+                  <li data-i18n="exam.ruleDetail5">请在倒计时结束前点击<strong>“结束考试并交卷”</strong>，超时系统将自动收卷。</li>
                 </ul>
               </div>
 
               <div class="cbt-option-row" style="display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);">
-                <label for="coding-exam-count" style="font-weight: 600; font-size: 14px;"><i class="fa-solid fa-hashtag"></i> <span data-i18n="exam.questionCount">妯℃嫙鑰冭瘯棰橀噺:</span></label>
+                <label for="coding-exam-count" style="font-weight: 600; font-size: 14px;"><i class="fa-solid fa-hashtag"></i> <span data-i18n="exam.questionCount">模拟考试题量:</span></label>
                 <select id="coding-exam-count" style="background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; cursor: pointer; outline: none; font-size: 13px;">
-                  <option value="5" data-i18n="exam.q5">5 棰?(蹇€熸祴璇?- 闄愭椂 15 鍒嗛挓)</option>
-                  <option value="10" selected data-i18n="exam.q10">10 棰?(鏍囧噯瀹炴搷 - 闄愭椂 30 鍒嗛挓)</option>
-                  <option value="15" data-i18n="exam.q15">15 棰?(鍏ㄩ潰鎸戞垬 - 闄愭椂 45 鍒嗛挓)</option>
+                  <option value="5" data-i18n="exam.q5">5 题 (快速测试 - 限时 15 分钟)</option>
+                  <option value="10" selected data-i18n="exam.q10">10 题 (标准实操 - 限时 30 分钟)</option>
+                  <option value="15" data-i18n="exam.q15">15 题 (全面挑战 - 限时 45 分钟)</option>
                 </select>
               </div>
             </div>
 
             <button class="cbt-launch-btn" onclick="startCodingExam()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan)); color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2); transition: var(--transition-smooth);">
-              <i class="fa-solid fa-circle-play"></i> <span data-i18n="exam.launchBtnCoding">寮€濮嬪疄鎿嶈€冭瘯 (瑭﹂〒闁嬪)</span>
+              <i class="fa-solid fa-circle-play"></i> <span data-i18n="exam.launchBtnCoding">开始实操考试 (試験開始)</span>
             </button>
           </div>
         </div>
@@ -515,11 +515,11 @@
           <!-- Exam Header Info -->
           <div class="exam-header-bar" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 16px;">
             <div class="exam-title-box">
-              <span class="cbt-indicator-badge" style="background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.2); color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;"><i class="fa-solid fa-code"></i> <span data-i18n="exam.cbtSimulatorCoding">瀹炴搷鏈鸿€?/span></span>
-              <h4 id="coding-exam-display-title" style="font-size: 16px; font-weight: 600; margin-top: 4px;">SQL 瀹炴搷鑳藉姏妯℃嫙娴嬭瘯</h4>
+              <span class="cbt-indicator-badge" style="background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.2); color: var(--neon-cyan); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;"><i class="fa-solid fa-code"></i> <span data-i18n="exam.cbtSimulatorCoding">实操机考</span></span>
+              <h4 id="coding-exam-display-title" style="font-size: 16px; font-weight: 600; margin-top: 4px;">SQL 实操能力模拟测试</h4>
             </div>
             <div class="exam-timer-box" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; padding: 6px 14px; border-radius: 6px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
-              <i class="fa-solid fa-stopwatch"></i> <span data-i18n="exam.remainingTime">鍓╀綑鏃堕棿: </span> <span id="coding-timer-display">30:00</span>
+              <i class="fa-solid fa-stopwatch"></i> <span data-i18n="exam.remainingTime">剩余时间: </span> <span id="coding-timer-display">30:00</span>
             </div>
           </div>
 
@@ -527,29 +527,29 @@
           <div class="eq-card" style="display: flex; flex-direction: column; gap: 16px;">
             <div class="eq-card-header" style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
               <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="eq-number" id="eq-number-text" style="font-weight: 700; color: var(--neon-cyan);">绗?1 棰?/ 鍟?1</span>
-                <span class="eq-diff-badge" id="eq-diff-text" style="background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; color: var(--text-muted);">闅惧害: 鈽呪槅鈽?/span>
+                <span class="eq-number" id="eq-number-text" style="font-weight: 700; color: var(--neon-cyan);">第 1 题 / 問 1</span>
+                <span class="eq-diff-badge" id="eq-diff-text" style="background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; color: var(--text-muted);">难度: ★☆☆</span>
               </div>
               <button class="eq-flag-btn" id="eq-flag-btn" onclick="toggleCodingQuestionFlag()" style="background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: var(--transition-smooth); display: flex; align-items: center; gap: 4px;">
-                <i class="fa-regular fa-flag"></i> <span data-i18n="exam.flagReview">鏍囪姝ら澶嶆煡</span>
+                <i class="fa-regular fa-flag"></i> <span data-i18n="exam.flagReview">标记此题复查</span>
               </button>
             </div>
 
             <!-- Task text details -->
             <div class="eq-body-area" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
               <div class="eq-text-ja" style="font-size: 14.5px; line-height: 1.6; font-weight: 500; color: var(--text-main);">
-                <h5 style="color: var(--neon-cyan); margin-bottom: 6px; font-size: 13px; font-weight: 600;"><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="sandbox.currentMission">銉熴儍銈枫儳銉?(褰撳墠浠诲姟)</span></h5>
-                <p id="eq-task-ja">瀛︾敓銉炪偣銈裤亱銈夈仚銇广仸銇儑銉笺偪銈掑彇寰椼仐銇仌銇勩€?/p>
+                <h5 style="color: var(--neon-cyan); margin-bottom: 6px; font-size: 13px; font-weight: 600;"><i class="fa-solid fa-graduation-cap"></i> <span data-i18n="sandbox.currentMission">ミッション (当前任务)</span></h5>
+                <p id="eq-task-ja">学生マスタからすべてのデータを取得しなさい。</p>
               </div>
               <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.05);">
               <div class="eq-text-zh" style="font-size: 13.5px; line-height: 1.5; color: var(--text-muted);">
-                <h5 style="color: var(--neon-blue); margin-bottom: 6px; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-language"></i> <span data-i18n="lesson.translationZh">涓枃缈昏瘧瀵圭収</span></h5>
-                <p id="eq-task-zh">鏌ヨ瀛︾敓涓昏〃鐨勬墍鏈夋暟鎹€?/p>
+                <h5 style="color: var(--neon-blue); margin-bottom: 6px; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-language"></i> <span data-i18n="lesson.translationZh">中文翻译对照</span></h5>
+                <p id="eq-task-zh">查询学生主表的所有数据。</p>
               </div>
               
               <!-- Expected output (for Java/Python) -->
               <div class="eq-expected-box" id="eq-expected-output-box" style="display: none; margin-top: 8px;">
-                <h5 style="color: #fcb900; margin-bottom: 6px; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-square-poll-horizontal"></i> <span data-i18n="exam.expectedOutput">鏈熷緟銇曘倢銈嬪嚭鍔涚祼鏋?(鏈熸湜鎵ц杈撳嚭)</span></h5>
+                <h5 style="color: #fcb900; margin-bottom: 6px; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-square-poll-horizontal"></i> <span data-i18n="exam.expectedOutput">期待される出力結果 (期望执行输出)</span></h5>
                 <pre style="background: #030712; border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 6px; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 13px; color: #ff9e64;" id="eq-expected-output">Expected output goes here...</pre>
               </div>
             </div>
@@ -558,19 +558,19 @@
           <!-- Inline Actions for current question -->
           <div class="eq-actions-row" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px 18px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 8px;">
             <div class="eq-verify-status-box" style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
-              <span data-i18n="exam.status">娴嬭瘯鐘舵€? </span>
-              <span class="verify-status-badge" id="eq-verify-status-badge" style="background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 4px; font-weight: 600; color: var(--text-muted);" data-i18n="exam.notStarted">鏈綔绛?(鏈潃鎵?</span>
+              <span data-i18n="exam.status">测试状态: </span>
+              <span class="verify-status-badge" id="eq-verify-status-badge" style="background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 4px; font-weight: 600; color: var(--text-muted);" data-i18n="exam.notStarted">未作答 (未着手)</span>
             </div>
             
             <button class="eq-verify-btn" onclick="verifyCurrentCodingQuestion()" style="padding: 8px 16px; background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2); transition: var(--transition-smooth);">
-              <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.verify">楠岃瘉骞朵繚瀛樼瓟妗?(鍒ゅ畾)</span>
+              <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.verify">验证并保存答案 (判定)</span>
             </button>
           </div>
 
           <!-- Bottom Navigation and Navigator Row -->
           <div class="eq-navigation-row" style="display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
             <button class="cbt-nav-btn" onclick="codingPrevQuestion()" style="padding: 8px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); border-radius: 6px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition-smooth);">
-              <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.previous">涓婁竴棰?(鍓嶃伕)</span>
+              <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.previous">上一题 (前へ)</span>
             </button>
 
             <!-- Compact grid selector -->
@@ -579,18 +579,18 @@
             </div>
 
             <button class="cbt-nav-btn" onclick="codingNextQuestion()" style="padding: 8px 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); border-radius: 6px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition-smooth);">
-              <span data-i18n="exam.next">涓嬩竴棰?(娆°伕)</span> <i class="fa-solid fa-chevron-right"></i>
+              <span data-i18n="exam.next">下一题 (次へ)</span> <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
 
           <!-- Finish controls -->
           <div class="exam-finish-bar" style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border-color); display: flex; justify-content: space-between; gap: 12px;">
             <button class="cbt-btn-action reset" onclick="exitCodingExam()" style="padding: 10px 20px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: var(--transition-smooth);">
-              <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="exam.exit">涓柇閫€鍑?(瑭﹂〒闆㈣劚)</span>
+              <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="exam.exit">中断退出 (試験離脱)</span>
             </button>
             
             <button class="cbt-btn-action submit" onclick="submitCodingExam()" style="padding: 10px 24px; background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: var(--transition-smooth);">
-              <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.submit">鎻愪氦璇曞嵎骞朵氦鍗?(瑭﹂〒绲備簡)</span>
+              <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.submit">提交试卷并交卷 (試験終了)</span>
             </button>
           </div>
         </div>
@@ -599,27 +599,27 @@
         <div class="content-card coding-exam-results" id="coding-exam-results" style="display: none;">
           <div class="cbt-results-card">
             <div class="cbt-results-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; margin-bottom: 20px;">
-              <h2 style="font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--neon-cyan);"><i class="fa-solid fa-square-poll-vertical"></i> <span data-i18n="exam.resultsTitle">瀹炴搷鑰冭瘯鎴愮哗鍗?(瑭曚尽绲愭灉)</span></h2>
+              <h2 style="font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--neon-cyan);"><i class="fa-solid fa-square-poll-vertical"></i> <span data-i18n="exam.resultsTitle">实操考试成绩单 (評価結果)</span></h2>
               <button class="cbt-results-close-btn" onclick="closeCodingExamResults()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: var(--transition-smooth);">
-                <span data-i18n="exam.backToHome">杩斿洖涓婚〉</span> <i class="fa-solid fa-chevron-right"></i>
+                <span data-i18n="exam.backToHome">返回主页</span> <i class="fa-solid fa-chevron-right"></i>
               </button>
             </div>
 
             <!-- Score Summary Card -->
             <div class="cbt-results-summary-row" style="display: flex; gap: 20px; background: rgba(0,0,0,0.15); padding: 24px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 24px; align-items: center;">
               <div class="cbt-results-total-box" style="flex: 1; text-align: center; border-right: 1px solid rgba(255,255,255,0.05); padding-right: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                <span class="summary-label" style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;" data-i18n="exam.passLabel">鍚堟牸鍒ゅ畾</span>
-                <div class="pass-status-badge pass" id="coding-pass-badge" style="font-size: 18px; font-weight: 800; padding: 4px 16px; border-radius: 6px; width: fit-content; text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);">鍚堟牸</div>
+                <span class="summary-label" style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;" data-i18n="exam.passLabel">合格判定</span>
+                <div class="pass-status-badge pass" id="coding-pass-badge" style="font-size: 18px; font-weight: 800; padding: 4px 16px; border-radius: 6px; width: fit-content; text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);">合格</div>
                 <div class="score-display" style="margin-top: 8px;">
                   <span class="score-num" id="coding-score-correct-count" style="font-size: 32px; font-weight: 800; color: var(--text-main);">8</span>
-                  <span class="score-max" style="font-size: 16px; color: var(--text-muted);"> / 10 棰橀€氳繃</span>
+                  <span class="score-max" style="font-size: 16px; color: var(--text-muted);"> / 10 题通过</span>
                 </div>
               </div>
 
               <div class="cbt-results-fields-box" style="flex: 1.5; display: flex; flex-direction: column; gap: 12px; padding-left: 10px;">
                 <div class="field-score-item">
                   <div class="field-score-meta" style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 4px;">
-                    <strong><span data-i18n="exam.correctRate">寰楃偣鐜?(閫氳繃鐜?</span></strong>
+                    <strong><span data-i18n="exam.correctRate">得点率 (通过率)</span></strong>
                     <span id="coding-results-percentage-text">80%</span>
                   </div>
                   <div class="field-score-progressbar" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
@@ -628,24 +628,24 @@
                 </div>
 
                 <div class="field-score-item" style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; margin-top: 4px;">
-                  <span><span data-i18n="exam.timeSpent">鑰冭瘯鐢ㄦ椂 (鎵€瑕佹檪闁?:</span></span>
-                  <strong id="coding-results-time-spent" style="color: var(--text-main);">12鍒?4绉?/strong>
+                  <span><span data-i18n="exam.timeSpent">考试用时 (所要時間):</span></span>
+                  <strong id="coding-results-time-spent" style="color: var(--text-main);">12分34秒</strong>
                 </div>
               </div>
             </div>
 
             <!-- Detailed Question Breakdown -->
             <div class="cbt-results-details-wrapper">
-              <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--neon-purple);"><i class="fa-solid fa-list-ol"></i> <span data-i18n="exam.detailsTitle">鍚勯楠岃瘉娴嬭瘯璇︽儏</span></h3>
+              <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--neon-purple);"><i class="fa-solid fa-list-ol"></i> <span data-i18n="exam.detailsTitle">各题验证测试详情</span></h3>
               <div class="results-table-container" style="overflow-x: auto; background: rgba(0,0,0,0.1); border: 1px solid var(--border-color); border-radius: 8px;">
                 <table class="results-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
                   <thead>
                     <tr style="background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-color);">
-                      <th style="padding: 12px 16px; font-weight: 600;" data-i18n="exam.tableQNo">棰樺彿</th>
-                      <th style="padding: 12px 16px; font-weight: 600;" data-i18n="exam.tableTitle">鑰冩牳鐭ヨ瘑鐐?(銈裤偆銉堛儷)</th>
-                      <th style="padding: 12px 16px; font-weight: 600;" data-i18n="exam.tableDifficulty">闅惧害</th>
-                      <th style="padding: 12px 16px; font-weight: 600; text-align: center;" data-i18n="exam.tableResult">楠岃瘉缁撴灉</th>
-                      <th style="padding: 12px 16px; font-weight: 600; text-align: center;" data-i18n="exam.tableAction">鎿嶄綔</th>
+                      <th style="padding: 12px 16px; font-weight: 600;" data-i18n="exam.tableQNo">题号</th>
+                      <th style="padding: 12px 16px; font-weight: 600;" data-i18n="exam.tableTitle">考核知识点 (タイトル)</th>
+                      <th style="padding: 12px 16px; font-weight: 600;" data-i18n="exam.tableDifficulty">难度</th>
+                      <th style="padding: 12px 16px; font-weight: 600; text-align: center;" data-i18n="exam.tableResult">验证结果</th>
+                      <th style="padding: 12px 16px; font-weight: 600; text-align: center;" data-i18n="exam.tableAction">操作</th>
                     </tr>
                   </thead>
                   <tbody id="coding-results-table-body">
@@ -659,15 +659,15 @@
 
         <div class="pdf-viewer-panel" id="pdf-viewer-panel" style="display: none;" aria-hidden="true">
           <div class="pdf-panel-header">
-            <span id="pdf-panel-title"><i class="fa-solid fa-file-pdf"></i> <span data-i18n="lesson.showPdf">鍘熶功 PDF</span></span>
+            <span id="pdf-panel-title"><i class="fa-solid fa-file-pdf"></i> <span data-i18n="lesson.showPdf">原书 PDF</span></span>
             <div style="display: flex; gap: 8px; align-items: center;">
               <button class="pdf-minimize-btn" id="pdf-minimize-btn" onclick="toggleMinimizePdf()" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-muted); padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: var(--transition-smooth);">
                 <i class="fa-solid fa-compress" id="pdf-minimize-icon"></i>
-                <span id="pdf-minimize-text" data-i18n="common.minimize">鏈€灏忓寲</span>
+                <span id="pdf-minimize-text" data-i18n="common.minimize">最小化</span>
               </button>
               <button class="pdf-close-btn" onclick="closeEmbeddedPdf()">
                 <i class="fa-solid fa-xmark"></i>
-                <span data-i18n="common.close">鍏抽棴</span>
+                <span data-i18n="common.close">关闭</span>
               </button>
             </div>
           </div>
@@ -685,14 +685,14 @@
         <!-- DB Schema Visualizer -->
         <div class="playground-card schema-card sql-widget collapsed">
           <div class="schema-header collapsed" onclick="toggleSchemaDetails()">
-            <span><i class="fa-solid fa-sitemap"></i> <span data-i18n="sandbox.databaseStructure">銉囥兗銈裤儥銉笺偣妲嬮€?(DB 琛ㄧ粨鏋勫弬鑰?</span></span>
+            <span><i class="fa-solid fa-sitemap"></i> <span data-i18n="sandbox.databaseStructure">データベース構造 (DB 表结构参考)</span></span>
             <div style="display:flex; align-items:center; gap:8px;">
               <div class="db-group-tabs" onclick="event.stopPropagation()">
                 <button class="db-group-tab active" id="db-tab-school" onclick="switchDBGroup('school')">
-                  <i class="fa-solid fa-school"></i> <span data-i18n="sandbox.schoolDb">瀛︽牎DB</span>
+                  <i class="fa-solid fa-school"></i> <span data-i18n="sandbox.schoolDb">学校DB</span>
                 </button>
                 <button class="db-group-tab" id="db-tab-shop" onclick="switchDBGroup('shop')">
-                  <i class="fa-solid fa-book"></i> <span data-i18n="sandbox.bookstoreDb">涔﹀簵DB</span>
+                  <i class="fa-solid fa-book"></i> <span data-i18n="sandbox.bookstoreDb">书店DB</span>
                 </button>
               </div>
               <i class="fa-solid fa-chevron-down toggle-icon" id="schema-toggle-icon" style="transform: rotate(-90deg);"></i>
@@ -711,14 +711,14 @@
         <!-- Live SQL Playground -->
         <div class="playground-card console-card sql-widget">
           <div class="console-header" onclick="toggleConsoleDetails()">
-            <span><i class="fa-solid fa-terminal"></i> <span data-i18n="sandbox.sqlPlayground">SQL 銉椼儸銈ゃ偘銉┿偊銉炽儔 (婕旂粌娌欑洅)</span></span>
+            <span><i class="fa-solid fa-terminal"></i> <span data-i18n="sandbox.sqlPlayground">SQL プレイグラウンド (演练沙盒)</span></span>
             <div style="display:flex; align-items:center; gap:8px;">
               <div class="console-actions" onclick="event.stopPropagation()">
                 <button class="console-btn hint-btn" onclick="showPlaygroundHint()">
-                  <i class="fa-solid fa-circle-info"></i> <span data-i18n="sandbox.hint">銉掋兂銉?(鎻愮ず)</span>
+                  <i class="fa-solid fa-circle-info"></i> <span data-i18n="sandbox.hint">ヒント (提示)</span>
                 </button>
                 <button class="console-btn reset-db-btn" onclick="resetMockDB()">
-                  <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n="sandbox.resetDb">DB銉偦銉冦儓 (閲嶇疆DB)</span>
+                  <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n="sandbox.resetDb">DBリセット (重置DB)</span>
                 </button>
               </div>
               <i class="fa-solid fa-chevron-down toggle-icon" id="console-toggle-icon"></i>
@@ -728,31 +728,31 @@
           <div class="console-card-body" id="console-card-body" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
             <div class="playground-task-desc">
               <div class="task-desc-main">
-                <strong><i class="fa-solid fa-circle-dot"></i> <span id="mission-label-text" data-i18n="sandbox.currentMission">銉熴儍銈枫儳銉?(褰撳墠浠诲姟)</span>:</strong>
-                <span id="playground-task-text">瀛︾敓銉嗐兗銉栥儷 (students) 銇嬨倝銇欍伖銇︺伄銉囥兗銈裤倰鍙栧緱銇椼仸銇裤伨銇椼倗銇嗐€?/span>
+                <strong><i class="fa-solid fa-circle-dot"></i> <span id="mission-label-text" data-i18n="sandbox.currentMission">ミッション (当前任务)</span>:</strong>
+                <span id="playground-task-text">学生テーブル (students) からすべてのデータを取得してみましょう。</span>
               </div>
               <div class="task-desc-actions">
                 <button class="console-btn change-practice-btn-style" id="change-practice-btn" onclick="changeRandomPracticeQuestion()" style="display: none;">
-                  <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n="common.random">鎹竴棰?/span>
+                  <i class="fa-solid fa-arrows-rotate"></i> <span data-i18n="common.random">换一题</span>
                 </button>
                 <button class="console-btn random-practice-btn" id="random-practice-btn" onclick="toggleRandomPractice()">
-                  <i class="fa-solid fa-shuffle"></i> <span data-i18n="sandbox.randomPractice">闅忔満鎸囦护缁冧範</span>
+                  <i class="fa-solid fa-shuffle"></i> <span data-i18n="sandbox.randomPractice">随机指令练习</span>
                 </button>
               </div>
             </div>
 
             <div class="editor-container">
               <div class="line-numbers" id="line-numbers">1</div>
-              <textarea class="sql-editor" id="sql-editor" spellcheck="false" placeholder=" 璇峰湪姝ゅ杈撳叆 SQL 璇彞...&#10;銇撱亾銇玈QL銈掑叆鍔涖仐銇︺亸銇犮仌銇?.." data-i18n-placeholder="sandbox.sqlPlaceholder"></textarea>
+              <textarea class="sql-editor" id="sql-editor" spellcheck="false" placeholder=" 请在此处输入 SQL 语句...&#10;ここにSQLを入力してください..." data-i18n-placeholder="sandbox.sqlPlaceholder"></textarea>
             </div>
 
             <div class="console-footer">
               <div class="playground-status" id="playground-status">
-                <span class="status-ready"><i class="fa-solid fa-circle-play"></i> <span data-i18n="sandbox.readyStatus">宸插氨缁?(Ready)</span></span>
+                <span class="status-ready"><i class="fa-solid fa-circle-play"></i> <span data-i18n="sandbox.readyStatus">已就绪 (Ready)</span></span>
               </div>
               <div class="run-area">
                 <button class="run-query-btn" id="run-query-btn" onclick="runPlaygroundQuery()">
-                  <i class="fa-solid fa-play"></i> <span data-i18n="sandbox.runSql">鎵ц SQL</span> <kbd>Ctrl+Enter</kbd>
+                  <i class="fa-solid fa-play"></i> <span data-i18n="sandbox.runSql">执行 SQL</span> <kbd>Ctrl+Enter</kbd>
                 </button>
               </div>
             </div>
@@ -762,12 +762,12 @@
         <!-- Query Output Terminal -->
         <div class="playground-card output-card sql-widget" id="output-card">
           <div class="output-header" onclick="toggleOutputDetails()">
-            <span><i class="fa-solid fa-table"></i> <span data-i18n="console.output">瀹熻绲愭灉 (鎵ц缁撴灉)</span></span>
+            <span><i class="fa-solid fa-table"></i> <span data-i18n="console.output">実行結果 (执行结果)</span></span>
             <div style="display:flex; align-items:center; gap:8px;">
               <div class="output-actions" onclick="event.stopPropagation()">
-                <span class="row-count-badge" id="output-row-count" style="display: none;">0琛?/span>
-                <button class="console-btn maximize-btn" id="output-maximize-btn" onclick="toggleMaximizeOutput()" title="鏈€澶у寲" data-i18n-title="common.maximize">
-                  <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">鏈€澶у寲</span>
+                <span class="row-count-badge" id="output-row-count" style="display: none;">0行</span>
+                <button class="console-btn maximize-btn" id="output-maximize-btn" onclick="toggleMaximizeOutput()" title="最大化" data-i18n-title="common.maximize">
+                  <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">最大化</span>
                 </button>
               </div>
               <i class="fa-solid fa-chevron-down toggle-icon" id="output-toggle-icon"></i>
@@ -777,8 +777,8 @@
             <div class="output-body" id="output-body">
               <div class="output-placeholder">
                 <i class="fa-solid fa-arrow-up-long"></i>
-                <p data-i18n="console.emptyResult">銈偍銉倰瀹熻銇欍倠銇ㄣ€併亾銇撱伀绲愭灉銉嗐兗銉栥儷銇岃〃绀恒仌銈屻伨銇欍€?/p>
-                <span data-i18n="console.emptyResultSub">(鎵ц SQL 鍚庯紝鏌ヨ缁撴灉琛ㄦ牸灏嗗湪姝ゅ鏄剧ず)</span>
+                <p data-i18n="console.emptyResult">クエリを実行すると、ここに結果テーブルが表示されます。</p>
+                <span data-i18n="console.emptyResultSub">(执行 SQL 后，查询结果表格将在此处显示)</span>
               </div>
             </div>
           </div>
@@ -788,7 +788,7 @@
         <!-- Checklist Card -->
         <div class="playground-card schema-card itpass-widget" id="itpass-checklist-card" style="display: none;">
           <div class="schema-header" onclick="toggleItPassCard('checklist')">
-            <span><i class="fa-solid fa-clipboard-list"></i> <span data-i18n="lesson.checklist">绔犺妭瑕佺偣閫熻琛?(瑕佺偣纰鸿獚)</span></span>
+            <span><i class="fa-solid fa-clipboard-list"></i> <span data-i18n="lesson.checklist">章节要点速记表 (要点確認)</span></span>
             <i class="fa-solid fa-chevron-down toggle-icon" id="checklist-toggle-icon"></i>
           </div>
           <div class="schema-body" id="checklist-body">
@@ -799,35 +799,35 @@
         <!-- Flashcards Card -->
         <div class="playground-card console-card itpass-widget" id="itpass-flashcards-card" style="display: none;">
           <div class="console-header" onclick="toggleItPassCard('flashcards')">
-            <span><i class="fa-solid fa-clone"></i> <span data-i18n="flashcard.title">鏍稿績涓撲笟璇嶅崱 (鐢ㄨ獮銈兗銉?</span></span>
+            <span><i class="fa-solid fa-clone"></i> <span data-i18n="flashcard.title">核心专业词卡 (用語カード)</span></span>
             <i class="fa-solid fa-chevron-down toggle-icon" id="flashcards-toggle-icon"></i>
           </div>
           <div class="console-card-body" id="flashcards-body" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
             <div class="flashcard-desc-box">
-              <span>鐐瑰嚮闂崱鍗冲彲缈昏浆鏌ョ湅涓棩瀵圭収缈昏瘧鍙婇噴涔夛細</span>
+              <span>点击闪卡即可翻转查看中日对照翻译及释义：</span>
             </div>
             
             <div class="flashcard-outer">
               <div class="flashcard" id="flashcard-element" onclick="flipFlashcard()">
                 <div class="flashcard-front">
-                  <h3 id="fc-ja-term">CPU (涓ぎ鍑︾悊瑁呯疆)</h3>
-              <span><i class="fa-solid fa-rotate"></i> <span data-i18n="flashcard.clickToFlipHint">鐐瑰嚮鏌ョ湅涓枃閲婁箟</span></span>
+                  <h3 id="fc-ja-term">CPU (中央処理装置)</h3>
+              <span><i class="fa-solid fa-rotate"></i> <span data-i18n="flashcard.clickToFlipHint">点击查看中文释义</span></span>
                 </div>
                 <div class="flashcard-back">
-                  <h4 id="fc-zh-term">涓ぎ澶勭悊鍣?/h4>
-                  <p id="fc-desc">璁＄畻鏈虹殑杩愮畻涓庢帶鍒舵牳蹇冦€傝礋璐ｈВ閲婅绠楁満鎸囦护骞跺鐞嗙▼搴忎腑鐨勬暟鎹€?/p>
-                  <span><i class="fa-solid fa-rotate"></i> <span data-i18n="flashcard.clickToFlipHint">鐐瑰嚮杩斿洖鏃ヨ</span></span>
+                  <h4 id="fc-zh-term">中央处理器</h4>
+                  <p id="fc-desc">计算机的运算与控制核心。负责解释计算机指令并处理程序中的数据。</p>
+                  <span><i class="fa-solid fa-rotate"></i> <span data-i18n="flashcard.clickToFlipHint">点击返回日语</span></span>
                 </div>
               </div>
             </div>
 
             <div class="flashcard-footer">
               <button class="console-btn" onclick="prevFlashcard()">
-                <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.previous">涓婁竴涓?/span>
+                <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.previous">上一个</span>
               </button>
               <span class="flashcard-counter" id="fc-counter">1 / 5</span>
               <button class="console-btn" onclick="nextFlashcard()">
-                <span data-i18n="exam.next">涓嬩竴涓?/span> <i class="fa-solid fa-chevron-right"></i>
+                <span data-i18n="exam.next">下一个</span> <i class="fa-solid fa-chevron-right"></i>
               </button>
             </div>
           </div>
@@ -836,16 +836,16 @@
         <!-- Calculator Tools Card -->
         <div class="playground-card output-card itpass-widget" id="itpass-tools-card" style="display: none;">
           <div class="output-header" onclick="toggleItPassCard('tools')">
-            <span><i class="fa-solid fa-calculator"></i> <span data-i18n="lesson.calculator">澶囪€冨皬璁＄畻鍣ㄥ伐鍏风</span></span>
+            <span><i class="fa-solid fa-calculator"></i> <span data-i18n="lesson.calculator">备考小计算器工具箱</span></span>
             <i class="fa-solid fa-chevron-down toggle-icon" id="tools-toggle-icon"></i>
           </div>
           <div class="output-card-body" id="tools-body" style="display: flex; flex-direction: column; flex: 1; padding: 12px; overflow-y: auto;">
             <div class="tool-selector-group">
-              <label for="calculator-select"><span data-i18n="lesson.calculatorSelect">閫夋嫨宸ュ叿: </span></label>
+              <label for="calculator-select"><span data-i18n="lesson.calculatorSelect">选择工具: </span></label>
               <select id="calculator-select" onchange="switchCalculatorTool()">
-                <option value="binary">2 / 10 / 16 杩涘埗蹇嵎杞崲</option>
-                <option value="reliability">绯荤粺鍙敤鎬?(绋煎儘鐜? 璁＄畻</option>
-                <option value="roi">鎶曡祫鏀剁泭鐜?(ROI) 涓庢崯鐩婂钩琛?/option>
+                <option value="binary">2 / 10 / 16 进制快捷转换</option>
+                <option value="reliability">系统可用性 (稼働率) 计算</option>
+                <option value="roi">投资收益率 (ROI) 与损益平衡</option>
               </select>
             </div>
 
@@ -862,10 +862,10 @@
           <div class="java-sandbox-header">
             <div class="java-sandbox-title">
               <i class="fa-brands fa-java"></i>
-              <span data-i18n="sandbox.javaSandboxTitle">Java 銉椼儹銈般儵銉熴兂銈版矙鐩?/ Java缂栫▼娌欑洅</span>
+              <span data-i18n="sandbox.javaSandboxTitle">Java プログラミング沙盒 / Java编程沙盒</span>
             </div>
             <div class="java-sandbox-meta">
-              <span id="java-sandbox-lesson-title" class="java-sandbox-lesson-label" data-i18n="sandbox.chooseLessonLoadCode">鈥?閫夋嫨璇剧▼鍚庤浇鍏ョず渚嬩唬鐮?鈥?/span>
+              <span id="java-sandbox-lesson-title" class="java-sandbox-lesson-label" data-i18n="sandbox.chooseLessonLoadCode">— 选择课程后载入示例代码 —</span>
             </div>
           </div>
 
@@ -873,14 +873,14 @@
             <!-- Editor Panel -->
             <div class="java-editor-panel">
               <div class="java-editor-toolbar">
-                <button class="java-tool-btn" id="java-load-template-btn" onclick="JavaSandbox.toggleTemplate()" title="鍔犺浇褰撳墠璇剧▼妯℃澘" data-i18n-title="sandbox.toolbarTemplateTitle">
-                  <i class="fa-solid fa-file-code"></i> <span data-i18n="sandbox.toolbarTemplate">銉嗐兂銉椼儸</span>
+                <button class="java-tool-btn" id="java-load-template-btn" onclick="JavaSandbox.toggleTemplate()" title="加载当前课程模板" data-i18n-title="sandbox.toolbarTemplateTitle">
+                  <i class="fa-solid fa-file-code"></i> <span data-i18n="sandbox.toolbarTemplate">テンプレ</span>
                 </button>
-                <button class="java-tool-btn" onclick="JavaSandbox.copyCode()" title="澶嶅埗浠ｇ爜" data-i18n-title="sandbox.toolbarCopyTitle">
-                  <i class="fa-solid fa-copy"></i> <span data-i18n="sandbox.toolbarCopy">銈炽償銉?/span>
+                <button class="java-tool-btn" onclick="JavaSandbox.copyCode()" title="复制代码" data-i18n-title="sandbox.toolbarCopyTitle">
+                  <i class="fa-solid fa-copy"></i> <span data-i18n="sandbox.toolbarCopy">コピー</span>
                 </button>
-                <button class="java-tool-btn danger" onclick="JavaSandbox.clearCode()" title="娓呯┖骞堕噸缃? data-i18n-title="sandbox.toolbarClearTitle">
-                  <i class="fa-solid fa-trash"></i> <span data-i18n="sandbox.toolbarClear">銉偦銉冦儓</span>
+                <button class="java-tool-btn danger" onclick="JavaSandbox.clearCode()" title="清空并重置" data-i18n-title="sandbox.toolbarClearTitle">
+                  <i class="fa-solid fa-trash"></i> <span data-i18n="sandbox.toolbarClear">リセット</span>
                 </button>
               </div>
               <div class="java-editor-container">
@@ -893,7 +893,7 @@
                     class="java-editor"
                     id="java-editor"
                     spellcheck="false"
-                    placeholder="Java 銈炽兗銉夈倰銇撱亾銇叆鍔涖仐銇︺亸銇犮仌銇?.."
+                    placeholder="Java コードをここに入力してください..."
                     data-i18n-placeholder="sandbox.javaEditorPlaceholder"
                   ></textarea>
                 </div>
@@ -903,22 +903,22 @@
             <!-- Input Panel -->
             <div class="java-input-panel">
               <div class="java-input-header">
-                <span><i class="fa-solid fa-keyboard"></i> <span data-i18n="sandbox.stdinHeader">鏍囧噯杈撳叆 / Standard Input (stdin)</span></span>
+                <span><i class="fa-solid fa-keyboard"></i> <span data-i18n="sandbox.stdinHeader">标准输入 / Standard Input (stdin)</span></span>
               </div>
               <div class="java-input-row">
                 <textarea
                   class="java-input-content"
                   id="java-input-content"
                   spellcheck="false"
-                  placeholder="绋嬪簭鎺ユ敹鐨勮緭鍏ュ唴瀹瑰啓鍦ㄨ繖閲?.."
+                  placeholder="程序接收的输入内容写在这里..."
                   data-i18n-placeholder="sandbox.stdinPlaceholder"
                 ></textarea>
                 <div class="java-input-sidebar">
                   <div class="java-run-info-mini">
-                    <span>JDK 21 路 10s 路 128MB</span>
+                    <span>JDK 21 · 10s · 128MB</span>
                   </div>
                   <button class="java-run-btn" id="java-run-btn" onclick="JavaSandbox.runCode()">
-                    <span class="sandbox-btn-icon">鈻?/span> <span data-i18n="sandbox.runCode">瀹熻</span> <kbd>Ctrl+Enter</kbd>
+                    <span class="sandbox-btn-icon">▶</span> <span data-i18n="sandbox.runCode">実行</span> <kbd>Ctrl+Enter</kbd>
                   </button>
                 </div>
               </div>
@@ -929,22 +929,22 @@
         <!-- Java Output Card (replacing Java Info Card) -->
         <div class="playground-card output-card java-widget" id="java-output-card" style="display: none;">
           <div class="output-header java-output-header" onclick="toggleJavaOutputDetails()">
-                                    <span><i class="fa-solid fa-terminal"></i> <span data-i18n="console.output">瀹熻绲愭灉 (鎵ц缁撴灉)</span></span>
+                                    <span><i class="fa-solid fa-terminal"></i> <span data-i18n="console.output">実行結果 (执行结果)</span></span>
             <div style="display:flex; align-items:center; gap:8px;">
               <span id="python-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
               <span id="java-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
               <div class="output-actions" onclick="event.stopPropagation()">
-                <span class="java-sandbox-status" id="java-sandbox-status">婧栧倷瀹屼簡 / Ready</span>
+                <span class="java-sandbox-status" id="java-sandbox-status">準備完了 / Ready</span>
                 <button class="console-btn maximize-btn" id="java-output-maximize-btn" onclick="toggleMaximizeJavaOutput()">
-                  <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">鏈€澶у寲</span>
+                  <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">最大化</span>
                 </button>
               </div>
               <i class="fa-solid fa-chevron-down toggle-icon" id="java-output-toggle-icon"></i>
             </div>
           </div>
           <div class="output-card-body" id="java-output-card-body" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
-            <pre class="java-output-content" id="java-output-content" data-i18n="sandbox.outputPlaceholder">锛堝疅琛屻儨銈裤兂銈掓娂銇欍仺銆併亾銇撱伀绲愭灉銇岃〃绀恒仌銈屻伨銇欙級
-锛堢偣鍑昏繍琛屾寜閽紝缁撴灉灏嗘樉绀哄湪杩欓噷锛?/pre>
+            <pre class="java-output-content" id="java-output-content" data-i18n="sandbox.outputPlaceholder">（実行ボタンを押すと、ここに結果が表示されます）
+（点击运行按钮，结果将显示在这里）</pre>
           </div>
         </div>
 
@@ -954,10 +954,10 @@
           <div class="python-sandbox-header">
             <div class="python-sandbox-title">
               <i class="fa-brands fa-python"></i>
-              <span data-i18n="sandbox.pythonSandboxTitle">Python 銉椼儹銈般儵銉熴兂銈版矙鐩?/ Python缂栫▼娌欑洅</span>
+              <span data-i18n="sandbox.pythonSandboxTitle">Python プログラミング沙盒 / Python编程沙盒</span>
             </div>
             <div class="python-sandbox-meta">
-              <span id="python-sandbox-lesson-title" class="python-sandbox-lesson-label" data-i18n="sandbox.chooseLessonLoadCode">鈥?閫夋嫨璇剧▼鍚庤浇鍏ョず渚嬩唬鐮?鈥?/span>
+              <span id="python-sandbox-lesson-title" class="python-sandbox-lesson-label" data-i18n="sandbox.chooseLessonLoadCode">— 选择课程后载入示例代码 —</span>
             </div>
           </div>
 
@@ -965,14 +965,14 @@
             <!-- Editor Panel -->
             <div class="python-editor-panel">
               <div class="python-editor-toolbar">
-                <button class="python-tool-btn" id="python-load-template-btn" onclick="PythonSandbox.toggleTemplate()" title="鍔犺浇褰撳墠璇剧▼妯℃澘" data-i18n-title="sandbox.toolbarTemplateTitle">
-                  <i class="fa-solid fa-file-code"></i> <span data-i18n="sandbox.toolbarTemplate">銉嗐兂銉椼儸</span>
+                <button class="python-tool-btn" id="python-load-template-btn" onclick="PythonSandbox.toggleTemplate()" title="加载当前课程模板" data-i18n-title="sandbox.toolbarTemplateTitle">
+                  <i class="fa-solid fa-file-code"></i> <span data-i18n="sandbox.toolbarTemplate">テンプレ</span>
                 </button>
-                <button class="python-tool-btn" onclick="PythonSandbox.copyCode()" title="澶嶅埗浠ｇ爜" data-i18n-title="sandbox.toolbarCopyTitle">
-                  <i class="fa-solid fa-copy"></i> <span data-i18n="sandbox.toolbarCopy">銈炽償銉?/span>
+                <button class="python-tool-btn" onclick="PythonSandbox.copyCode()" title="复制代码" data-i18n-title="sandbox.toolbarCopyTitle">
+                  <i class="fa-solid fa-copy"></i> <span data-i18n="sandbox.toolbarCopy">コピー</span>
                 </button>
-                <button class="python-tool-btn danger" onclick="PythonSandbox.clearCode()" title="娓呯┖骞堕噸缃? data-i18n-title="sandbox.toolbarClearTitle">
-                  <i class="fa-solid fa-trash"></i> <span data-i18n="sandbox.toolbarClear">銉偦銉冦儓</span>
+                <button class="python-tool-btn danger" onclick="PythonSandbox.clearCode()" title="清空并重置" data-i18n-title="sandbox.toolbarClearTitle">
+                  <i class="fa-solid fa-trash"></i> <span data-i18n="sandbox.toolbarClear">リセット</span>
                 </button>
               </div>
               <div class="python-editor-container">
@@ -985,7 +985,7 @@
                     class="python-editor"
                     id="python-editor"
                     spellcheck="false"
-                    placeholder="Python 銈炽兗銉夈倰銇撱亾銇叆鍔涖仐銇︺亸銇犮仌銇?.."
+                    placeholder="Python コードをここに入力してください..."
                     data-i18n-placeholder="sandbox.pythonEditorPlaceholder"
                   ></textarea>
                 </div>
@@ -995,22 +995,22 @@
             <!-- Input Panel -->
             <div class="python-input-panel">
               <div class="python-input-header">
-                <span><i class="fa-solid fa-keyboard"></i> <span data-i18n="sandbox.stdinHeader">鏍囧噯杈撳叆 / Standard Input (stdin)</span></span>
+                <span><i class="fa-solid fa-keyboard"></i> <span data-i18n="sandbox.stdinHeader">标准输入 / Standard Input (stdin)</span></span>
               </div>
               <div class="python-input-row">
                 <textarea
                   class="python-input-content"
                   id="python-input-content"
                   spellcheck="false"
-                  placeholder="绋嬪簭鎺ユ敹鐨勮緭鍏ュ唴瀹瑰啓鍦ㄨ繖閲?.."
+                  placeholder="程序接收的输入内容写在这里..."
                   data-i18n-placeholder="sandbox.stdinPlaceholder"
                 ></textarea>
                 <div class="python-input-sidebar">
                   <div class="python-run-info-mini">
-                    <span>Python 3.12 路 10s 路 绂荤嚎娌欑洅</span>
+                    <span>Python 3.12 · 10s · 离线沙盒</span>
                   </div>
                   <button class="python-run-btn" id="python-run-btn" onclick="PythonSandbox.runCode()">
-                    <span class="sandbox-btn-icon">鈻?/span> <span data-i18n="sandbox.runCode">瀹熻</span> <kbd>Ctrl+Enter</kbd>
+                    <span class="sandbox-btn-icon">▶</span> <span data-i18n="sandbox.runCode">実行</span> <kbd>Ctrl+Enter</kbd>
                   </button>
                 </div>
               </div>
@@ -1021,20 +1021,20 @@
         <!-- Python Output Card -->
         <div class="playground-card output-card python-widget" id="python-output-card" style="display: none;">
           <div class="output-header python-output-header" onclick="togglePythonOutputDetails()">
-            <span><i class="fa-solid fa-terminal"></i> <span data-i18n="console.output">瀹熻绲愭灉 (鎵ц缁撴灉)</span></span>
+            <span><i class="fa-solid fa-terminal"></i> <span data-i18n="console.output">実行結果 (执行结果)</span></span>
             <div style="display:flex; align-items:center; gap:8px;">
               <div class="output-actions" onclick="event.stopPropagation()">
-                <span class="python-sandbox-status" id="python-sandbox-status">婧栧倷瀹屼簡 / Ready</span>
+                <span class="python-sandbox-status" id="python-sandbox-status">準備完了 / Ready</span>
                 <button class="console-btn maximize-btn" id="python-output-maximize-btn" onclick="toggleMaximizePythonOutput()">
-                  <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">鏈€澶у寲</span>
+                  <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">最大化</span>
                 </button>
               </div>
               <i class="fa-solid fa-chevron-down toggle-icon" id="python-output-toggle-icon"></i>
             </div>
           </div>
           <div class="output-card-body" id="python-output-card-body" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
-            <pre class="python-output-content" id="python-output-content" data-i18n="sandbox.outputPlaceholder">锛堝疅琛屻儨銈裤兂銈掓娂銇欍仺銆併亾銇撱伀绲愭灉銇岃〃绀恒仌銈屻伨銇欙級
-锛堢偣鍑昏繍琛屾寜閽紝缁撴灉灏嗘樉绀哄湪杩欓噷锛?/pre>
+            <pre class="python-output-content" id="python-output-content" data-i18n="sandbox.outputPlaceholder">（実行ボタンを押すと、ここに結果が表示されます）
+（点击运行按钮，结果将显示在这里）</pre>
           </div>
         </div>
         
@@ -1053,49 +1053,49 @@
         <div class="cbt-config-card">
           <div class="cbt-config-header-main">
             <i class="fa-solid fa-school-flag cbt-logo-icon"></i>
-            <h2 data-i18n="exam.ruleTitle">閬庡幓鍟忛亾鍫?鈥?CBT 妯℃嫙鑰冭瘯绯荤粺</h2>
-            <p data-i18n="exam.ruleDesc">鍩轰簬杩戝勾 IT 鑰冭瘯鐪熼锛屾ā鎷熺湡瀹炶绠楁満鏈鸿€?(CBT) 鐜銆?/p>
+            <h2 data-i18n="exam.ruleTitle">過去問道場 — CBT 模拟考试系统</h2>
+            <p data-i18n="exam.ruleDesc">基于近年 IT 考试真题，模拟真实计算机机考 (CBT) 环境。</p>
           </div>
 
           <div class="cbt-config-options">
             <div class="cbt-option-row">
-              <label for="cbt-year-select"><i class="fa-solid fa-calendar-days"></i> <span data-i18n="exam.selectYear">閫夋嫨鑰冭瘯骞村害/鐪熼:</span></label>
+              <label for="cbt-year-select"><i class="fa-solid fa-calendar-days"></i> <span data-i18n="exam.selectYear">选择考试年度/真题:</span></label>
               <select id="cbt-year-select">
-                <option value="all" selected data-i18n="exam.all">闅忔満娣峰悎鐪熼 (鎺ㄨ崘 - 缁煎悎妯¤€?</option>
-                <option value="08_haru" data-i18n="exam.r8">浠ゅ拰8骞村害 (R8) 鍏紑闂</option>
-                <option value="07_haru" data-i18n="exam.r7">浠ゅ拰7骞村害 (R7) 鍏紑闂</option>
-                <option value="06_haru" data-i18n="exam.r6">浠ゅ拰6骞村害 (R6) 鍏紑闂</option>
-                <option value="05_haru" data-i18n="exam.r5">浠ゅ拰5骞村害 (R5) 鍏紑闂</option>
-                <option value="04_haru" data-i18n="exam.r4">浠ゅ拰4骞村害 (R4) 鍏紑闂</option>
-                <option value="03_haru" data-i18n="exam.r3">浠ゅ拰3骞村害 (R3) 鍏紑闂</option>
+                <option value="all" selected data-i18n="exam.all">随机混合真题 (推荐 - 综合模考)</option>
+                <option value="08_haru" data-i18n="exam.r8">令和8年度 (R8) 公开问题</option>
+                <option value="07_haru" data-i18n="exam.r7">令和7年度 (R7) 公开问题</option>
+                <option value="06_haru" data-i18n="exam.r6">令和6年度 (R6) 公开问题</option>
+                <option value="05_haru" data-i18n="exam.r5">令和5年度 (R5) 公开问题</option>
+                <option value="04_haru" data-i18n="exam.r4">令和4年度 (R4) 公开问题</option>
+                <option value="03_haru" data-i18n="exam.r3">令和3年度 (R3) 公开问题</option>
               </select>
             </div>
 
             <div class="cbt-option-row">
-              <label for="cbt-count-select"><i class="fa-solid fa-hashtag"></i> <span data-i18n="exam.questionCount">妯℃嫙鑰冭瘯棰橀噺:</span></label>
+              <label for="cbt-count-select"><i class="fa-solid fa-hashtag"></i> <span data-i18n="exam.questionCount">模拟考试题量:</span></label>
               <select id="cbt-count-select">
-                <option value="100" data-i18n="exam.cbtQ100">100 棰?(姝ｅ紡鏈鸿€冩爣鍑?- 闄愭椂120鍒嗛挓)</option>
-                <option value="50" data-i18n="exam.cbtQ50">50 棰?(绮剧畝妯¤€?- 闄愭椂60鍒嗛挓)</option>
-                <option value="30" data-i18n="exam.cbtQ30">30 棰?(蹇€熷埛棰?- 闄愭椂36鍒嗛挓)</option>
-                <option value="10" selected data-i18n="exam.cbtQ10">10 棰?(寰瀷灏忔祴 - 闄愭椂12鍒嗛挓)</option>
+                <option value="100" data-i18n="exam.cbtQ100">100 题 (正式机考标准 - 限时120分钟)</option>
+                <option value="50" data-i18n="exam.cbtQ50">50 题 (精简模考 - 限时60分钟)</option>
+                <option value="30" data-i18n="exam.cbtQ30">30 题 (快速刷题 - 限时36分钟)</option>
+                <option value="10" selected data-i18n="exam.cbtQ10">10 题 (微型小测 - 限时12分钟)</option>
               </select>
             </div>
 
             <div class="cbt-option-row">
-              <label><i class="fa-solid fa-gears"></i> <span data-i18n="exam.personalizeTitle">鏈鸿€冧釜鎬у寲閫夐」:</span></label>
+              <label><i class="fa-solid fa-gears"></i> <span data-i18n="exam.personalizeTitle">机考个性化选项:</span></label>
               <div class="cbt-checkbox-group">
                 <label class="cbt-checkbox">
-                  <input type="checkbox" id="cbt-opt-shuffle" checked> <span data-i18n="exam.optShuffle">闅忔満鎵撲贡閫夋嫨鑲㈤『搴?(銈€溿偍)</span>
+                  <input type="checkbox" id="cbt-opt-shuffle" checked> <span data-i18n="exam.optShuffle">随机打乱选择肢顺序 (ア〜エ)</span>
                 </label>
                 <label class="cbt-checkbox">
-                  <input type="checkbox" id="cbt-opt-nocalc"> <span data-i18n="exam.optNocalc">杩囨护璁＄畻棰?(涓嶆樉绀哄惈鏈夊叕寮忚绠楃殑棰樼洰)</span>
+                  <input type="checkbox" id="cbt-opt-nocalc"> <span data-i18n="exam.optNocalc">过滤计算题 (不显示含有公式计算的题目)</span>
                 </label>
               </div>
             </div>
           </div>
 
           <button class="cbt-launch-btn" onclick="startCbtExam()">
-            <i class="fa-solid fa-play-circle"></i> <span data-i18n="exam.launchBtn">寮€濮嬫満鑰冩寫鎴?(瑭﹂〒闁嬪)</span>
+            <i class="fa-solid fa-play-circle"></i> <span data-i18n="exam.launchBtn">开始机考挑战 (試験開始)</span>
           </button>
         </div>
       </div>
@@ -1104,20 +1104,20 @@
       <div class="cbt-testing-screen" id="cbt-testing-screen" style="display: none;">
         <div class="cbt-testing-header">
           <div class="cbt-exam-title-box">
-            <span class="cbt-indicator-badge"><i class="fa-solid fa-laptop"></i> <span data-i18n="exam.cbtSimulator">CBT 妯℃嫙绯荤粺</span></span>
-            <h4 id="cbt-exam-display-title">浠ゅ拰6骞?鍏紑闂 妯℃嫙鑰冭瘯</h4>
+            <span class="cbt-indicator-badge"><i class="fa-solid fa-laptop"></i> <span data-i18n="exam.cbtSimulator">CBT 模拟系统</span></span>
+            <h4 id="cbt-exam-display-title">令和6年 公开问题 模拟考试</h4>
           </div>
           
           <div class="cbt-exam-timer-box">
-            <i class="fa-solid fa-stopwatch"></i> <span data-i18n="exam.remainingTime">鍓╀綑鏃堕棿: </span> <strong id="cbt-timer-display">120:00</strong>
+            <i class="fa-solid fa-stopwatch"></i> <span data-i18n="exam.remainingTime">剩余时间: </span> <strong id="cbt-timer-display">120:00</strong>
           </div>
 
           <div class="cbt-exam-actions">
             <button class="cbt-btn-action reset" onclick="exitCbtExam()">
-              <i class="fa-solid fa-rectangle-xmark"></i> <span data-i18n="exam.exitCbt">涓柇閫€鍑?/span>
+              <i class="fa-solid fa-rectangle-xmark"></i> <span data-i18n="exam.exitCbt">中断退出</span>
             </button>
             <button class="cbt-btn-action submit" onclick="submitCbtExam()">
-              <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.submitCbt">鎻愪氦璇曞嵎</span>
+              <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.submitCbt">提交试卷</span>
             </button>
           </div>
         </div>
@@ -1126,19 +1126,19 @@
           <!-- Question Canvas -->
           <div class="cbt-question-canvas">
             <div class="cbt-q-card-header">
-              <span class="cbt-q-number" id="cbt-q-number-text">绗?1 棰?/ 鍟?1</span>
+              <span class="cbt-q-number" id="cbt-q-number-text">第 1 题 / 問 1</span>
               <div class="cbt-q-meta-wrap">
-                <span class="cbt-q-field" id="cbt-q-field-text">銉嗐偗銉庛儹銈哥郴 / 銉嶃儍銉堛儻銉笺偗</span>
+                <span class="cbt-q-field" id="cbt-q-field-text">テクノロジ系 / ネットワーク</span>
                 <button class="cbt-q-meta-toggle" id="cbt-q-meta-toggle" type="button" aria-expanded="false" onclick="toggleCbtQuestionMeta()" hidden>
-                  <span data-i18n="exam.metaExpand">棰樼洰淇℃伅 <i class="fa-solid fa-chevron-down"></i></span>
+                  <span data-i18n="exam.metaExpand">题目信息 <i class="fa-solid fa-chevron-down"></i></span>
                 </button>
               </div>
               <button class="cbt-q-flag-btn" id="cbt-q-flag-btn" onclick="toggleCbtQuestionFlag()">
-                <i class="fa-regular fa-flag"></i> <span data-i18n="exam.flagReview">鏍囪姝ら澶嶆煡</span>
+                <i class="fa-regular fa-flag"></i> <span data-i18n="exam.flagReview">标记此题复查</span>
               </button>
             </div>
             <div class="cbt-q-meta-full" id="cbt-q-meta-full" hidden>
-              <span class="cbt-q-meta-full-label" data-i18n="exam.metaSource">鍑哄吀锛?/span>
+              <span class="cbt-q-meta-full-label" data-i18n="exam.metaSource">出典：</span>
               <span id="cbt-q-meta-full-text"></span>
             </div>
             
@@ -1153,25 +1153,25 @@
             <!-- Bottom Navigation -->
             <div class="cbt-q-navigation-bar">
               <button class="cbt-nav-btn" id="cbt-prev-btn" onclick="cbtPrevQuestion()">
-                <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.previous">涓婁竴棰?(鍓嶃伕)</span>
+                <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.previous">上一题 (前へ)</span>
               </button>
-              <span class="cbt-nav-status" id="cbt-nav-status-text">绗?1 棰橈紝鍏?10 棰?(宸蹭綔绛?0 棰?</span>
+              <span class="cbt-nav-status" id="cbt-nav-status-text">第 1 题，共 10 题 (已作答 0 题)</span>
               <button class="cbt-nav-btn" id="cbt-next-btn" onclick="cbtNextQuestion()">
-                <span data-i18n="exam.next">涓嬩竴棰?(娆°伕)</span> <i class="fa-solid fa-chevron-right"></i>
+                <span data-i18n="exam.next">下一题 (次へ)</span> <i class="fa-solid fa-chevron-right"></i>
               </button>
             </div>
           </div>
 
           <!-- CBT Grid Navigator Sidebar -->
           <div class="cbt-navigator-panel">
-            <h5><i class="fa-solid fa-list-ol"></i> <span data-i18n="exam.gridTitle">绛旈鍗＄湅鏉?/span></h5>
+            <h5><i class="fa-solid fa-list-ol"></i> <span data-i18n="exam.gridTitle">答题卡看板</span></h5>
             <div class="cbt-grid-canvas" id="cbt-grid-canvas">
               <!-- Question index grid buttons -->
             </div>
             <div class="cbt-grid-legend">
-              <span class="legend-unit"><span class="legend-color-box cbt-unanswered"></span><span data-i18n="exam.unanswered">鏈瓟</span></span>
-              <span class="legend-unit"><span class="legend-color-box cbt-answered"></span><span data-i18n="exam.answered">宸茬瓟</span></span>
-              <span class="legend-unit"><span class="legend-color-box cbt-flagged"><i class="fa-solid fa-flag"></i></span><span data-i18n="exam.flagged">鏍囪</span></span>
+              <span class="legend-unit"><span class="legend-color-box cbt-unanswered"></span><span data-i18n="exam.unanswered">未答</span></span>
+              <span class="legend-unit"><span class="legend-color-box cbt-answered"></span><span data-i18n="exam.answered">已答</span></span>
+              <span class="legend-unit"><span class="legend-color-box cbt-flagged"><i class="fa-solid fa-flag"></i></span><span data-i18n="exam.flagged">标记</span></span>
             </div>
           </div>
         </div>
@@ -1181,75 +1181,75 @@
       <div class="cbt-results-screen" id="cbt-results-screen" style="display: none;">
         <div class="cbt-results-card">
           <div class="cbt-results-header">
-            <h2 data-i18n="exam.resultsTitleCbt"><i class="fa-solid fa-square-poll-vertical"></i> 妯℃嫙鑰冭瘯娴嬭瘎鎴愮哗鍗?/h2>
+            <h2 data-i18n="exam.resultsTitleCbt"><i class="fa-solid fa-square-poll-vertical"></i> 模拟考试测评成绩单</h2>
             <button class="cbt-results-close-btn" onclick="closeCbtResults()">
-              <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.backToDojo">杩斿洖閬撳満</span>
+              <i class="fa-solid fa-chevron-left"></i> <span data-i18n="exam.backToDojo">返回道场</span>
             </button>
           </div>
 
           <!-- Score Summary Dashboard -->
           <div class="cbt-results-summary-row">
             <div class="cbt-results-total-box">
-              <span class="summary-label" data-i18n="exam.totalScoreLabel">缁煎悎寰楃偣 (鎬诲垎)</span>
+              <span class="summary-label" data-i18n="exam.totalScoreLabel">综合得点 (总分)</span>
               <div class="score-display">
                 <span class="score-num" id="cbt-score-total">650</span>
-                <span class="score-max">/ 1000 鐐?/span>
+                <span class="score-max">/ 1000 点</span>
               </div>
-              <div class="pass-status-badge pass" id="cbt-pass-status-badge" data-i18n="exam.passStatus">鍚堟牸</div>
+              <div class="pass-status-badge pass" id="cbt-pass-status-badge" data-i18n="exam.passStatus">合格</div>
             </div>
 
             <div class="cbt-results-fields-box">
               <!-- Strategy -->
               <div class="field-score-item">
                 <div class="field-score-meta">
-                  <strong data-i18n="exam.domainStrat">銈广儓銉┿儐銈哥郴 (绛栫暐棰嗗煙)</strong>
+                  <strong data-i18n="exam.domainStrat">ストラテジ系 (策略领域)</strong>
                   <span id="cbt-field-score-strat">600 / 1000</span>
                 </div>
                 <div class="field-score-progressbar">
                   <div class="field-score-fill" id="cbt-field-bar-strat" style="width: 60%"></div>
                 </div>
-                <span class="field-score-status" id="cbt-field-status-strat">鍚堟牸 (>=300)</span>
+                <span class="field-score-status" id="cbt-field-status-strat">合格 (>=300)</span>
               </div>
               <!-- Management -->
               <div class="field-score-item">
                 <div class="field-score-meta">
-                  <strong data-i18n="exam.domainMan">銉炪儘銈搞儭銉炽儓绯?(绠＄悊棰嗗煙)</strong>
+                  <strong data-i18n="exam.domainMan">マネジメント系 (管理领域)</strong>
                   <span id="cbt-field-score-man">700 / 1000</span>
                 </div>
                 <div class="field-score-progressbar">
                   <div class="field-score-fill" id="cbt-field-bar-man" style="width: 70%"></div>
                 </div>
-                <span class="field-score-status" id="cbt-field-status-man">鍚堟牸 (>=300)</span>
+                <span class="field-score-status" id="cbt-field-status-man">合格 (>=300)</span>
               </div>
               <!-- Technology -->
               <div class="field-score-item">
                 <div class="field-score-meta">
-                  <strong data-i18n="exam.domainTech">銉嗐偗銉庛儹銈哥郴 (鎶€鏈鍩?</strong>
+                  <strong data-i18n="exam.domainTech">テクノロジ系 (技术领域)</strong>
                   <span id="cbt-field-score-tech">650 / 1000</span>
                 </div>
                 <div class="field-score-progressbar">
                   <div class="field-score-fill" id="cbt-field-bar-tech" style="width: 65%"></div>
                 </div>
-                <span class="field-score-status" id="cbt-field-status-tech">鍚堟牸 (>=300)</span>
+                <span class="field-score-status" id="cbt-field-status-tech">合格 (>=300)</span>
               </div>
               <!-- Subject B -->
               <div class="field-score-item" id="cbt-field-score-item-subb" style="display: none;">
                 <div class="field-score-meta">
-                  <strong data-i18n="exam.domainSubb">绉戠洰B (鍦烘櫙搴旂敤)</strong>
-                  <span id="cbt-field-score-subb">0 / 1000 鐐?/span>
+                  <strong data-i18n="exam.domainSubb">科目B (场景应用)</strong>
+                  <span id="cbt-field-score-subb">0 / 1000 点</span>
                 </div>
                 <div class="field-score-progressbar">
                   <div class="field-score-fill" id="cbt-field-bar-subb" style="width: 0%"></div>
                 </div>
-                <span class="field-score-status" id="cbt-field-status-subb">鍚堟牸 (>=300)</span>
+                <span class="field-score-status" id="cbt-field-status-subb">合格 (>=300)</span>
               </div>
             </div>
           </div>
 
           <!-- Question Review and Analysis List -->
           <div class="cbt-results-details-wrapper">
-            <h3 data-i18n="exam.reviewTitle"><i class="fa-solid fa-circle-question"></i> 鐪熼鍥為【涓庨敊棰樺垎鏋?/h3>
-            <p class="results-table-tip" data-i18n="exam.reviewTip"><i class="fa-solid fa-lightbulb"></i> 鐐瑰嚮浠绘剰鏉＄洰灞曞紑鏌ョ湅璇︽儏銆?/p>
+            <h3 data-i18n="exam.reviewTitle"><i class="fa-solid fa-circle-question"></i> 真题回顾与错题分析</h3>
+            <p class="results-table-tip" data-i18n="exam.reviewTip"><i class="fa-solid fa-lightbulb"></i> 点击任意条目展开查看详情。</p>
 
             <div class="exam-review-list" id="cbt-results-table-body">
               <!-- Review cards dynamically inserted -->
@@ -1262,19 +1262,19 @@
 
   </div>
 
-  <section class="typing-hub" id="typing-hub" aria-label="鏃ユ湰瑾炪偪銈ゃ償銉炽偘" data-i18n-aria-label="nav.typing">
+  <section class="typing-hub" id="typing-hub" aria-label="日本語タイピング" data-i18n-aria-label="nav.typing">
     <aside class="typing-panel typing-library-panel">
-      <h2 class="typing-hub-title" data-i18n="typing.library">銈裤偆銉斻兂銈版枃搴?/h2>
-      <p class="typing-hub-subtitle" data-i18n="typing.libraryDesc">N3銇嬨倝N1銇俱仹骞呭簝銇忎娇銇堛倠瀹熺敤鏃ユ湰瑾炶緭鍏ャ€傜敓娲汇兓鑱峰牬銉婚暦鏂囥倰鑷垎銇儦銉笺偣銇х反缈掋仹銇嶃伨銇欍€?/p>
+      <h2 class="typing-hub-title" data-i18n="typing.library">タイピング文庫</h2>
+      <p class="typing-hub-subtitle" data-i18n="typing.libraryDesc">N3からN1まで幅広く使える実用日本語输入。生活・職場・長文を自分のペースで練習できます。</p>
 
       <div class="typing-field">
-        <label for="typing-library-search" data-i18n="typing.search">鏂囧簱鎼滅储</label>
-        <input id="typing-library-search" type="search" placeholder="鏍囬銆佸唴瀹规垨鏍囩" data-i18n-placeholder="typing.searchPlaceholder" oninput="TypingHub.search(this.value)">
+        <label for="typing-library-search" data-i18n="typing.search">文库搜索</label>
+        <input id="typing-library-search" type="search" placeholder="标题、内容或标签" data-i18n-placeholder="typing.searchPlaceholder" oninput="TypingHub.search(this.value)">
       </div>
 
       <div class="typing-category-list" id="typing-category-list"></div>
       <div class="typing-field">
-        <label><span data-i18n="typing.articleList">鏂囩珷鍒楄〃</span> <span id="typing-library-count"></span></label>
+        <label><span data-i18n="typing.articleList">文章列表</span> <span id="typing-library-count"></span></label>
       </div>
       <div class="typing-article-list" id="typing-article-list"></div>
     </aside>
@@ -1282,32 +1282,32 @@
     <main class="typing-panel typing-main-panel">
       <div class="typing-toolbar">
         <button class="typing-primary-btn" onclick="TypingHub.randomArticle()">
-          <i class="fa-solid fa-shuffle"></i> <span data-i18n="typing.randomArticle">闅忔満涓€绡?/span>
+          <i class="fa-solid fa-shuffle"></i> <span data-i18n="typing.randomArticle">随机一篇</span>
         </button>
         <button class="typing-secondary-btn" onclick="TypingHub.restart()">
-          <i class="fa-solid fa-rotate-left"></i> <span data-i18n="typing.restart">閲嶆柊寮€濮?/span>
+          <i class="fa-solid fa-rotate-left"></i> <span data-i18n="typing.restart">重新开始</span>
         </button>
-        <label for="typing-time-limit" style="color:var(--text-muted);font-size:12px;" data-i18n="typing.timeLimit">闄愭椂</label>
+        <label for="typing-time-limit" style="color:var(--text-muted);font-size:12px;" data-i18n="typing.timeLimit">限时</label>
         <select id="typing-time-limit" class="typing-secondary-btn">
-          <option value="0" data-i18n="typing.noLimit">涓嶉檺鏃?/option>
-          <option value="60" data-i18n="typing.t1min">1鍒嗛挓</option>
-          <option value="180" data-i18n="typing.t3min">3鍒嗛挓</option>
-          <option value="300" data-i18n="typing.t5min">5鍒嗛挓</option>
-          <option value="600" data-i18n="typing.t10min">10鍒嗛挓</option>
+          <option value="0" data-i18n="typing.noLimit">不限时</option>
+          <option value="60" data-i18n="typing.t1min">1分钟</option>
+          <option value="180" data-i18n="typing.t3min">3分钟</option>
+          <option value="300" data-i18n="typing.t5min">5分钟</option>
+          <option value="600" data-i18n="typing.t10min">10分钟</option>
         </select>
         <span class="typing-toolbar-spacer"></span>
-        <button class="typing-secondary-btn typing-favorite-btn" id="typing-favorite-btn" onclick="TypingHub.toggleFavorite()" title="鏀惰棌褰撳墠鏂囩珷" data-i18n-title="typing.favoriteTitle">
-          <i class="fa-solid fa-star"></i> <span data-i18n="typing.favoriteBtn">鏀惰棌</span>
+        <button class="typing-secondary-btn typing-favorite-btn" id="typing-favorite-btn" onclick="TypingHub.toggleFavorite()" title="收藏当前文章" data-i18n-title="typing.favoriteTitle">
+          <i class="fa-solid fa-star"></i> <span data-i18n="typing.favoriteBtn">收藏</span>
         </button>
       </div>
 
       <div class="typing-workspace">
         <div class="typing-article-heading">
           <div>
-            <h2 id="typing-current-title">鏂囩珷鍑嗗涓?/h2>
+            <h2 id="typing-current-title">文章准备中</h2>
             <div class="typing-tags" id="typing-current-tags"></div>
           </div>
-          <span class="typing-tag" data-i18n="typing.imeMode">IME 瀹炴垬妯″紡</span>
+          <span class="typing-tag" data-i18n="typing.imeMode">IME 实战模式</span>
         </div>
 
         <div class="typing-progress"><div id="typing-progress-fill"></div></div>
@@ -1319,34 +1319,34 @@
           lang="ja"
           spellcheck="false"
           autocomplete="off"
-          placeholder="鏃ヨ杈撳叆娉曘倰銈兂銇仐銇︺€佽繖閲屻亱銈夎緭鍏ャ仐銇︺亸銇犮仌銇勩€?
+          placeholder="日语输入法をオンにして、这里から输入してください。"
           data-i18n-placeholder="typing.imePlaceholder"
         ></textarea>
-        <p class="typing-help" data-i18n="typing.typingHelp">绯荤粺鏃ヨ IME 杈撳叆銆傚叏瑙掍笌鍗婅浼氱粺涓€姣旇緝锛涘垹闄ゅ拰鏀瑰啓浼氳鍏ヤ慨鏀规鏁般€?/p>
+        <p class="typing-help" data-i18n="typing.typingHelp">系统日语 IME 输入。全角与半角会统一比较；删除和改写会计入修改次数。</p>
 
         <div class="typing-stats">
-          <div class="typing-stat"><span data-i18n="typing.speed">閫熷害</span><strong id="typing-stat-kpm">0</strong><small> KPM</small></div>
-          <div class="typing-stat"><span data-i18n="typing.accuracy">姝ｇ‘鐜?/span><strong id="typing-stat-accuracy">100%</strong></div>
-          <div class="typing-stat"><span data-i18n="typing.progress">鏈夋晥杩涘害</span><strong id="typing-stat-progress">0/0</strong></div>
-          <div class="typing-stat"><span data-i18n="typing.edits">淇敼娆℃暟</span><strong id="typing-stat-corrections">0</strong></div>
-          <div class="typing-stat"><span data-i18n="typing.time">鏃堕棿</span><strong id="typing-stat-time">00:00</strong></div>
+          <div class="typing-stat"><span data-i18n="typing.speed">速度</span><strong id="typing-stat-kpm">0</strong><small> KPM</small></div>
+          <div class="typing-stat"><span data-i18n="typing.accuracy">正确率</span><strong id="typing-stat-accuracy">100%</strong></div>
+          <div class="typing-stat"><span data-i18n="typing.progress">有效进度</span><strong id="typing-stat-progress">0/0</strong></div>
+          <div class="typing-stat"><span data-i18n="typing.edits">修改次数</span><strong id="typing-stat-corrections">0</strong></div>
+          <div class="typing-stat"><span data-i18n="typing.time">时间</span><strong id="typing-stat-time">00:00</strong></div>
         </div>
 
         <div class="typing-result" id="typing-result">
-          <h3 id="typing-result-title" data-i18n="typing.resultTitle">缁冧範瀹屾垚</h3>
+          <h3 id="typing-result-title" data-i18n="typing.resultTitle">练习完成</h3>
           <p id="typing-result-summary"></p>
-          <button class="typing-primary-btn" onclick="TypingHub.randomArticle()" data-i18n="typing.continueRandom">缁х画闅忔満缁冧範</button>
+          <button class="typing-primary-btn" onclick="TypingHub.randomArticle()" data-i18n="typing.continueRandom">继续随机练习</button>
         </div>
 
         <div class="typing-bottom-grid">
           <section class="typing-mini-card">
-            <h3><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="typing.recentScores">鏈€杩戞垚缁?/span></h3>
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> <span data-i18n="typing.recentScores">最近成绩</span></h3>
             <div id="typing-history-list"></div>
           </section>
           <section class="typing-mini-card">
-            <h3><i class="fa-solid fa-bullseye"></i> <span data-i18n="typing.personalReview">涓汉澶嶇粌</span></h3>
-            <p class="typing-empty" data-i18n="typing.reviewDesc">姝ｇ‘鐜囦綆浜?98% 鐨勬枃绔犱細鑷姩鍔犲叆閿欏彞澶嶇粌锛涙弧鍒嗗畬鎴愬悗鑷姩绉婚櫎銆?/p>
-            <strong id="typing-review-count" class="typing-review-count" data-i18n="typing.reviewCount">0 绡囧緟澶嶇粌</strong>
+            <h3><i class="fa-solid fa-bullseye"></i> <span data-i18n="typing.personalReview">个人复练</span></h3>
+            <p class="typing-empty" data-i18n="typing.reviewDesc">正确率低于 98% 的文章会自动加入错句复练；满分完成后自动移除。</p>
+            <strong id="typing-review-count" class="typing-review-count" data-i18n="typing.reviewCount">0 篇待复练</strong>
           </section>
         </div>
       </div>
@@ -1354,14 +1354,14 @@
   </section>
 
   <!-- Coding Typing Hub -->
-  <section class="coding-typing-hub" id="coding-typing-hub" aria-label="缂栫▼鎵撳瓧" data-i18n-aria-label="nav.codingTyping">
+  <section class="coding-typing-hub" id="coding-typing-hub" aria-label="编程打字" data-i18n-aria-label="nav.codingTyping">
     <aside class="ct-panel ct-library-panel">
-      <h2 class="ct-title" data-i18n="codingTyping.title">缂栫▼鎵撳瓧缁冧範</h2>
-      <p class="ct-subtitle" data-i18n="codingTyping.subtitle">閫氳繃鎵撳瓧缁冧範鎺屾彙缂栫▼璇硶銆傞€夋嫨璇█鍜岀被鍒紑濮嬬粌涔犮€?/p>
+      <h2 class="ct-title" data-i18n="codingTyping.title">编程打字练习</h2>
+      <p class="ct-subtitle" data-i18n="codingTyping.subtitle">通过打字练习掌握编程语法。选择语言和类别开始练习。</p>
 
       <!-- Language selector -->
       <div class="ct-field">
-        <label data-i18n="codingTyping.language">閫夋嫨璇█</label>
+        <label data-i18n="codingTyping.language">选择语言</label>
         <div class="ct-lang-tabs" id="ct-lang-tabs">
           <button class="ct-lang-tab active" data-lang="python" onclick="CodingTyping.filterLang('python')"><i class="fab fa-python"></i> Python</button>
           <button class="ct-lang-tab" data-lang="java" onclick="CodingTyping.filterLang('java')"><i class="fab fa-java"></i> Java</button>
@@ -1372,15 +1372,15 @@
 
       <!-- Category filter -->
       <div class="ct-field">
-        <label data-i18n="codingTyping.category">绫诲埆杩囨护</label>
+        <label data-i18n="codingTyping.category">类别过滤</label>
         <div class="ct-cat-list" id="ct-cat-list"></div>
       </div>
 
       <!-- Difficulty filter -->
       <div class="ct-field">
-        <label data-i18n="codingTyping.difficultyFilter">闅惧害杩囨护</label>
+        <label data-i18n="codingTyping.difficultyFilter">难度过滤</label>
         <div class="ct-diff-list" id="ct-diff-list">
-          <button class="ct-diff-btn active" data-diff="all" onclick="CodingTyping.filterDiff('all')"><span data-i18n="codingTyping.allDifficulties">鍏ㄩ儴</span></button>
+          <button class="ct-diff-btn active" data-diff="all" onclick="CodingTyping.filterDiff('all')"><span data-i18n="codingTyping.allDifficulties">全部</span></button>
           <button class="ct-diff-btn" data-diff="1" onclick="CodingTyping.filterDiff('1')">Lv.1</button>
           <button class="ct-diff-btn" data-diff="2" onclick="CodingTyping.filterDiff('2')">Lv.2</button>
           <button class="ct-diff-btn" data-diff="3" onclick="CodingTyping.filterDiff('3')">Lv.3</button>
@@ -1390,7 +1390,7 @@
       </div>
       <!-- Item list -->
       <div class="ct-field">
-        <label><span data-i18n="codingTyping.exerciseList">缁冧範鍒楄〃</span> <span id="ct-item-count"></span></label>
+        <label><span data-i18n="codingTyping.exerciseList">练习列表</span> <span id="ct-item-count"></span></label>
       </div>
       <div class="ct-item-list" id="ct-item-list"></div>
     </aside>
@@ -1398,42 +1398,42 @@
     <main class="ct-panel ct-main-panel">
       <section class="ct-practice-guide" aria-labelledby="ct-practice-guide-title">
         <div class="ct-practice-guide__intro">
-          <h2 id="ct-practice-guide-title" data-i18n="codingTyping.practiceTitle">缂栫▼鎵撳瓧缁冧範</h2>
-          <p data-i18n="codingTyping.practiceDescription">鐪嬬洰鏍囦唬鐮侊紝鍦ㄨ緭鍏ュ尯瀹屾暣鎵撳嚭鏉ャ€?/p>
+          <h2 id="ct-practice-guide-title" data-i18n="codingTyping.practiceTitle">编程打字练习</h2>
+          <p data-i18n="codingTyping.practiceDescription">看目标代码，在输入区完整打出来。</p>
         </div>
         <ol class="ct-practice-steps">
-          <li data-i18n="codingTyping.stepChoose">閫夋嫨璇█鍜岀被鍒?/li>
-          <li data-i18n="codingTyping.stepType">杈撳叆鐩爣浠ｇ爜</li>
-          <li data-i18n="codingTyping.stepSandbox">鍙戦€佸埌娌欑洅鎴栬繍琛屾鏌?/li>
+          <li data-i18n="codingTyping.stepChoose">选择语言和类别</li>
+          <li data-i18n="codingTyping.stepType">输入目标代码</li>
+          <li data-i18n="codingTyping.stepSandbox">发送到沙盒或运行检查</li>
         </ol>
         <div class="ct-sandbox-help">
-          <span><strong data-i18n="codingTyping.sendToSandbox">鍙戦€佸埌娌欑洅</strong><small data-i18n="codingTyping.sendOnlyHelp">鍙彂閫佸埌娌欑洅锛屼笉鎵ц</small></span>
-          <span><strong data-i18n="codingTyping.runInSandbox">鍦ㄦ矙鐩掍腑杩愯</strong><small data-i18n="codingTyping.runHelp">鍙戦€佸埌娌欑洅骞剁珛鍗虫墽琛?/small></span>
+          <span><strong data-i18n="codingTyping.sendToSandbox">发送到沙盒</strong><small data-i18n="codingTyping.sendOnlyHelp">只发送到沙盒，不执行</small></span>
+          <span><strong data-i18n="codingTyping.runInSandbox">在沙盒中运行</strong><small data-i18n="codingTyping.runHelp">发送到沙盒并立即执行</small></span>
         </div>
       </section>
 
       <!-- Toolbar -->
       <div class="ct-toolbar">
         <button class="ct-secondary-btn ct-back-btn" onclick="CodingTyping.goBack()">
-          <i class="fa-solid fa-arrow-left"></i> <span data-i18n="codingTyping.backToList">杩斿洖缁冧範鍒楄〃</span>
+          <i class="fa-solid fa-arrow-left"></i> <span data-i18n="codingTyping.backToList">返回练习列表</span>
         </button>
         <button class="ct-primary-btn" onclick="CodingTyping.randomItem()">
-          <i class="fa-solid fa-shuffle"></i> <span data-i18n="codingTyping.random">闅忔満涓€棰?/span>
+          <i class="fa-solid fa-shuffle"></i> <span data-i18n="codingTyping.random">随机一题</span>
         </button>
         <button class="ct-secondary-btn" onclick="CodingTyping.nextItem()">
-          <i class="fa-solid fa-forward"></i> <span data-i18n="codingTyping.next">涓嬩竴棰?/span>
+          <i class="fa-solid fa-forward"></i> <span data-i18n="codingTyping.next">下一题</span>
         </button>
         <button class="ct-secondary-btn" onclick="CodingTyping.restart()">
-          <i class="fa-solid fa-rotate-left"></i> <span data-i18n="codingTyping.restart">閲嶆潵</span>
+          <i class="fa-solid fa-rotate-left"></i> <span data-i18n="codingTyping.restart">重来</span>
         </button>
         <span class="ct-toolbar-spacer"></span>
         <label class="ct-opt-label">
           <input type="checkbox" id="ct-normalize-fullwidth" checked onchange="CodingTyping.toggleNormalize()">
-          <span data-i18n="codingTyping.normalizeFullWidth">鍏ㄨ鈫掑崐瑙?/span>
+          <span data-i18n="codingTyping.normalizeFullWidth">全角→半角</span>
         </label>
         <label class="ct-opt-label">
           <input type="checkbox" id="ct-lenient-indent" checked onchange="CodingTyping.toggleLenientIndent()">
-          <span data-i18n="codingTyping.lenientIndent">缂╄繘瀹藉</span>
+          <span data-i18n="codingTyping.lenientIndent">缩进宽容</span>
         </label>
       </div>
 
@@ -1442,7 +1442,7 @@
         <!-- Target code display -->
         <div class="ct-code-section">
           <div class="ct-code-header">
-            <span class="ct-code-label" data-i18n="codingTyping.code">鐩爣浠ｇ爜</span>
+            <span class="ct-code-label" data-i18n="codingTyping.code">目标代码</span>
             <span class="ct-item-meta" id="ct-item-meta"></span>
           </div>
           <pre class="ct-code-display" id="ct-code-display"></pre>
@@ -1459,23 +1459,23 @@
         <!-- Exam Insight Card -->
         <div class="ct-exam-insight" id="ct-exam-insight">
           <div class="ct-exam-insight__head">
-            <span class="ct-exam-insight__head-label" data-i18n="codingTyping.examInsight">鑰冭瘯鐞嗚В</span>
+            <span class="ct-exam-insight__head-label" data-i18n="codingTyping.examInsight">考试理解</span>
             <span class="ct-exam-insight__badge" id="ct-exam-badge"></span>
           </div>
           <div class="ct-exam-insight__body">
             <div class="ct-exam-insight__tags" id="ct-exam-targets"></div>
             <div class="ct-exam-insight__tags" id="ct-exam-glossary"></div>
-            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.meaning">鍚箟</span><span class="ct-exam-insight__text" id="ct-exam-meaning"></span></div>
-            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.memoryHook">璁板繂娉?/span><span class="ct-exam-insight__text" id="ct-exam-memory"></span></div>
-            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.examPoint">鑰冪偣</span><span class="ct-exam-insight__text" id="ct-exam-point"></span></div>
-            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.commonMistake">鏄撻敊</span><span class="ct-exam-insight__text" id="ct-exam-mistake"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.meaning">含义</span><span class="ct-exam-insight__text" id="ct-exam-meaning"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.memoryHook">记忆法</span><span class="ct-exam-insight__text" id="ct-exam-memory"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.examPoint">考点</span><span class="ct-exam-insight__text" id="ct-exam-point"></span></div>
+            <div class="ct-exam-insight__row"><span class="ct-exam-insight__label" data-i18n="codingTyping.commonMistake">易错</span><span class="ct-exam-insight__text" id="ct-exam-mistake"></span></div>
           </div>
         </div>
 
         <!-- User input -->
         <div class="ct-input-section">
-          <label data-i18n="codingTyping.input">杈撳叆鍖?/label>
-          <textarea class="ct-textarea" id="ct-textarea" spellcheck="false" autocomplete="off" placeholder="鍦ㄦ杈撳叆鐩爣浠ｇ爜..." data-i18n-placeholder="codingTyping.inputPlaceholder"></textarea>
+          <label data-i18n="codingTyping.input">输入区</label>
+          <textarea class="ct-textarea" id="ct-textarea" spellcheck="false" autocomplete="off" placeholder="在此输入目标代码..." data-i18n-placeholder="codingTyping.inputPlaceholder"></textarea>
         </div>
 
         <!-- Live character comparison -->
@@ -1489,10 +1489,10 @@
         <!-- Stats -->
         <div class="ct-stats">
           <div class="ct-stat"><span data-i18n="codingTyping.speed">CPM</span><strong id="ct-stat-cpm">0</strong></div>
-          <div class="ct-stat"><span data-i18n="codingTyping.accuracy">姝ｇ‘鐜?/span><strong id="ct-stat-accuracy">100%</strong></div>
-          <div class="ct-stat"><span data-i18n="codingTyping.progress">杩涘害</span><strong id="ct-stat-progress">0/0</strong></div>
-          <div class="ct-stat"><span data-i18n="codingTyping.time">鐢ㄦ椂</span><strong id="ct-stat-time">00:00</strong></div>
-          <div class="ct-stat"><span data-i18n="codingTyping.errors">閿欒</span><strong id="ct-stat-errors">0</strong></div>
+          <div class="ct-stat"><span data-i18n="codingTyping.accuracy">正确率</span><strong id="ct-stat-accuracy">100%</strong></div>
+          <div class="ct-stat"><span data-i18n="codingTyping.progress">进度</span><strong id="ct-stat-progress">0/0</strong></div>
+          <div class="ct-stat"><span data-i18n="codingTyping.time">用时</span><strong id="ct-stat-time">00:00</strong></div>
+          <div class="ct-stat"><span data-i18n="codingTyping.errors">错误</span><strong id="ct-stat-errors">0</strong></div>
         </div>
 
         <!-- Complete message (JS generated) -->
@@ -1512,20 +1512,20 @@
 
         <!-- History filter controls -->
         <div class="ct-history-controls" id="ct-history-controls">
-          <h4 data-i18n="codingTyping.historyFilter">鍘嗗彶绛涢€?/h4>
+          <h4 data-i18n="codingTyping.historyFilter">历史筛选</h4>
           <div class="ct-history-filter-row">
             <select id="ct-hist-lang" class="ct-hist-select">
-              <option value="all" data-i18n="codingTyping.allLanguages">鍏ㄩ儴璇█</option>
+              <option value="all" data-i18n="codingTyping.allLanguages">全部语言</option>
               <option value="python">Python</option>
               <option value="java">Java</option>
               <option value="sql">SQL</option>
               <option value="symbol">Symbols</option>
             </select>
             <select id="ct-hist-cat" class="ct-hist-select">
-              <option value="all" data-i18n="codingTyping.allCategories">鍏ㄩ儴绫诲埆</option>
+              <option value="all" data-i18n="codingTyping.allCategories">全部类别</option>
             </select>
             <select id="ct-hist-diff" class="ct-hist-select">
-              <option value="all" data-i18n="codingTyping.allDifficulties">鍏ㄩ儴闅惧害</option>
+              <option value="all" data-i18n="codingTyping.allDifficulties">全部难度</option>
               <option value="1">Lv.1</option>
               <option value="2">Lv.2</option>
               <option value="3">Lv.3</option>
@@ -1533,7 +1533,7 @@
               <option value="5">Lv.5</option>
             </select>
           </div>
-          <button class="ct-clear-history-btn" onclick="CodingTyping.clearHistory()" data-i18n="codingTyping.clearHistory">娓呯┖鍘嗗彶</button>
+          <button class="ct-clear-history-btn" onclick="CodingTyping.clearHistory()" data-i18n="codingTyping.clearHistory">清空历史</button>
         </div>
 
         <!-- Recent history -->
@@ -1548,28 +1548,28 @@
     <section class="glossary-dialog" role="dialog" aria-modal="true" aria-labelledby="glossary-title">
       <header class="glossary-header">
         <div>
-          <h2 id="glossary-title" data-i18n="glossary.title">IT鏈琛?/h2>
-          <p data-i18n="glossary.keepEnglishNote">淇濈暀鑻辨枃鎶€鏈湳璇?/p>
+          <h2 id="glossary-title" data-i18n="glossary.title">IT术语表</h2>
+          <p data-i18n="glossary.keepEnglishNote">保留英文技术术语</p>
         </div>
         <button type="button" class="glossary-close-btn" data-glossary-close data-i18n-title="glossary.close">
           <i class="fa-solid fa-xmark"></i>
-          <span class="sr-only" data-i18n="glossary.close">鍏抽棴</span>
+          <span class="sr-only" data-i18n="glossary.close">关闭</span>
         </button>
       </header>
       <div class="glossary-toolbar">
         <div style="position: relative; flex: 1; min-width: 180px; display: flex; align-items: center;">
-          <input id="glossary-search" type="search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="鎼滅储鏈..." style="flex: 1; padding-right: 32px;">
+          <input id="glossary-search" type="search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="搜索术语..." style="flex: 1; padding-right: 32px;">
           <button id="glossary-search-clear" type="button" style="display: none; position: absolute; right: 6px; background: transparent; border: none; color: var(--text-muted, #94a3b8); cursor: pointer; font-size: 14px; width: 24px; height: 24px; border-radius: 4px; align-items: center; justify-content: center; padding: 0;" aria-label="Clear search" title="Clear search">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
         <select id="glossary-category-filter" data-i18n-title="glossary.category">
-          <option value="all" data-i18n="glossary.allCategories">鍏ㄩ儴</option>
-          <option value="database" data-i18n="glossary.filterDatabase">鏁版嵁搴?/option>
-          <option value="security" data-i18n="glossary.filterSecurity">瀹夊叏</option>
-          <option value="network" data-i18n="glossary.filterNetwork">缃戠粶</option>
-          <option value="programming" data-i18n="glossary.filterProgramming">缂栫▼</option>
-          <option value="system" data-i18n="glossary.filterSystem">绯荤粺</option>
+          <option value="all" data-i18n="glossary.allCategories">全部</option>
+          <option value="database" data-i18n="glossary.filterDatabase">数据库</option>
+          <option value="security" data-i18n="glossary.filterSecurity">安全</option>
+          <option value="network" data-i18n="glossary.filterNetwork">网络</option>
+          <option value="programming" data-i18n="glossary.filterProgramming">编程</option>
+          <option value="system" data-i18n="glossary.filterSystem">系统</option>
         </select>
       </div>
       <div id="glossary-count" class="glossary-count"></div>
@@ -1583,21 +1583,21 @@
     <section class="exam-history-modal__panel" role="dialog" aria-modal="true" aria-labelledby="exam-history-title">
       <header class="exam-history-modal__header">
         <div>
-          <h2 id="exam-history-title" data-i18n="examHistory.title">鏈€杩戣€冭瘯鍘嗗彶</h2>
-          <p data-i18n="examHistory.subtitle">鏌ョ湅宸蹭繚瀛樼殑妯℃嫙鑰冭瘯缁撴灉</p>
+          <h2 id="exam-history-title" data-i18n="examHistory.title">最近考试历史</h2>
+          <p data-i18n="examHistory.subtitle">查看已保存的模拟考试结果</p>
         </div>
         <button type="button" class="exam-history-modal__close" data-exam-history-close>
           <i class="fa-solid fa-xmark"></i>
-          <span class="sr-only" data-i18n="examHistory.close">鍏抽棴</span>
+          <span class="sr-only" data-i18n="examHistory.close">关闭</span>
         </button>
       </header>
       <div class="exam-history-modal__tabs" id="exam-history-tabs">
-        <button type="button" class="exam-history-tab-btn active" data-tab="history" data-i18n="examHistory.title">鑰冭瘯鍘嗗彶</button>
-        <button type="button" class="exam-history-tab-btn" data-tab="wrong-book" data-i18n="wrongBook.title">閿欓鏈?/button>
+        <button type="button" class="exam-history-tab-btn active" data-tab="history" data-i18n="examHistory.title">考试历史</button>
+        <button type="button" class="exam-history-tab-btn" data-tab="wrong-book" data-i18n="wrongBook.title">错题本</button>
       </div>
       <div id="exam-history-view" class="exam-history-view">
         <div class="exam-history-modal__filters" id="exam-history-filters">
-          <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="examHistory.filterAll">鍏ㄩ儴</button>
+          <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="examHistory.filterAll">全部</button>
           <button type="button" class="exam-history-filter-btn" data-filter="itpass">IT Passport</button>
           <button type="button" class="exam-history-filter-btn" data-filter="sg">SG</button>
         </div>
@@ -1607,15 +1607,15 @@
         <div id="wrong-book-browser">
           <div class="wrong-book-toolbar">
             <div class="exam-history-modal__filters" id="wrong-book-filters">
-              <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="wrongBook.all">鍏ㄩ儴</button>
-              <button type="button" class="exam-history-filter-btn" data-filter="unmastered" data-i18n="wrongBook.unmastered">鏈帉鎻?/button>
-              <button type="button" class="exam-history-filter-btn" data-filter="mastered" data-i18n="wrongBook.mastered">宸叉帉鎻?/button>
+              <button type="button" class="exam-history-filter-btn active" data-filter="all" data-i18n="wrongBook.all">全部</button>
+              <button type="button" class="exam-history-filter-btn" data-filter="unmastered" data-i18n="wrongBook.unmastered">未掌握</button>
+              <button type="button" class="exam-history-filter-btn" data-filter="mastered" data-i18n="wrongBook.mastered">已掌握</button>
             </div>
             <label class="wrong-book-module-filter">
-              <span data-i18n="wrongBook.moduleFilter">妯″潡</span>
+              <span data-i18n="wrongBook.moduleFilter">模块</span>
               <select id="wrong-book-module-select" data-i18n-aria-label="wrongBook.moduleFilter"></select>
             </label>
-            <button type="button" class="wrong-book-retry-start" id="wrong-book-retry-start" data-i18n="wrongBook.startRetry">寮€濮嬮噸缁?/button>
+            <button type="button" class="wrong-book-retry-start" id="wrong-book-retry-start" data-i18n="wrongBook.startRetry">开始重练</button>
           </div>
           <div id="wrong-book-list" class="exam-history-list wrong-book-list"></div>
         </div>
