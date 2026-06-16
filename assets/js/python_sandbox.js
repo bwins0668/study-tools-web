@@ -39,9 +39,9 @@ window.PythonSandbox = (() => {
         editor.style.opacity = "0.7";
         editor.style.cursor = "not-allowed";
         const lnContainer = document.getElementById('python-line-numbers');
-        if (lnContainer) lnContainer.innerHTML = '<span>1</span><span>2</span>';
+        if (lnContainer) { lnContainer.replaceChildren(); var _s1=document.createElement("span"); _s1.textContent="1"; lnContainer.appendChild(_s1); var _s2=document.createElement("span"); _s2.textContent="2"; lnContainer.appendChild(_s2); }
         const overlay = document.getElementById('python-highlight-overlay');
-        if (overlay) overlay.innerHTML = '<span class="hl-comment"># 本节为纯概念理论课，无需编写或运行代码。</span>\n<span class="hl-comment"># 请阅读左侧的教材讲解，并完成随堂练习！</span>\n';
+        if (overlay) { overlay.replaceChildren(); overlay.insertAdjacentHTML("beforeend", "<span class=\"hl-comment\"># 本节为纯概念理论课，无需编写或运行代码。</span>\n<span class=\"hl-comment\"># 请阅读左侧的教材讲解，并完成随堂练习！</span>\n"); }
       }
       if (runBtn) {
         runBtn.disabled = true;
@@ -158,7 +158,8 @@ window.PythonSandbox = (() => {
     const editor = getEditor();
     const overlay = document.getElementById('python-highlight-overlay');
     if (!editor || !overlay) return;
-    overlay.innerHTML = highlightPythonCode(editor.value) + "\n";
+    overlay.replaceChildren();
+    overlay.insertAdjacentHTML("beforeend", highlightPythonCode(editor.value) + "\n");
     // Sync scroll positions immediately to prevent misalignment
     overlay.scrollTop = editor.scrollTop;
     overlay.scrollLeft = editor.scrollLeft;
@@ -208,11 +209,16 @@ window.PythonSandbox = (() => {
     const editor = getEditor();
     if (!editor) return;
     navigator.clipboard.writeText(editor.value).then(() => {
-      const btn = document.querySelector('.python-tool-btn:nth-child(2)');
-      if (btn) {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+      var _btn = document.querySelector(".python-tool-btn:nth-child(2)");
+      if (_btn) {
+        var _origIconClass = (_btn.querySelector("i") && _btn.querySelector("i").className) || "";
+        var _origText = _btn.childNodes.length > 1 ? (_btn.childNodes[1].textContent || "") : "";
+        _btn.replaceChildren();
+        _btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-check\"></i> Copied!");
+        setTimeout(function() {
+          _btn.replaceChildren();
+          _btn.insertAdjacentHTML("beforeend", "<i class=\"" + _origIconClass + "\"></i> " + _origText);
+        }, 1500);
       }
     });
   }
@@ -227,7 +233,8 @@ window.PythonSandbox = (() => {
     for (let i = 1; i <= lines; i++) {
       html += `<span>${i}</span>`;
     }
-    lnContainer.innerHTML = html;
+    lnContainer.replaceChildren();
+    lnContainer.insertAdjacentHTML("beforeend", html);
     lnContainer.scrollTop = editor.scrollTop;
   }
 
@@ -300,7 +307,8 @@ window.PythonSandbox = (() => {
     const btn = getRunBtn();
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 実行中...';
+      btn.replaceChildren();
+      btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-spinner fa-spin\"></i> 実行中...");
     }
     setStatus('running', '実行中... / Running...');
     displayOutput('# 実行中 / Running...\n# しばらくお待ちください / Please wait...', 'idle');
@@ -362,7 +370,8 @@ window.PythonSandbox = (() => {
       isRunning = false;
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span class="sandbox-btn-icon">▶</span> 実行 <kbd>Ctrl+Enter</kbd>';
+        btn.replaceChildren();
+        btn.insertAdjacentHTML("beforeend", "<span class=\"sandbox-btn-icon\">▶</span> 実行 <kbd>Ctrl+Enter</kbd>");
       }
     }
   }
@@ -462,7 +471,7 @@ window.PythonSandbox = (() => {
     const debugPanel = document.getElementById('python-ai-debugger');
     if (debugPanel) {
       debugPanel.style.display = 'none';
-      debugPanel.innerHTML = '';
+      debugPanel.textContent = '';
     }
 
     if (type === 'error') {
@@ -471,13 +480,22 @@ window.PythonSandbox = (() => {
       // Render AI Debugger Button if there is a real error message
       if (debugPanel && text.trim().length > 0 && !text.includes('Please enter some code')) {
         debugPanel.style.display = 'block';
-        debugPanel.innerHTML = `
-          <div style="margin-top: 12px; text-align: center;">
-            <button class="ai-debug-btn" onclick="triggerAiDebug('python', document.getElementById('python-editor').value.trim(), ${JSON.stringify(text).replace(/"/g, '&quot;')})">
-              <i class="fa-solid fa-robot"></i> AI 帮我看看
-            </button>
-          </div>
-        `;
+        debugPanel.replaceChildren();
+        var _dbgDiv = document.createElement("div");
+        _dbgDiv.style.cssText = "margin-top:12px;text-align:center;";
+        var _dbgBtn = document.createElement("button");
+        _dbgBtn.className = "ai-debug-btn";
+        var _safeCode = document.getElementById("python-editor") ? document.getElementById("python-editor").value.trim() : "";
+        var _safeText = text;
+        _dbgBtn.addEventListener("click", function() {
+          triggerAiDebug("python", _safeCode, _safeText);
+        });
+        var _dbgIcon = document.createElement("i");
+        _dbgIcon.className = "fa-solid fa-robot";
+        _dbgBtn.appendChild(_dbgIcon);
+        _dbgBtn.appendChild(document.createTextNode(" AI 帮我看看"));
+        _dbgDiv.appendChild(_dbgBtn);
+        debugPanel.appendChild(_dbgDiv);
       }
     }
     if (type === 'success') out.classList.add('python-output-success');
@@ -545,7 +563,7 @@ window.PythonSandbox = (() => {
     }).length;
 
     const pct = Math.round((completed / total) * 100);
-    el.innerHTML = `全体 ${pct}% (${completed}/${total}) ✓`;
+    el.textContent = "全体 " + pct + "% (" + completed + "/" + total + ") ✓";
   }
 
   function hideVocabSection() {
