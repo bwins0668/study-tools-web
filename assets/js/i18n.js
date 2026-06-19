@@ -853,6 +853,28 @@ DISABLE_TRANSLATION_OVERLAY = true;
     }
   }
 
+  function getVisibleContentPack(subject, lesson, lang) {
+    if (!subject || !lesson || !window.ContentI18n || typeof window.ContentI18n.get !== "function") return null;
+    return window.ContentI18n.get(subject, lesson.id, lang || currentLang);
+  }
+
+  function updateLessonVisibleExtras(lesson, lang) {
+    var subject = getActiveSubject();
+    var pack = getVisibleContentPack(subject, lesson, lang);
+    var analogyEl = document.getElementById("lesson-analogy");
+    if (analogyEl) {
+      analogyEl.textContent = pack && pack.analogy ? pack.analogy : (lesson.analogy || "");
+    }
+    if (
+      typeof initFlashcards === "function" &&
+      (subject === "sql" || subject === "itpass" || subject === "sg") &&
+      lesson &&
+      lesson.id != null
+    ) {
+      initFlashcards(lesson.id);
+    }
+  }
+
   async function applyLessonTranslation(lesson) {
     if (!lesson) return;
     markManaged();
@@ -882,6 +904,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
       conceptTargetEl.innerHTML = renderOriginalConcept(textFromLessonLocale(lesson, "concept", "zh", lesson.conceptZh || ""));
       setLessonFallbackState("zh", false);
       updateCourseLabels();
+      updateLessonVisibleExtras(lesson, "default-ja-zh");
       if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
@@ -897,6 +920,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
       conceptJaEl.innerHTML = renderOriginalConcept(jaConcept);
       setLessonFallbackState("ja", false);
       updateCourseLabels();
+      updateLessonVisibleExtras(lesson, "ja");
       if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
@@ -910,6 +934,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
       conceptJaEl.innerHTML = renderOriginalConcept(textFromLessonLocale(lesson, "concept", "ja", lesson.conceptJa || ""));
       setLessonFallbackState("zh", false);
       updateCourseLabels();
+      updateLessonVisibleExtras(lesson, "zh");
       if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
@@ -1017,6 +1042,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
 
     setLessonFallbackState(actualLang, isFallback);
     updateCourseLabels();
+    updateLessonVisibleExtras(lesson, short);
 
     if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
   }

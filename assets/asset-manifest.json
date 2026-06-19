@@ -1,45 +1,45 @@
 {
-  "assetVersion": "v2026.6.19-r-vi-full-pack",
-  "generatedAt": "2026-06-19T15:09:37.935Z",
-  "webVersion": "v2026.6.19-r-vi-full-pack",
-  "releaseVersion": "v2026.6.19-r-vi-full-pack",
+  "assetVersion": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+  "generatedAt": "2026-06-19T18:24:54Z",
+  "webVersion": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+  "releaseVersion": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
-      "sizeBytes": 1443,
-      "sha256": "4227007b299012d656e27593b89089fe21a795c7e9ded00a64af2f40499904d5",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "sizeBytes": 1484,
+      "sha256": "17525069ec3af8d2a0c76a69d5288567cc0c8435f38e9cc8070d3cf70a157579",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
-      "sizeBytes": 275069,
-      "sha256": "8fbe64a61846ac09634bc920d5c57c812e9457fdbddfdc494db102d873059c11",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "sizeBytes": 280179,
+      "sha256": "9b1463a66aafb54fa34cccb1094d82aa246136f482596a3e3cfd55b6cecfc046",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
-      "sizeBytes": 82448,
-      "sha256": "f3180cf060948ab5cfb6b0d64e7ac500dfdc204729ae68cfffc985ba81886d67",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "sizeBytes": 83452,
+      "sha256": "6083aea3da00d00093982682ce22ff07059c732a17fd708e1d3619055e7706a1",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
-      "sizeBytes": 8263,
-      "sha256": "bc088acdcd5442527634048858276eb62e5e8aa69e0ae7d743e9ef132e72144e",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "sizeBytes": 20416,
+      "sha256": "d8583e92b8df24a0f62be949b616005174265ab18e3d7efe8f0154d05a18e0c4",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 331987,
       "sha256": "8a3dbde7e483f5a9d71cd426c55a4284a98cf0a2957084121d73e2013fd42053",
       "cacheStrategy": "static"
@@ -47,7 +47,7 @@
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,7 +55,7 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 1272,
       "sha256": "f9b1ac03a11e46c392e1a22827a20283bd0a84bd8e1c7b1e82311ce53c879869",
       "cacheStrategy": "static"
@@ -63,7 +63,7 @@
     {
       "path": "data/lessons.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 178488,
       "sha256": "dd6ec01e9dea0f6fc1ab60f3066ad05ea9262205332a20686ed5cbe49a8a7154",
       "cacheStrategy": "static"
@@ -71,7 +71,7 @@
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 262170,
       "sha256": "dc06eb3bc3b198c0ccfaa2407e23a722a658632250edf29bbeaa18c2f58e51a6",
       "cacheStrategy": "static"
@@ -79,7 +79,7 @@
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -87,7 +87,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -95,7 +95,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.19-r-vi-full-pack",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -103,9 +103,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-vi-full-pack",
-      "sizeBytes": 4556,
-      "sha256": "92bddd5c4ed3b433662a9d41da7939359ca2a8aebff94f68d1ba340fd96395d2",
+      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "sizeBytes": 4571,
+      "sha256": "4ed551ab59039bea716f6463cd27c5b20f999ff51161bbb43d86655755853485",
       "cacheStrategy": "pwa"
     }
   ]

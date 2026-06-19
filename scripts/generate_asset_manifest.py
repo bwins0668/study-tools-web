@@ -112,37 +112,48 @@ print("Successfully generated assets/asset-manifest.json")
 # Generate Content Pack Manifest
 content_dir = "data/i18n_content"
 subjects = ["sql", "itpass", "sg", "java", "python"]
-languages = ["en", "vi", "my", "fr"]
+pack_pattern = re.compile(r"^(" + "|".join(subjects) + r")_([a-z]{2})\.js$")
+pack_files = []
+languages = set()
+
+for filename in sorted(os.listdir(content_dir)):
+    match = pack_pattern.match(filename)
+    if not match:
+        continue
+    subj, lang = match.groups()
+    pack_files.append((subj, lang, filename))
+    languages.add(lang)
 
 pack_items = []
 total_packs = 0
 
-for subj in subjects:
-    for lang in languages:
-        filename = f"{subj}_{lang}.js"
-        filepath = os.path.join(content_dir, filename)
-        if not os.path.exists(filepath):
-            print(f"Warning: Content pack {filepath} not found.")
-            continue
-            
-        size_bytes = os.path.getsize(filepath)
-        sha256 = get_sha256(filepath)
-        lesson_count = get_lesson_count(filepath)
-        
-        # Source type mapping
-        source_type = "manual" if lang == "en" else "ai-assisted"
-        
-        pack_items.append({
-            "subject": subj,
-            "lang": lang,
-            "path": filepath.replace("\\", "/"),
-            "version": asset_version,
-            "lessonCount": lesson_count,
-            "sizeBytes": size_bytes,
-            "sha256": sha256,
-            "sourceType": source_type
-        })
-        total_packs += 1
+for subj, lang, filename in pack_files:
+    filepath = os.path.join(content_dir, filename)
+    size_bytes = os.path.getsize(filepath)
+    sha256 = get_sha256(filepath)
+    lesson_count = get_lesson_count(filepath)
+
+    if lang == "en":
+        source_type = "manual"
+    elif lang == "ko":
+        source_type = "local-usable"
+    else:
+        source_type = "ai-assisted"
+
+    item = {
+        "subject": subj,
+        "lang": lang,
+        "path": filepath.replace("\\", "/"),
+        "version": asset_version,
+        "lessonCount": lesson_count,
+        "sizeBytes": size_bytes,
+        "sha256": sha256,
+        "sourceType": source_type
+    }
+    if lang in ["ko", "my", "vi", "th"]:
+        item["coverageStatus"] = f"usable-{lang}" if lang != "th" else "needs-review-th"
+    pack_items.append(item)
+    total_packs += 1
 
 content_manifest = {
     "assetVersion": asset_version,

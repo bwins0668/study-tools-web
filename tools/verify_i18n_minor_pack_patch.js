@@ -211,7 +211,7 @@ const versionMatch = versionJs.match(/webVersion:\s*"([^"]+)"/);
 const currentVersion = versionMatch ? versionMatch[1] : "";
 check(versionMatch !== null, "version.js has webVersion");
 if (versionMatch) {
-  check(currentVersion.startsWith("v2026.6.19-"),
+  check(/^v2026\.6\.\d{2}-/.test(currentVersion),
     `version.js webVersion is "${currentVersion}"`);
 }
 

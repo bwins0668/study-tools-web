@@ -1,14 +1,14 @@
-﻿/* Study Tools Web 鐢?Lightweight version metadata (no framework, no app.js dep) */
+/* Study Tools Web 鐢?Lightweight version metadata (no framework, no app.js dep) */
 (function () {
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
-    webVersion: "v2026.6.20-r-dual-final-qa",
+    webVersion: "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
     desktopVersion: "v2026.6.20-r-pc-final-qa",
     releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.20-r-pc-final-qa",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.20-r-dual-final-qa"
+    assetVersion: "v2026.6.20-r-i18n-visible-gold-gate-ko-my"
   };
 
   function applyVersionInfo() {
