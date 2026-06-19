@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "study-tools-web-v2026-6-16-r136-2";
+﻿const CACHE_NAME = "study-tools-web-v2026-6-19-r-mobile-layout-fix";
 
 const CORE_ASSETS = [
   "./",

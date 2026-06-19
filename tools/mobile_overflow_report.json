@@ -1,0 +1,332 @@
+{
+  "passed": 25,
+  "failed": 0,
+  "skipped": 0,
+  "details": [
+    {
+      "viewport": "375x812",
+      "page": "首页",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 375,
+        "bodyScrollWidth": 375,
+        "docScrollWidth": 375,
+        "maxAllowed": 377,
+        "bodyClientWidth": 375,
+        "docClientWidth": 375
+      }
+    },
+    {
+      "viewport": "375x812",
+      "page": "SQL 学习入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 375,
+        "bodyScrollWidth": 375,
+        "docScrollWidth": 375,
+        "maxAllowed": 377,
+        "bodyClientWidth": 375,
+        "docClientWidth": 375
+      }
+    },
+    {
+      "viewport": "375x812",
+      "page": "SQL lesson 页面",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 375,
+        "bodyScrollWidth": 375,
+        "docScrollWidth": 375,
+        "maxAllowed": 377,
+        "bodyClientWidth": 375,
+        "docClientWidth": 375
+      }
+    },
+    {
+      "viewport": "375x812",
+      "page": "左右对照模式",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 375,
+        "bodyScrollWidth": 375,
+        "docScrollWidth": 375,
+        "maxAllowed": 377,
+        "bodyClientWidth": 375,
+        "docClientWidth": 375
+      }
+    },
+    {
+      "viewport": "375x812",
+      "page": "右侧沙盒/考试入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 375,
+        "bodyScrollWidth": 375,
+        "docScrollWidth": 375,
+        "maxAllowed": 377,
+        "bodyClientWidth": 375,
+        "docClientWidth": 375
+      }
+    },
+    {
+      "viewport": "390x844",
+      "page": "首页",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "docScrollWidth": 390,
+        "maxAllowed": 392,
+        "bodyClientWidth": 390,
+        "docClientWidth": 390
+      }
+    },
+    {
+      "viewport": "390x844",
+      "page": "SQL 学习入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "docScrollWidth": 390,
+        "maxAllowed": 392,
+        "bodyClientWidth": 390,
+        "docClientWidth": 390
+      }
+    },
+    {
+      "viewport": "390x844",
+      "page": "SQL lesson 页面",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "docScrollWidth": 390,
+        "maxAllowed": 392,
+        "bodyClientWidth": 390,
+        "docClientWidth": 390
+      }
+    },
+    {
+      "viewport": "390x844",
+      "page": "左右对照模式",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "docScrollWidth": 390,
+        "maxAllowed": 392,
+        "bodyClientWidth": 390,
+        "docClientWidth": 390
+      }
+    },
+    {
+      "viewport": "390x844",
+      "page": "右侧沙盒/考试入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 390,
+        "bodyScrollWidth": 390,
+        "docScrollWidth": 390,
+        "maxAllowed": 392,
+        "bodyClientWidth": 390,
+        "docClientWidth": 390
+      }
+    },
+    {
+      "viewport": "414x896",
+      "page": "首页",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 414,
+        "bodyScrollWidth": 414,
+        "docScrollWidth": 414,
+        "maxAllowed": 416,
+        "bodyClientWidth": 414,
+        "docClientWidth": 414
+      }
+    },
+    {
+      "viewport": "414x896",
+      "page": "SQL 学习入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 414,
+        "bodyScrollWidth": 414,
+        "docScrollWidth": 414,
+        "maxAllowed": 416,
+        "bodyClientWidth": 414,
+        "docClientWidth": 414
+      }
+    },
+    {
+      "viewport": "414x896",
+      "page": "SQL lesson 页面",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 414,
+        "bodyScrollWidth": 414,
+        "docScrollWidth": 414,
+        "maxAllowed": 416,
+        "bodyClientWidth": 414,
+        "docClientWidth": 414
+      }
+    },
+    {
+      "viewport": "414x896",
+      "page": "左右对照模式",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 414,
+        "bodyScrollWidth": 414,
+        "docScrollWidth": 414,
+        "maxAllowed": 416,
+        "bodyClientWidth": 414,
+        "docClientWidth": 414
+      }
+    },
+    {
+      "viewport": "414x896",
+      "page": "右侧沙盒/考试入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 414,
+        "bodyScrollWidth": 414,
+        "docScrollWidth": 414,
+        "maxAllowed": 416,
+        "bodyClientWidth": 414,
+        "docClientWidth": 414
+      }
+    },
+    {
+      "viewport": "430x932",
+      "page": "首页",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 430,
+        "bodyScrollWidth": 430,
+        "docScrollWidth": 430,
+        "maxAllowed": 432,
+        "bodyClientWidth": 430,
+        "docClientWidth": 430
+      }
+    },
+    {
+      "viewport": "430x932",
+      "page": "SQL 学习入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 430,
+        "bodyScrollWidth": 430,
+        "docScrollWidth": 430,
+        "maxAllowed": 432,
+        "bodyClientWidth": 430,
+        "docClientWidth": 430
+      }
+    },
+    {
+      "viewport": "430x932",
+      "page": "SQL lesson 页面",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 430,
+        "bodyScrollWidth": 430,
+        "docScrollWidth": 430,
+        "maxAllowed": 432,
+        "bodyClientWidth": 430,
+        "docClientWidth": 430
+      }
+    },
+    {
+      "viewport": "430x932",
+      "page": "左右对照模式",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 430,
+        "bodyScrollWidth": 430,
+        "docScrollWidth": 430,
+        "maxAllowed": 432,
+        "bodyClientWidth": 430,
+        "docClientWidth": 430
+      }
+    },
+    {
+      "viewport": "430x932",
+      "page": "右侧沙盒/考试入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 430,
+        "bodyScrollWidth": 430,
+        "docScrollWidth": 430,
+        "maxAllowed": 432,
+        "bodyClientWidth": 430,
+        "docClientWidth": 430
+      }
+    },
+    {
+      "viewport": "393x852",
+      "page": "首页",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 393,
+        "bodyScrollWidth": 393,
+        "docScrollWidth": 393,
+        "maxAllowed": 395,
+        "bodyClientWidth": 393,
+        "docClientWidth": 393
+      }
+    },
+    {
+      "viewport": "393x852",
+      "page": "SQL 学习入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 393,
+        "bodyScrollWidth": 393,
+        "docScrollWidth": 393,
+        "maxAllowed": 395,
+        "bodyClientWidth": 393,
+        "docClientWidth": 393
+      }
+    },
+    {
+      "viewport": "393x852",
+      "page": "SQL lesson 页面",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 393,
+        "bodyScrollWidth": 393,
+        "docScrollWidth": 393,
+        "maxAllowed": 395,
+        "bodyClientWidth": 393,
+        "docClientWidth": 393
+      }
+    },
+    {
+      "viewport": "393x852",
+      "page": "左右对照模式",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 393,
+        "bodyScrollWidth": 393,
+        "docScrollWidth": 393,
+        "maxAllowed": 395,
+        "bodyClientWidth": 393,
+        "docClientWidth": 393
+      }
+    },
+    {
+      "viewport": "393x852",
+      "page": "右侧沙盒/考试入口",
+      "status": "PASS",
+      "overflow": {
+        "innerWidth": 393,
+        "bodyScrollWidth": 393,
+        "docScrollWidth": 393,
+        "maxAllowed": 395,
+        "bodyClientWidth": 393,
+        "docClientWidth": 393
+      }
+    }
+  ]
+}
