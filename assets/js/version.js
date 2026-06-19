@@ -3,12 +3,12 @@
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
-    webVersion: "v2026.6.19-r-ko-sql-final",
+    webVersion: "v2026.6.19-r-ko-java-pack",
     desktopVersion: "v2026.6.15-r134.2",
-    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.19-r-ko-sql-final",
+    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.19-r-ko-java-pack",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.19-r-ko-sql-final"
+    assetVersion: "v2026.6.19-r-ko-java-pack"
   };
 
   function applyVersionInfo() {
