@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-ko-python-pack";
+﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-ko-coding-typing-ui";
 
 const CORE_ASSETS = [
   "./",
