@@ -817,6 +817,12 @@ DISABLE_TRANSLATION_OVERLAY = true;
     if (document.getElementById("subject-tab-java")?.classList.contains("active")) return "java";
     if (document.getElementById("subject-tab-sg")?.classList.contains("active")) return "sg";
     if (document.getElementById("subject-tab-python")?.classList.contains("active")) return "python";
+    var activeModule = document.querySelector(".module-switch-option.active[data-module]");
+    var moduleName = activeModule ? activeModule.getAttribute("data-module") : "";
+    if (["sql", "itpass", "java", "sg", "python"].indexOf(moduleName) !== -1) return moduleName;
+    if (typeof currentSubject !== "undefined" && ["sql", "itpass", "java", "sg", "python"].indexOf(currentSubject) !== -1) {
+      return currentSubject;
+    }
     return null;
   }
 
@@ -2019,4 +2025,3 @@ function openUtEditor(el, origText, transText, ctx) {
       }
     } catch(e) { console.warn("[I18n] factoryResetI18n error:", e); }
   })();
-

@@ -52,6 +52,30 @@ function hasLatin(text) {
   return /[A-Za-z]{4,}/.test(text);
 }
 
+function hasBurmese(text) {
+  return /[\u1000-\u109f]/.test(text || "");
+}
+
+function hasThai(text) {
+  return /[\u0e00-\u0e7f]/.test(text || "");
+}
+
+function hasVietnamese(text) {
+  return /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(text || "");
+}
+
+function hasIndonesian(text) {
+  return /\b(adalah|yang|dan|untuk|dengan|pada|dari|tidak|sebagai|mengambil|pelajaran|data)\b/i.test(text || "");
+}
+
+function looksLikeLanguage(code, text) {
+  if (code === 'my') return hasBurmese(text);
+  if (code === 'th') return hasThai(text);
+  if (code === 'vi') return hasVietnamese(text);
+  if (code === 'id') return hasIndonesian(text);
+  return false;
+}
+
 function assertNoRawText(text, label) {
   if (!text) return;
   if (/undefined|null|\[object Object\]|NaN/i.test(String(text))) {
@@ -242,10 +266,7 @@ async function run() {
         // my/th/vi/id: must have fallback label if not in target language
         const hasFallbackLabel = headerInfo.headerText.includes('fallback') || headerInfo.headerText.includes('日本語') || headerInfo.headerText.includes('中文');
         if (!hasFallbackLabel) {
-          // Check if the content actually looks like the target language
-          // vi: check for Vietnamese accents
-          const hasVietnamese = /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(headerInfo.conceptText);
-          if (!hasVietnamese) {
+          if (!looksLikeLanguage(code, headerInfo.conceptText)) {
             emit('WARN', `${code} — content may be fallback without label`,
               `"${headerInfo.conceptText.slice(0, 60)}" header="${headerInfo.headerText}"`);
           } else {

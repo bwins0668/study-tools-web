@@ -62,6 +62,14 @@ function hasVietnamese(text) {
   return /[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]/i.test(text || "");
 }
 
+function hasThai(text) {
+  return /[\u0e00-\u0e7f]/.test(text || "");
+}
+
+function hasIndonesian(text) {
+  return /\b(adalah|yang|dan|untuk|dengan|pada|dari|tidak|sebagai|mengambil|pelajaran|data)\b/i.test(text || "");
+}
+
 function hasInvalidRawText(text) {
   return /undefined|null|\[object Object\]|NaN/i.test(text || "");
 }
@@ -70,7 +78,9 @@ function looksLikeRequestedLanguage(code, text) {
   if (code === "ko") return hasHangul(text);
   if (code === "en") return hasLatin(text);
   if (code === "my") return hasBurmese(text);
+  if (code === "th") return hasThai(text);
   if (code === "vi") return hasVietnamese(text);
+  if (code === "id") return hasIndonesian(text);
   if (code === "zh") return /[\u4e00-\u9fff]/.test(text || "");
   if (code === "ja") return /[\u3040-\u30ff]/.test(text || "");
   return false;

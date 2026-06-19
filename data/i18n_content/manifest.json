@@ -1,82 +1,12 @@
 {
-  "assetVersion": "v2026.6.19-r-i18n-minor-pack",
-  "generatedAt": "2026-06-19T11:30:00Z",
-  "webVersion": "v2026.6.19-r-i18n-minor-pack",
-  "releaseVersion": "v2026.6.19-r-i18n-minor-pack",
+  "assetVersion": "v2026.6.19-r-i18n-coverage-ko-1",
+  "generatedAt": "2026-06-19T12:00:00Z",
+  "webVersion": "v2026.6.19-r-i18n-coverage-ko-1",
+  "releaseVersion": "v2026.6.19-r-i18n-coverage-ko-1",
   "totalSubjects": 5,
   "totalLanguages": 7,
-  "totalPacks": 23,
+  "totalPacks": 27,
   "packs": [
-    {
-      "subject": "sql",
-      "lang": "en",
-      "path": "data/i18n_content/sql_en.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 36,
-      "sizeBytes": 23206,
-      "sha256": "bd42e4707fef82705663a8488948ce333c3ce3bb64d25414b96e708daefa4b6d",
-      "sourceType": "manual"
-    },
-    {
-      "subject": "sql",
-      "lang": "vi",
-      "path": "data/i18n_content/sql_vi.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 36,
-      "sizeBytes": 30252,
-      "sha256": "d3c41af3ecef32cdc90bdb60faaba36bed35592cdbdf58ec6c021e5caaba7fbc",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sql",
-      "lang": "my",
-      "path": "data/i18n_content/sql_my.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 36,
-      "sizeBytes": 50325,
-      "sha256": "7d49e29444ab10585aa61366150468e8760aeb67446a78981d8833c18592b7b5",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sql",
-      "lang": "fr",
-      "path": "data/i18n_content/sql_fr.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 36,
-      "sizeBytes": 28488,
-      "sha256": "9b1befbe82fc33df861bd7f86397d33ddb3a4eac6195723e0a939cfaab569e37",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sql",
-      "lang": "ko",
-      "path": "data/i18n_content/sql_ko.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 36,
-      "sizeBytes": 18424,
-      "sha256": "dfaac67b936e184cd368f2729c26b888edfefe8dc121bd3c12d5c3e883a0373e",
-      "sourceType": "manual"
-    },
-    {
-      "subject": "sql",
-      "lang": "th",
-      "path": "data/i18n_content/sql_th.js",
-      "version": "v2026.6.19-r-i18n-minor-pack",
-      "lessonCount": 36,
-      "sizeBytes": 26522,
-      "sha256": "eb7c578c508279cc328c9bf0c12f585c0270d81f0fb0216193850e07d53ec093",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sql",
-      "lang": "id",
-      "path": "data/i18n_content/sql_id.js",
-      "version": "v2026.6.19-r-i18n-minor-pack",
-      "lessonCount": 36,
-      "sizeBytes": 16531,
-      "sha256": "4a69310ab25b3911929b41580d23073a53a573f6b78f41e53d8e2a4f1e3f785f",
-      "sourceType": "ai-assisted"
-    },
     {
       "subject": "itpass",
       "lang": "en",
@@ -89,13 +19,25 @@
     },
     {
       "subject": "itpass",
-      "lang": "vi",
-      "path": "data/i18n_content/itpass_vi.js",
+      "lang": "fr",
+      "path": "data/i18n_content/itpass_fr.js",
       "version": "v2026.6.19-r-sql-ko-content",
       "lessonCount": 85,
-      "sizeBytes": 116077,
-      "sha256": "c114a6bdb8b9438046fb111141ecd42a0a4dc8f83bc0bf8d82d017cc49720757",
+      "sizeBytes": 106577,
+      "sha256": "7f40a492c7b7a10052e6ae2a436599ed78dbbc0a3ca1d36f5b53f9640464137c",
       "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "itpass",
+      "lang": "ko",
+      "path": "data/i18n_content/itpass_ko.js",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "lessonCount": 85,
+      "sizeBytes": 94967,
+      "sha256": "3c35ebe926af477c04f081ed8afe88125e2b9183f3f5bff80bf5903259b27262",
+      "sourceType": "local-starter",
+      "coverageStatus": "starter-ko",
+      "needsReview": true
     },
     {
       "subject": "itpass",
@@ -109,52 +51,12 @@
     },
     {
       "subject": "itpass",
-      "lang": "fr",
-      "path": "data/i18n_content/itpass_fr.js",
+      "lang": "vi",
+      "path": "data/i18n_content/itpass_vi.js",
       "version": "v2026.6.19-r-sql-ko-content",
       "lessonCount": 85,
-      "sizeBytes": 106577,
-      "sha256": "7f40a492c7b7a10052e6ae2a436599ed78dbbc0a3ca1d36f5b53f9640464137c",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sg",
-      "lang": "en",
-      "path": "data/i18n_content/sg_en.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 44,
-      "sizeBytes": 40657,
-      "sha256": "57e424421c7a99877ee8ce01212ce4edad5fad7156f0acbb6ab1e5457fee3d04",
-      "sourceType": "manual"
-    },
-    {
-      "subject": "sg",
-      "lang": "vi",
-      "path": "data/i18n_content/sg_vi.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 44,
-      "sizeBytes": 45274,
-      "sha256": "b36f09da46b5f29ea01b16fd0ddf9d7e1b667f1a0dc067720ae635562fc1c57b",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sg",
-      "lang": "my",
-      "path": "data/i18n_content/sg_my.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 44,
-      "sizeBytes": 73946,
-      "sha256": "38e9fce85c6e29ee17011e2803b04bca8cfb2ce55898f211404a864b8b6e466d",
-      "sourceType": "ai-assisted"
-    },
-    {
-      "subject": "sg",
-      "lang": "fr",
-      "path": "data/i18n_content/sg_fr.js",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "lessonCount": 44,
-      "sizeBytes": 38967,
-      "sha256": "6cbcd4a4f4dae98be5163c31088d704890fdb147a3dd7cb9c64fbd15d9311df4",
+      "sizeBytes": 116077,
+      "sha256": "c114a6bdb8b9438046fb111141ecd42a0a4dc8f83bc0bf8d82d017cc49720757",
       "sourceType": "ai-assisted"
     },
     {
@@ -169,13 +71,25 @@
     },
     {
       "subject": "java",
-      "lang": "vi",
-      "path": "data/i18n_content/java_vi.js",
+      "lang": "fr",
+      "path": "data/i18n_content/java_fr.js",
       "version": "v2026.6.19-r-sql-ko-content",
       "lessonCount": 115,
-      "sizeBytes": 73155,
-      "sha256": "1e877af392c1367b7d44ed34e2eb43c56af10c192fda3b4ffbea29f7430272dd",
+      "sizeBytes": 72025,
+      "sha256": "c3200977ce9ebc62c8c1b5afbd7c13ce83a418e055b981ab9f23f860990fd2be",
       "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "java",
+      "lang": "ko",
+      "path": "data/i18n_content/java_ko.js",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "lessonCount": 115,
+      "sizeBytes": 128985,
+      "sha256": "beebf81a8626b3e7b71c8fb6d4605a93b4c0171718568228a0dc6467a93352ca",
+      "sourceType": "local-starter",
+      "coverageStatus": "starter-ko",
+      "needsReview": true
     },
     {
       "subject": "java",
@@ -189,12 +103,12 @@
     },
     {
       "subject": "java",
-      "lang": "fr",
-      "path": "data/i18n_content/java_fr.js",
+      "lang": "vi",
+      "path": "data/i18n_content/java_vi.js",
       "version": "v2026.6.19-r-sql-ko-content",
       "lessonCount": 115,
-      "sizeBytes": 72025,
-      "sha256": "c3200977ce9ebc62c8c1b5afbd7c13ce83a418e055b981ab9f23f860990fd2be",
+      "sizeBytes": 73155,
+      "sha256": "1e877af392c1367b7d44ed34e2eb43c56af10c192fda3b4ffbea29f7430272dd",
       "sourceType": "ai-assisted"
     },
     {
@@ -209,13 +123,25 @@
     },
     {
       "subject": "python",
-      "lang": "vi",
-      "path": "data/i18n_content/python_vi.js",
+      "lang": "fr",
+      "path": "data/i18n_content/python_fr.js",
       "version": "v2026.6.19-r-sql-ko-content",
       "lessonCount": 255,
-      "sizeBytes": 152395,
-      "sha256": "284ace8009cde44bf44de8c2349aec087adbc65fead8b5a91427bd78b5b6fc4e",
+      "sizeBytes": 162485,
+      "sha256": "4ef989519d251b4b49adaf3f0dc6c18b65a2d7bc40ef56a6a9b5104617bfe71f",
       "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "python",
+      "lang": "ko",
+      "path": "data/i18n_content/python_ko.js",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "lessonCount": 255,
+      "sizeBytes": 309289,
+      "sha256": "b15453ab848e36e277686e65392205322ea611eb30c3118b4ee42795c5962fac",
+      "sourceType": "local-starter",
+      "coverageStatus": "starter-ko",
+      "needsReview": true
     },
     {
       "subject": "python",
@@ -229,12 +155,134 @@
     },
     {
       "subject": "python",
-      "lang": "fr",
-      "path": "data/i18n_content/python_fr.js",
+      "lang": "vi",
+      "path": "data/i18n_content/python_vi.js",
       "version": "v2026.6.19-r-sql-ko-content",
       "lessonCount": 255,
-      "sizeBytes": 162485,
-      "sha256": "4ef989519d251b4b49adaf3f0dc6c18b65a2d7bc40ef56a6a9b5104617bfe71f",
+      "sizeBytes": 152395,
+      "sha256": "284ace8009cde44bf44de8c2349aec087adbc65fead8b5a91427bd78b5b6fc4e",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sg",
+      "lang": "en",
+      "path": "data/i18n_content/sg_en.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 44,
+      "sizeBytes": 40657,
+      "sha256": "57e424421c7a99877ee8ce01212ce4edad5fad7156f0acbb6ab1e5457fee3d04",
+      "sourceType": "manual"
+    },
+    {
+      "subject": "sg",
+      "lang": "fr",
+      "path": "data/i18n_content/sg_fr.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 44,
+      "sizeBytes": 38967,
+      "sha256": "6cbcd4a4f4dae98be5163c31088d704890fdb147a3dd7cb9c64fbd15d9311df4",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sg",
+      "lang": "ko",
+      "path": "data/i18n_content/sg_ko.js",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "lessonCount": 44,
+      "sizeBytes": 50509,
+      "sha256": "802ac6087ddd3c0197a1db65fcdfb8d01acc44c4ddcd46f3f092b007771dded8",
+      "sourceType": "local-starter",
+      "coverageStatus": "starter-ko",
+      "needsReview": true
+    },
+    {
+      "subject": "sg",
+      "lang": "my",
+      "path": "data/i18n_content/sg_my.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 44,
+      "sizeBytes": 73946,
+      "sha256": "38e9fce85c6e29ee17011e2803b04bca8cfb2ce55898f211404a864b8b6e466d",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sg",
+      "lang": "vi",
+      "path": "data/i18n_content/sg_vi.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 44,
+      "sizeBytes": 45274,
+      "sha256": "b36f09da46b5f29ea01b16fd0ddf9d7e1b667f1a0dc067720ae635562fc1c57b",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sql",
+      "lang": "en",
+      "path": "data/i18n_content/sql_en.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 36,
+      "sizeBytes": 23206,
+      "sha256": "bd42e4707fef82705663a8488948ce333c3ce3bb64d25414b96e708daefa4b6d",
+      "sourceType": "manual"
+    },
+    {
+      "subject": "sql",
+      "lang": "fr",
+      "path": "data/i18n_content/sql_fr.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 36,
+      "sizeBytes": 28488,
+      "sha256": "9b1befbe82fc33df861bd7f86397d33ddb3a4eac6195723e0a939cfaab569e37",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sql",
+      "lang": "id",
+      "path": "data/i18n_content/sql_id.js",
+      "version": "v2026.6.19-r-i18n-minor-pack",
+      "lessonCount": 36,
+      "sizeBytes": 16531,
+      "sha256": "4a69310ab25b3911929b41580d23073a53a573f6b78f41e53d8e2a4f1e3f785f",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sql",
+      "lang": "ko",
+      "path": "data/i18n_content/sql_ko.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 36,
+      "sizeBytes": 18424,
+      "sha256": "dfaac67b936e184cd368f2729c26b888edfefe8dc121bd3c12d5c3e883a0373e",
+      "sourceType": "manual"
+    },
+    {
+      "subject": "sql",
+      "lang": "my",
+      "path": "data/i18n_content/sql_my.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 36,
+      "sizeBytes": 50325,
+      "sha256": "7d49e29444ab10585aa61366150468e8760aeb67446a78981d8833c18592b7b5",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sql",
+      "lang": "th",
+      "path": "data/i18n_content/sql_th.js",
+      "version": "v2026.6.19-r-i18n-minor-pack",
+      "lessonCount": 36,
+      "sizeBytes": 26522,
+      "sha256": "eb7c578c508279cc328c9bf0c12f585c0270d81f0fb0216193850e07d53ec093",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sql",
+      "lang": "vi",
+      "path": "data/i18n_content/sql_vi.js",
+      "version": "v2026.6.19-r-sql-ko-content",
+      "lessonCount": 36,
+      "sizeBytes": 30252,
+      "sha256": "d3c41af3ecef32cdc90bdb60faaba36bed35592cdbdf58ec6c021e5caaba7fbc",
       "sourceType": "ai-assisted"
     }
   ]

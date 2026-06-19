@@ -1,21 +1,21 @@
 {
-  "assetVersion": "v2026.6.19-r-i18n-minor-pack",
-  "generatedAt": "2026-06-19T11:30:00Z",
-  "webVersion": "v2026.6.19-r-i18n-minor-pack",
-  "releaseVersion": "v2026.6.19-r-i18n-minor-pack",
+  "assetVersion": "v2026.6.19-r-i18n-coverage-ko-1",
+  "generatedAt": "2026-06-19T12:00:00Z",
+  "webVersion": "v2026.6.19-r-i18n-coverage-ko-1",
+  "releaseVersion": "v2026.6.19-r-i18n-coverage-ko-1",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "sizeBytes": 1446,
-      "sha256": "31d09a65be5ad2de3267a7ff38f30e93af228dd17541ab7149e359be5c8c4a89",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "sizeBytes": 1467,
+      "sha256": "df454b4a8efdd4337993add630519e25774423d1a844893e51bf22438cd0bba0",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 274855,
       "sha256": "bc4b8a1c6f46c21fb89ada376fbb189ed2a00f7ff359fc30984de7e2a408f4ef",
       "cacheStrategy": "static"
@@ -23,31 +23,31 @@
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "sizeBytes": 83409,
-      "sha256": "6a4495afe23a60a411dc0afcdf13587af30f821b5bb36df8a99d1ccaf07a95cc",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "sizeBytes": 82448,
+      "sha256": "f3180cf060948ab5cfb6b0d64e7ac500dfdc204729ae68cfffc985ba81886d67",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "sizeBytes": 7384,
-      "sha256": "c61905621cc355faf6fbd420b020ffe28ab964060a3f003cc91e752a44f54f83",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "sizeBytes": 8263,
+      "sha256": "bc088acdcd5442527634048858276eb62e5e8aa69e0ae7d743e9ef132e72144e",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "sizeBytes": 323632,
-      "sha256": "807e72499b22376478230ae072207ccdaed4d8a1f3f5b387fe548a7c77023ed1",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "sizeBytes": 331254,
+      "sha256": "9951141844d463b8289c73418890f4612341feffedea807b11774bc07e181a0f",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,7 +55,7 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 1272,
       "sha256": "f9b1ac03a11e46c392e1a22827a20283bd0a84bd8e1c7b1e82311ce53c879869",
       "cacheStrategy": "static"
@@ -63,15 +63,15 @@
     {
       "path": "data/lessons.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "sizeBytes": 160043,
-      "sha256": "f21cec3a6c3ca884a9de8169a09666c966fc63730ad019c41172fa3193db7186",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "sizeBytes": 178488,
+      "sha256": "dd6ec01e9dea0f6fc1ab60f3066ad05ea9262205332a20686ed5cbe49a8a7154",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 262170,
       "sha256": "dc06eb3bc3b198c0ccfaa2407e23a722a658632250edf29bbeaa18c2f58e51a6",
       "cacheStrategy": "static"
@@ -79,7 +79,7 @@
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -87,7 +87,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -95,7 +95,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.19-r-sql-ko-content",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -103,9 +103,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-sql-ko-content",
-      "sizeBytes": 4557,
-      "sha256": "62bc0d098a8144b40625ccd9b0c93e723ab8c896355d6f1e3ec7c3ce0f870199",
+      "version": "v2026.6.19-r-i18n-coverage-ko-1",
+      "sizeBytes": 4564,
+      "sha256": "d2496d028210ca7124183d7c164a3fe1d14e1cdaf9998e945b808512a7e37003",
       "cacheStrategy": "pwa"
     }
   ]

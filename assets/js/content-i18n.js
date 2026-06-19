@@ -6,6 +6,36 @@
   var loadedPacks = {};
   var loadingPacks = {};
 
+  function ensureContentStore() {
+    var existing = window[CONTENT_KEY] || {};
+    if (existing && existing.__contentI18nMergeStore) return existing;
+    if (typeof Proxy === "undefined") {
+      window[CONTENT_KEY] = existing;
+      return existing;
+    }
+    var store = new Proxy(existing, {
+      set: function (target, key, value) {
+        if (
+          typeof key === "string" &&
+          value &&
+          typeof value === "object" &&
+          target[key] &&
+          typeof target[key] === "object"
+        ) {
+          target[key] = Object.assign({}, target[key], value);
+        } else {
+          target[key] = value;
+        }
+        return true;
+      }
+    });
+    Object.defineProperty(store, "__contentI18nMergeStore", { value: true });
+    window[CONTENT_KEY] = store;
+    return store;
+  }
+
+  ensureContentStore();
+
   function normalizeLang(code) {
     if (window.I18n && window.I18n.normalizeLang) {
       return window.I18n.normalizeLang(code);

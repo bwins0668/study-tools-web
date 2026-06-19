@@ -208,14 +208,16 @@ check(manifest.totalLanguages >= 7, `manifest totalLanguages >= 7 (is ${manifest
 // Check version consistent
 const versionJs = fs.readFileSync(path.join(BASE, "assets/js/version.js"), "utf8");
 const versionMatch = versionJs.match(/webVersion:\s*"([^"]+)"/);
+const currentVersion = versionMatch ? versionMatch[1] : "";
 check(versionMatch !== null, "version.js has webVersion");
 if (versionMatch) {
-  check(versionMatch[1] === "v2026.6.19-r-i18n-minor-pack",
-    `version.js webVersion is "${versionMatch[1]}" (expected v2026.6.19-r-i18n-minor-pack)`);
+  check(currentVersion.startsWith("v2026.6.19-"),
+    `version.js webVersion is "${currentVersion}"`);
 }
 
 // Index cache-buster check
-const ibCount = (indexHtml.match(/v2026\.6\.19-r-i18n-minor-pack/g) || []).length;
+const escapedVersion = currentVersion.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const ibCount = currentVersion ? (indexHtml.match(new RegExp(escapedVersion, "g")) || []).length : 0;
 check(ibCount >= 10, `index.html has ${ibCount} cache-buster references (expected >= 10)`);
 check(!indexHtml.includes('v2026.6.19-r-sql-ko-content'),
   "index.html has no old cache-buster references");
@@ -224,11 +226,11 @@ check(!indexHtml.includes('v2026.6.19-r-sql-ko-content'),
 console.log("\n── [7/7] Version consistency across files ──");
 
 const sw = fs.readFileSync(path.join(BASE, "service-worker.js"), "utf8");
-check(sw.includes("v2026.6.19-r-i18n-minor-pack"),
+check(currentVersion && sw.includes(currentVersion),
   "service-worker.js has new cache version");
 
 const am = JSON.parse(fs.readFileSync(path.join(BASE, "assets/asset-manifest.json"), "utf8"));
-check(am.assetVersion === "v2026.6.19-r-i18n-minor-pack",
+check(am.assetVersion === currentVersion,
   "asset-manifest.json has new assetVersion");
 
 // ── Summary ──────────────────────────────────────────────
