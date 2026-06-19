@@ -7,13 +7,19 @@
   var loadingPacks = {};
 
   function normalizeLang(code) {
+    if (window.I18n && window.I18n.normalizeLang) {
+      return window.I18n.normalizeLang(code);
+    }
     var c = String(code || "").toLowerCase();
-    if (c === "default-ja-zh" || c === "zh" || c === "zh-cn") return "zh";
+    if (c === "default-ja-zh" || c === "ja-zh") return "default-ja-zh";
+    if (c === "zh" || c === "zh-cn") return "zh";
     if (c === "ja" || c === "ja-jp") return "ja";
     if (c === "en" || c === "en-us") return "en";
     if (c === "ko" || c === "ko-kr") return "ko";
     if (c === "my" || c === "my-mm") return "my";
+    if (c === "th" || c === "th-th") return "th";
     if (c === "vi" || c === "vi-vn") return "vi";
+    if (c === "id" || c === "id-id") return "id";
     if (c === "fr" || c === "fr-fr") return "fr";
     return "en";
   }
@@ -44,6 +50,15 @@
     if (!entry) return null;
 
     var normalized = normalizeLang(lang || getCurrentLang());
+
+    // default-ja-zh: prefer zh content
+    if (normalized === "default-ja-zh") {
+      var zhContent = entry["zh"];
+      if (zhContent) return zhContent;
+      var jaContent = entry["ja"];
+      if (jaContent) return jaContent;
+    }
+
     var localized = entry[normalized];
     if (!localized) return null;
 

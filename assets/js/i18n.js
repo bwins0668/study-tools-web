@@ -538,6 +538,12 @@ DISABLE_TRANSLATION_OVERLAY = true;
     return languageByCode.get(code) || languageByCode.get(DEFAULT_LANG);
   }
 
+  function getNativeName(code) {
+    if (!code) return "";
+    var info = languageByCode.get(code);
+    return info ? info.native : "";
+  }
+
   function isActive() {
     return currentLang !== DEFAULT_LANG;
   }
@@ -823,8 +829,32 @@ if (DISABLE_TRANSLATION_OVERLAY) { missing = []; applyTranslations = function() 
     if (both) both.innerHTML = `<i class="fa-solid fa-columns"></i> ${info.native} / 日本語`;
     if (ja) ja.textContent = "日本語のみ";
     if (target) target.textContent = info.native;
+
+    // Column headers with fallback awareness
     if (jaHead) jaHead.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> 解説 (日本語)';
-    if (targetHead) targetHead.innerHTML = `<i class="fa-solid fa-language"></i> Explanation (${info.native})`;
+
+    // Check if target content is actually a fallback
+    var short = normalizeLangShort(currentLang);
+    var isFallback = false;
+    var actualLang = short;
+    var conceptContainer = document.querySelector(".concept-container");
+    if (conceptContainer) {
+      var fb = conceptContainer.getAttribute("data-is-fallback");
+      if (fb === "true") {
+        isFallback = true;
+        actualLang = conceptContainer.getAttribute("data-actual-lang") || short;
+      }
+    }
+
+    if (short === "default-ja-zh" || short === "ja") {
+      if (targetHead) targetHead.innerHTML = '<i class="fa-solid fa-language"></i> 讲解 (中文)';
+    } else if (isFallback) {
+      // Honest fallback label: show the actual language being shown
+      var fbName = getNativeName(actualLang);
+      if (targetHead) targetHead.innerHTML = `<i class="fa-solid fa-language"></i> ${fbName} <span style="opacity:0.55;font-size:0.85em">(fallback)</span>`;
+    } else {
+      if (targetHead) targetHead.innerHTML = `<i class="fa-solid fa-language"></i> ${info.native}`;
+    }
   }
 
   function getActiveSubject() {
@@ -847,80 +877,105 @@ if (DISABLE_TRANSLATION_OVERLAY) { missing = []; applyTranslations = function() 
     const conceptTargetEl = document.getElementById("concept-zh-body");
     if (!titleJaEl || !titleTargetEl || !conceptJaEl || !conceptTargetEl) return;
 
-    const normLang = normalizeLanguageCode(currentLang);
+    var short = normalizeLangShort(currentLang);
 
-    // 1. If baseline language (ja, zh, default-ja-zh), directly render and return
-    if (normLang === "ja-JP" || normLang === "zh-CN" || normLang === "default-ja-zh") {
-      applyLessonTargetLayout(normLang !== "default-ja-zh");
-      if (normLang === "ja-JP") {
-        titleTargetEl.textContent = lesson.titleJa || "";
-        conceptTargetEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
-      } else {
-        titleTargetEl.textContent = lesson.titleZh || "";
-        conceptTargetEl.innerHTML = renderOriginalConcept(lesson.conceptZh || "");
-      }
+    // 1. Determine what display mode to use
+    // default-ja-zh: show bilingual (ja + zh columns)
+    // zh: show zh-only (single column)
+    // ja: show ja-only (single column)
+    // Other: try target language, fallback with label
+
+    if (short === "default-ja-zh") {
+      // Bilingual: full display
+      applyLessonTargetLayout(false); // false = two-column
+      titleJaEl.textContent = lesson.titleJa || "";
+      conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
+      titleTargetEl.textContent = lesson.titleZh || "";
+      conceptTargetEl.innerHTML = renderOriginalConcept(lesson.conceptZh || "");
+      if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
+      return;
+    }
+
+    if (short === "ja") {
+      applyLessonTargetLayout(true); // true = single column (hide target, show ja)
+      titleTargetEl.textContent = lesson.titleJa || "";
+      conceptTargetEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
       titleJaEl.textContent = lesson.titleJa || "";
       conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
       if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
 
-    // 2. Prefer static ContentI18n package content if available
-    const subject = getActiveSubject();
-    let titleText = "";
-    let conceptHtml = "";
-    let found = false;
-
-    if (subject && window.ContentI18n && typeof window.ContentI18n.get === "function") {
-      const hasLoadPack = typeof window.ContentI18n.isPackLoaded === "function";
-
-      // A. Try target language pack
-      const isLoaded = !hasLoadPack || window.ContentI18n.isPackLoaded(subject, currentLang);
-      if (isLoaded) {
-        const localized = window.ContentI18n.get(subject, lesson.id, currentLang);
-        if (localized && (localized.title || localized.concept)) {
-          titleText = localized.title || "";
-          conceptHtml = renderOriginalConcept(localized.concept || "");
-          found = true;
-        }
-      } else {
-        // Pack is not loaded yet (Web dynamic load fallback). Show loading and return
-        applyLessonTargetLayout(true);
-        const loadingText = (window.I18n && typeof window.I18n.t === "function" ? window.I18n.t("common.loading") : "") || "Loading...";
-        titleTargetEl.textContent = loadingText;
-        conceptTargetEl.innerHTML = `<div style="opacity: 0.6; padding: 20px; text-align: center;">${loadingText}</div>`;
-        titleJaEl.textContent = lesson.titleJa || "";
-        conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
-        return;
-      }
-
-      // B. If not found in target language, fallback to "en" pack (only if loaded/exists)
-      if (!found && normLang !== "en-US") {
-        const enLoaded = !hasLoadPack || window.ContentI18n.isPackLoaded(subject, "en");
-        if (enLoaded) {
-          const enLocalized = window.ContentI18n.get(subject, lesson.id, "en");
-          if (enLocalized && (enLocalized.title || enLocalized.concept)) {
-            titleText = enLocalized.title || "";
-            conceptHtml = renderOriginalConcept(enLocalized.concept || "");
-            found = true;
-          }
-        }
-      }
-    }
-
-    if (found) {
-      applyLessonTargetLayout(true); // Single language layout
-      titleTargetEl.textContent = titleText || lesson.titleZh || lesson.titleJa || "";
-      conceptTargetEl.innerHTML = conceptHtml || renderOriginalConcept(lesson.conceptZh || lesson.conceptJa || "");
-      titleJaEl.textContent = lesson.titleJa || "";
-      conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
-    } else {
-      // C. Fallback immediately to default-ja-zh (bilingual layout)
-      applyLessonTargetLayout(false);
+    if (short === "zh") {
+      applyLessonTargetLayout(true);
       titleTargetEl.textContent = lesson.titleZh || "";
       conceptTargetEl.innerHTML = renderOriginalConcept(lesson.conceptZh || "");
       titleJaEl.textContent = lesson.titleJa || "";
       conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "");
+      if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
+      return;
+    }
+
+    // 3. Secondary languages: try ContentI18n packs first, then structured lesson data
+    var subject = getActiveSubject();
+    var titleText = "";
+    var conceptHtml = "";
+    var actualLang = short;
+    var isFallback = false;
+
+    // Try ContentI18n (dynamic packs for en, vi, my, fr, ko etc.)
+    if (subject && window.ContentI18n && typeof window.ContentI18n.get === "function") {
+      var fbOrder = getFallbackOrder(short);
+      for (var f = 0; f < fbOrder.length; f++) {
+        var tryLang = fbOrder[f];
+        if (tryLang === "default-ja-zh") continue; // skip compound key
+
+        var isLoaded = !window.ContentI18n.isPackLoaded || window.ContentI18n.isPackLoaded(subject, tryLang);
+        if (!isLoaded) continue;
+
+        var localized = window.ContentI18n.get(subject, lesson.id, tryLang);
+        if (localized && (localized.title || localized.concept)) {
+          titleText = localized.title || "";
+          conceptHtml = renderOriginalConcept(localized.concept || "");
+          actualLang = tryLang;
+          isFallback = (tryLang !== short);
+          break;
+        }
+      }
+    }
+
+    // Fallback to structured lesson data (zh/ja fields)
+    if (!titleText && !conceptHtml) {
+      var fbOrder = getFallbackOrder(short);
+      for (var f = 0; f < fbOrder.length; f++) {
+        var tryLang = fbOrder[f];
+        if (tryLang === "default-ja-zh") {
+          if (lesson.titleZh) { titleText = lesson.titleZh; actualLang = "zh"; isFallback = (short !== "zh"); break; }
+          if (lesson.titleJa) { titleText = lesson.titleJa; actualLang = "ja"; isFallback = (short !== "ja"); break; }
+          continue;
+        }
+        if (tryLang === "en" && lesson.titleEn) { titleText = lesson.titleEn; actualLang = "en"; isFallback = (short !== "en"); break; }
+      }
+      if (!titleText) {
+        titleText = lesson.titleZh || lesson.titleJa || "";
+        actualLang = lesson.titleZh ? "zh" : "ja";
+        isFallback = true;
+      }
+      conceptHtml = renderOriginalConcept(lesson.conceptZh || lesson.conceptJa || "");
+    }
+
+    // Render with fallback status
+    applyLessonTargetLayout(true);
+    titleTargetEl.textContent = titleText || "";
+    conceptTargetEl.innerHTML = conceptHtml || "";
+    titleJaEl.textContent = lesson.titleJa || "";
+    conceptJaEl.innerHTML = renderOriginalConcept(lesson.conceptJa || "") || "";
+
+    // Store fallback state for compare labels
+    var conceptContainer = document.querySelector(".concept-container");
+    if (conceptContainer) {
+      conceptContainer.setAttribute("data-actual-lang", actualLang);
+      conceptContainer.setAttribute("data-is-fallback", isFallback ? "true" : "false");
     }
 
     if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
@@ -1356,6 +1411,86 @@ if (DISABLE_TRANSLATION_OVERLAY) { missing = []; applyTranslations = function() 
     return "en-US";
   }
 
+  /**
+   * Unified language code normalizer — returns short codes.
+   * Used by content-i18n, lesson rendering, and compare labels.
+   */
+  function normalizeLangShort(code) {
+    if (!code) return "zh";
+    const c = String(code).trim().toLowerCase();
+    if (c === "default-ja-zh" || c === "ja-zh") return "default-ja-zh";
+    if (["zh","zh-cn","zh_cn","cn","chinese","chinese-simplified","中文","中文简体"].includes(c)) return "zh";
+    if (["ja","ja-jp","ja_jp","jp","japanese","日本語"].includes(c)) return "ja";
+    if (["en","en-us","en_us","english"].includes(c)) return "en";
+    if (["ko","ko-kr","ko_kr","korean","한국어"].includes(c)) return "ko";
+    if (["my","my-mm","burmese","myanmar","မြန်မာ"].includes(c)) return "my";
+    if (["th","th-th","thai","ไทย"].includes(c)) return "th";
+    if (["vi","vi-vn","vietnamese","tiếng việt","tiengviet"].includes(c)) return "vi";
+    if (["id","id-id","indonesian","bahasa indonesia","bahasa"].includes(c)) return "id";
+    if (["fr","fr-fr","french","français","francais"].includes(c)) return "fr";
+    return c;
+  }
+
+  /**
+   * Per-language fallback order for lesson content.
+   * The first item is the requested language itself.
+   */
+  function getFallbackOrder(lang) {
+    var short = normalizeLangShort(lang);
+    switch (short) {
+      case "default-ja-zh": return ["default-ja-zh", "ja", "zh", "en"];
+      case "zh": return ["zh", "ja", "en"];
+      case "ja": return ["ja", "zh", "en"];
+      case "en": return ["en", "ja", "zh"];
+      case "ko": return ["ko", "ja", "zh", "en"];
+      case "my": return ["my", "ja", "zh", "en"];
+      case "th": return ["th", "ja", "zh", "en"];
+      case "vi": return ["vi", "ja", "zh", "en"];
+      case "id": return ["id", "ja", "zh", "en"];
+      case "fr": return ["fr", "en", "ja", "zh"];
+      default: return [short, "ja", "zh", "en"];
+    }
+  }
+
+  /**
+   * Pick a localized value from a lesson object with fallback chain.
+   * Returns { text, actualLang, requestedLang, isFallback, missing }
+   */
+  function pickLocalizedValue(value, lang, options) {
+    options = options || {};
+    var normalized = normalizeLangShort(lang || currentLang);
+    var fallbackOrder = options.fallbackOrder || getFallbackOrder(normalized);
+
+    if (value == null) {
+      return { text: "", actualLang: null, requestedLang: normalized, isFallback: false, missing: true };
+    }
+
+    if (typeof value === "string") {
+      return { text: value, actualLang: "legacy", requestedLang: normalized, isFallback: normalized !== "legacy", missing: false };
+    }
+
+    if (typeof value === "object") {
+      // First try exact match in fallback order
+      for (var i = 0; i < fallbackOrder.length; i++) {
+        var key = fallbackOrder[i];
+        if (key === "default-ja-zh") {
+          if (value["zh"]) return { text: value["zh"], actualLang: "zh", requestedLang: normalized, isFallback: normalized !== "zh", missing: false };
+          if (value["ja"]) return { text: value["ja"], actualLang: "ja", requestedLang: normalized, isFallback: normalized !== "ja", missing: false };
+          continue;
+        }
+        if (value[key]) {
+          return { text: value[key], actualLang: key, requestedLang: normalized, isFallback: normalized !== key, missing: false };
+        }
+      }
+
+      // Try zh and ja as final fallbacks
+      if (value["zh"]) return { text: value["zh"], actualLang: "zh", requestedLang: normalized, isFallback: true, missing: false };
+      if (value["ja"]) return { text: value["ja"], actualLang: "ja", requestedLang: normalized, isFallback: true, missing: false };
+    }
+
+    return { text: "", actualLang: null, requestedLang: normalized, isFallback: false, missing: true };
+  }
+
   function translateStatic(key, params) {
     if (!key) return "";
     const lang = normalizeLanguageCode(currentLang);
@@ -1593,6 +1728,10 @@ if (DISABLE_TRANSLATION_OVERLAY) { missing = []; applyTranslations = function() 
       const translated = await window.I18n.tAsync(key, options);
       return renderTargetText(source, translated);
     },
+    // New unified API
+    normalizeLang: normalizeLangShort,
+    getFallbackOrder: getFallbackOrder,
+    pickLocalizedValue: pickLocalizedValue,
   };
  
    /* User translation local storage (Round 20.1 prototype) */
