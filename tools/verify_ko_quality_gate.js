@@ -136,9 +136,17 @@ function detectChineseResidue(text) {
 function checkTerminology(text, terms) {
   if (!text || !terms || !terms.length) return [];
   const missing = [];
+  // Tech terms that are acceptable as-is when used as code type names
+  const ACCEPTABLE_TECH_TERMS = ['String', 'Array', 'Tuple', 'List', 'Map', 'Set', 'Boolean', 'Integer', 'Float', 'Double', 'Char', 'Byte', 'Module', 'Exception'];
   for (const term of terms) {
-    // Check if the English term appears but Korean equivalent doesn't
-    if (text.includes(term.en) && !text.includes(term.ko)) {
+    // Skip if the English term is an acceptable code type name
+    // (these are standard identifiers and should remain in English in code context)
+    if (ACCEPTABLE_TECH_TERMS.includes(term.en)) continue;
+    // Use word-boundary matching to avoid false positives
+    // (e.g. "Conditional" should not match term "Condition", "ArrayList" should not match "Array")
+    const escaped = term.en.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('\\b' + escaped + '\\b');
+    if (re.test(text) && !text.includes(term.ko)) {
       missing.push(term.en);
     }
   }

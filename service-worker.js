@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-ko-sg-pack";
+﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-ko-quality-milestone";
 
 const CORE_ASSETS = [
   "./",
