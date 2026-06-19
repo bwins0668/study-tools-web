@@ -12001,6 +12001,8 @@ a:focus-visible,
 
   /* AI launcher popover: contain to viewport on mobile */
   .ai-launcher-popover {
+    position: fixed !important;
+    top: 56px !important;
     left: 12px !important;
     right: 12px !important;
     width: auto !important;
@@ -12011,7 +12013,7 @@ a:focus-visible,
 /* ── 3. Consistent color / contrast improvements ── */
 .language-option.active {
   color: #f8fafc;
-  background: rgba(45, 212, 191, 0.14);
+  background: #143640;
   border-color: rgba(45, 212, 191, 0.6) !important;
 }
 
@@ -12026,7 +12028,7 @@ a:focus-visible,
 }
 
 .language-option.active {
-  background: rgba(45, 212, 191, 0.14) !important;
+  background: #143640 !important;
   color: #f8fafc;
 }
 
@@ -12046,4 +12048,27 @@ a:focus-visible,
 body.mobile-sidebar-open,
 body.mobile-playground-open {
   overflow: hidden !important;
+}
+
+@media (max-width: 720px) {
+  .app-header .header-logo {
+    flex: 1 1 118px;
+    max-width: none;
+  }
+
+  .app-header .logo-text h1 {
+    max-width: 100%;
+  }
+
+  .sub-header-tabs {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    white-space: normal;
+  }
+
+  .sub-header-tab {
+    flex: 1 1 100%;
+    justify-content: center;
+    min-width: 0;
+  }
 }

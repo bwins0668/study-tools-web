@@ -1556,6 +1556,32 @@ function getLessonLocalizedText(subject, lesson) {
   return window.ContentI18n.get(subject, lesson.id, lang);
 }
 
+function getCurrentContentLanguage() {
+  return window.I18n && typeof window.I18n.getLanguage === "function"
+    ? window.I18n.getLanguage()
+    : "default-ja-zh";
+}
+
+function pickLocalText(value, fallback) {
+  if (window.I18n && typeof window.I18n.pickLocalizedValue === "function") {
+    const picked = window.I18n.pickLocalizedValue(value, getCurrentContentLanguage());
+    if (picked && !picked.missing && picked.text) return picked.text;
+  }
+  if (value && typeof value === "object") {
+    return value.zh || value.ja || value.en || fallback || "";
+  }
+  return value || fallback || "";
+}
+
+function pickLessonLocalText(lesson, field, fallback) {
+  return pickLocalText(lesson && lesson.locales ? lesson.locales[field] : null, fallback);
+}
+
+function pickExerciseTaskText(exercise) {
+  if (!exercise) return "";
+  return pickLocalText(exercise.taskI18n || exercise.task, exercise.task || "");
+}
+
 // Load Lesson Details into Content Panel
 function loadLesson(id) {
   document.body.classList.remove('mobile-sidebar-open');
@@ -2834,15 +2860,37 @@ function updateMissionUI() {
   const changeBtn = document.getElementById("change-practice-btn");
   
   if (isRandomPracticeActive) {
-    label.innerText = "ランダム課題 (随机练习)";
-    taskText.innerText = lesson.randomExercise ? lesson.randomExercise.task : "暂无随机练习";
-    btn.innerHTML = `<i class="fa-solid fa-circle-arrow-left"></i> 返回主线任务`;
+    label.innerText = pickLocalText({
+      zh: "随机练习",
+      ja: "ランダム課題",
+      en: "Random Practice",
+      ko: "랜덤 연습"
+    }, "随机练习");
+    taskText.innerText = lesson.randomExercise
+      ? pickExerciseTaskText(lesson.randomExercise)
+      : pickLocalText({ zh: "暂无随机练习", ja: "ランダム練習はまだありません", en: "No random practice yet", ko: "아직 랜덤 연습이 없습니다" }, "暂无随机练习");
+    btn.innerHTML = `<i class="fa-solid fa-circle-arrow-left"></i> ${pickLocalText({
+      zh: "返回主线任务",
+      ja: "メイン課題に戻る",
+      en: "Back to Main Mission",
+      ko: "기본 미션으로 돌아가기"
+    }, "返回主线任务")}`;
     btn.classList.add('active-practice');
     if (changeBtn) changeBtn.style.display = "inline-flex";
   } else {
-    label.innerText = "ミッション (当前任务)";
-    taskText.innerText = lesson.playgroundTask;
-    btn.innerHTML = `<i class="fa-solid fa-shuffle"></i> 随机指令练习`;
+    label.innerText = pickLocalText({
+      zh: "ミッション (当前任务)",
+      ja: "ミッション",
+      en: "Current Mission",
+      ko: "현재 미션"
+    }, "ミッション (当前任务)");
+    taskText.innerText = pickLessonLocalText(lesson, "playgroundTask", lesson.playgroundTask);
+    btn.innerHTML = `<i class="fa-solid fa-shuffle"></i> ${pickLocalText({
+      zh: "随机指令练习",
+      ja: "ランダム指令練習",
+      en: "Random Practice",
+      ko: "랜덤 지시 연습"
+    }, "随机指令练习")}`;
     btn.classList.remove('active-practice');
     if (changeBtn) changeBtn.style.display = "none";
   }
@@ -2948,7 +2996,7 @@ function renderCrossChallenge() {
   const label = document.getElementById('mission-label-text');
   const taskText = document.getElementById('playground-task-text');
   if (label) label.innerText = '🔥 综合挑战';
-  if (taskText) taskText.innerText = ex.task;
+  if (taskText) taskText.innerText = pickExerciseTaskText(ex);
 }
 
 function stopCrossChallenge() {
@@ -5786,14 +5834,25 @@ function initCodingExamSubLayout() {
   const configDesc = document.getElementById("coding-config-desc");
   
   if (currentSubject === "sql") {
-    configTitle.innerText = "SQL 实操模拟考试 (実技模試)";
-    configDesc.innerText = "本考试模拟日本 IT 专门学校的 SQL 实操考试模式。在限定时间内，根据给定的日文文字任务在右侧 SQL 沙盒中查询对应的数据，点击“判定”按钮提交测试。";
+    const lesson = typeof SQL_LESSONS !== "undefined" ? SQL_LESSONS.find(l => l.id === currentLessonId) : null;
+    configTitle.innerText = pickLessonLocalText(lesson, "practicalExamTitle", "SQL 实操模拟考试 (実技模試)");
+    configDesc.innerText = pickLessonLocalText(lesson, "practicalExamDescription", "本考试模拟日本 IT 专门学校的 SQL 实操考试模式。在限定时间内，根据给定的日文文字任务在右侧 SQL 沙盒中查询对应的数据，点击“判定”按钮提交测试。");
   } else if (currentSubject === "java") {
-    configTitle.innerText = "Java 实操模拟考试 (実技模試)";
-    configDesc.innerText = "本考试模拟日本 IT 专门学校的 Java 编程能力测试。在限定时间内，在右侧 Java 沙盒中实现对应程序逻辑，通过编译与 stdout 输出比对即算通过。";
+    configTitle.innerText = pickLocalText({ zh: "Java 实操模拟考试 (実技模試)", ja: "Java 実技模擬試験", en: "Java Practical Mock Exam", ko: "Java 실전 모의시험" }, "Java 实操模拟考试 (実技模試)");
+    configDesc.innerText = pickLocalText({
+      zh: "本考试模拟日本 IT 专门学校的 Java 编程能力测试。在限定时间内，在右侧 Java 沙盒中实现对应程序逻辑，通过编译与 stdout 输出比对即算通过。",
+      ja: "日本のIT専門学校のJavaプログラミング実技試験を想定した練習です。制限時間内に右側のJavaサンドボックスで処理を実装し、コンパイルと標準出力の一致で判定します。",
+      en: "This mode simulates a Java programming practical exam. Implement the required logic in the Java sandbox within the time limit; compilation and stdout matching determine success.",
+      ko: "Java 프로그래밍 실기 시험을 연습하는 모드입니다. 제한 시간 안에 오른쪽 Java 샌드박스에서 로직을 구현하고, 컴파일과 표준 출력 비교로 통과 여부를 판정합니다."
+    }, "本考试模拟日本 IT 专门学校的 Java 编程能力测试。在限定时间内，在右侧 Java 沙盒中实现对应程序逻辑，通过编译与 stdout 输出比对即算通过。");
   } else if (currentSubject === "python") {
-    configTitle.innerText = "Python 实操模拟考试 (実技模試)";
-    configDesc.innerText = "本考试模拟日本 IT 专门学校的 Python 编程能力测试。在限定时间内，在右侧 Python 沙盒中编写对应程序逻辑，完成预期的 stdout 输出比对即算通过。";
+    configTitle.innerText = pickLocalText({ zh: "Python 实操模拟考试 (実技模試)", ja: "Python 実技模擬試験", en: "Python Practical Mock Exam", ko: "Python 실전 모의시험" }, "Python 实操模拟考试 (実技模試)");
+    configDesc.innerText = pickLocalText({
+      zh: "本考试模拟日本 IT 专门学校的 Python 编程能力测试。在限定时间内，在右侧 Python 沙盒中编写对应程序逻辑，完成预期的 stdout 输出比对即算通过。",
+      ja: "日本のIT専門学校のPythonプログラミング実技試験を想定した練習です。制限時間内に右側のPythonサンドボックスで処理を実装し、期待される標準出力との一致で判定します。",
+      en: "This mode simulates a Python programming practical exam. Write the required logic in the Python sandbox within the time limit; expected stdout matching determines success.",
+      ko: "Python 프로그래밍 실기 시험을 연습하는 모드입니다. 제한 시간 안에 오른쪽 Python 샌드박스에서 로직을 작성하고, 예상 표준 출력과의 비교로 통과 여부를 판정합니다."
+    }, "本考试模拟日本 IT 专门学校的 Python 编程能力测试。在限定时间内，在右侧 Python 沙盒中编写对应程序逻辑，完成预期的 stdout 输出比对即算通过。");
   }
   
   // Show right panel based on current state

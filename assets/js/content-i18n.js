@@ -38,6 +38,18 @@
     return dict[key] || null;
   }
 
+  function hasLoadedContentFor(subject, lang) {
+    var dict = window[CONTENT_KEY];
+    if (!dict) return false;
+    var prefix = String(subject) + ":";
+    for (var key in dict) {
+      if (Object.prototype.hasOwnProperty.call(dict, key) && key.indexOf(prefix) === 0 && dict[key] && dict[key][lang]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * Get localized content for a lesson.
    * @param {string} subject — e.g. "sql", "itpass"
@@ -114,6 +126,12 @@
     }
 
     var key = subject + ":" + normLang;
+
+    // Already present through a static <script> tag in index.html.
+    if (hasLoadedContentFor(subject, normLang)) {
+      loadedPacks[key] = true;
+      return Promise.resolve(true);
+    }
 
     // Already loaded
     if (loadedPacks[key]) {

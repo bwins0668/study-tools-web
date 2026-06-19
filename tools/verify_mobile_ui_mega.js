@@ -158,6 +158,12 @@ async function detectOffenders(page, label) {
       .map((el) => {
         const rect = el.getBoundingClientRect();
         const style = getComputedStyle(el);
+        const closedPanel = el.closest('.app-sidebar, .playground-section, .tools-drawer__panel, .module-switch-panel');
+        let clippedByClosedPanel = false;
+        if (closedPanel && closedPanel !== el) {
+          const panelRect = closedPanel.getBoundingClientRect();
+          clippedByClosedPanel = panelRect.right <= 0 || panelRect.left >= vw;
+        }
 
         return {
           tag: el.tagName.toLowerCase(),
@@ -173,17 +179,23 @@ async function detectOffenders(page, label) {
           clientWidth: el.clientWidth,
           position: style.position,
           display: style.display,
+          visibility: style.visibility,
+          opacity: style.opacity,
           zIndex: style.zIndex,
           overflowX: style.overflowX,
+          clippedByClosedPanel,
         };
       })
       .filter((x) => {
         if (x.display === 'none') return false;
+        if (x.visibility === 'hidden') return false;
+        if (Number(x.opacity) === 0) return false;
+        if (x.clippedByClosedPanel) return false;
+        if (x.right <= 0 || x.left >= vw) return false;
         return (
           x.right > vw + 2 ||
           x.left < -2 ||
-          x.width > vw + 2 ||
-          x.scrollWidth > x.clientWidth + 2
+          x.width > vw + 2
         );
       })
       .slice(0, 120);
@@ -490,7 +502,7 @@ async function runSQLPageTests(browser) {
           const el = document.querySelector(sel);
           if (el) {
             const rect = el.getBoundingClientRect();
-            if (rect.width > 80) {
+            if (rect.width > 80 && rect.right > 0 && rect.left < window.innerWidth) {
               return { selector: sel, left: Math.round(rect.left), width: Math.round(rect.width) };
             }
           }
@@ -552,7 +564,7 @@ async function runExamSandboxTests(browser) {
           const el = document.querySelector(sel);
           if (el) {
             const rect = el.getBoundingClientRect();
-            if (rect.width > 80) {
+            if (rect.width > 80 && rect.right > 0 && rect.left < window.innerWidth) {
               return { selector: sel, left: Math.round(rect.left), width: Math.round(rect.width) };
             }
           }

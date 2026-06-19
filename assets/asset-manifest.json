@@ -1,53 +1,53 @@
 {
-  "assetVersion": "v2026.6.14-r21.9",
-  "generatedAt": "2026-06-14T01:58:48Z",
-  "webVersion": "v2026.6.13",
-  "releaseVersion": "v2026.6.13",
+  "assetVersion": "v2026.6.19-r-offline-i18n",
+  "generatedAt": "2026-06-19T05:38:38Z",
+  "webVersion": "v2026.6.19-r-offline-i18n",
+  "releaseVersion": "v2026.6.19-r-offline-i18n",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 1543,
-      "sha256": "ab7b41f22e1e77d02a034b4b795ad7aaee3b5f5a611d90bf0a5f23d5d29536b8",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 1446,
+      "sha256": "31d09a65be5ad2de3267a7ff38f30e93af228dd17541ab7149e359be5c8c4a89",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 188540,
-      "sha256": "a08fda59fb7d616ff84a5ec174185245e7122ebe730258287fb71345d34305af",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 274855,
+      "sha256": "bc4b8a1c6f46c21fb89ada376fbb189ed2a00f7ff359fc30984de7e2a408f4ef",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 68710,
-      "sha256": "0bea2cf923166b841a79fb02a342e3b38bcc17d9da09a35cf0072ba6140b5d92",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 83409,
+      "sha256": "6a4495afe23a60a411dc0afcdf13587af30f821b5bb36df8a99d1ccaf07a95cc",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 6342,
-      "sha256": "0b114614918242a0d0fdf0995c6bfb636ff917fda6441cee5f2bd05980648644",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 7384,
+      "sha256": "c61905621cc355faf6fbd420b020ffe28ab964060a3f003cc91e752a44f54f83",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 217222,
-      "sha256": "c64d15795ea0bf5e53c91e011e916ebedc0eb587a4daf4af53114cdba60d3b2c",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 323632,
+      "sha256": "807e72499b22376478230ae072207ccdaed4d8a1f3f5b387fe548a7c77023ed1",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
+      "version": "v2026.6.19-r-offline-i18n",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,23 +55,31 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 1104,
-      "sha256": "375e2a58fdf09f274e21876556e2a1997b1dec16978df36a2dae3f497b6debdd",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 1272,
+      "sha256": "f9b1ac03a11e46c392e1a22827a20283bd0a84bd8e1c7b1e82311ce53c879869",
+      "cacheStrategy": "static"
+    },
+    {
+      "path": "data/lessons.js",
+      "type": "javascript",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 160043,
+      "sha256": "f21cec3a6c3ca884a9de8169a09666c966fc63730ad019c41172fa3193db7186",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 172399,
-      "sha256": "0df3dfce20b1d374e623cf709d316909328844d478b2c8283b38a7b05fc2fcb6",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 262170,
+      "sha256": "dc06eb3bc3b198c0ccfaa2407e23a722a658632250edf29bbeaa18c2f58e51a6",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.14-r21.9",
+      "version": "v2026.6.19-r-offline-i18n",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -79,7 +87,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.14-r21.9",
+      "version": "v2026.6.19-r-offline-i18n",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -87,7 +95,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.14-r21.9",
+      "version": "v2026.6.19-r-offline-i18n",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -95,9 +103,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.14-r21.9",
-      "sizeBytes": 4044,
-      "sha256": "42db5af3ff44a4e59f21b5447b0fed88a243fe3d9ec815c7abf5120b0db43c10",
+      "version": "v2026.6.19-r-offline-i18n",
+      "sizeBytes": 4557,
+      "sha256": "62bc0d098a8144b40625ccd9b0c93e723ab8c896355d6f1e3ec7c3ce0f870199",
       "cacheStrategy": "pwa"
     }
   ]

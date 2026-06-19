@@ -24,6 +24,69 @@ const SQL_LESSONS = [{
 
 这一节我们将从你学校真实的“学生主表”中获取所有数据，体验最基本的查询指令。`,
 
+    locales: {
+      title: {
+        zh: "01-什么是数据库 and SQL？",
+        ja: "01-SQLやデータベースとは何か？",
+        en: "01-What are SQL and Databases?",
+        ko: "01-SQL과 데이터베이스란 무엇인가?"
+      },
+      subtitle: {
+        zh: "数据库的基础",
+        ja: "データベースの基礎",
+        en: "Database Basics",
+        ko: "데이터베이스 기초"
+      },
+      concept: {
+        zh: `数据库（Database, 简称DB）是按组织结构存储的数据集合。
+
+在大多数系统里，数据是以类似于Excel表格的“表（Table）”的形式存储在**关系型数据库（RDB）**中的。
+
+**SQL**（结构化查询语言）是用来给数据库发送指令（比如“读取数据”、“插入数据”）的专用语言。
+
+这一节我们将从你学校真实的“学生主表”中获取所有数据，体验最基本的查询指令。`,
+        ja: `データベース(DB)とは、整理されたデータの集まりです。
+
+多くのシステムでは、データを「表(テーブル)」の形式で管理する**リレーショナルデータベース(RDB)**が使われます。
+
+**SQL**は、そのデータベースに対して「データを取ってきて」「データを登録して」と命令するための専用の言語です。
+
+今回は、あなたの学校のデータベースから学生マスタを取得する、もっとも基本的なデータ取得命令を学びましょう。`,
+        en: `A database (DB) is an organized collection of data.
+
+In most systems, data is managed as tables inside a **Relational Database (RDB)**, similar to sheets in Excel.
+
+**SQL** (Structured Query Language) is the dedicated language used to send commands to a database, such as "read data" or "insert data."
+
+In this lesson, you will fetch all rows from the school's student master table and experience the most basic query command.`,
+        ko: `데이터베이스(DB)는 일정한 구조로 정리해서 저장한 데이터의 모음입니다.
+
+대부분의 시스템에서는 Excel 표와 비슷한 **테이블(Table)** 형식으로 데이터를 관리하는 **관계형 데이터베이스(RDB)**를 사용합니다.
+
+**SQL**(Structured Query Language)은 데이터베이스에 "데이터를 읽어 와라", "데이터를 추가해라" 같은 명령을 보내기 위한 전용 언어입니다.
+
+이번 수업에서는 학교의 학생 마스터 테이블에서 모든 데이터를 가져오며 가장 기본적인 조회 명령을 익힙니다.`
+      },
+      playgroundTask: {
+        zh: "查询学生主表 (students_mst) 的所有列和所有行的数据。",
+        ja: "学生マスタ (students_mst) のすべての列とすべての行を取得しましょう。",
+        en: "Query every column and every row from the student master table (students_mst).",
+        ko: "학생 마스터 테이블(students_mst)의 모든 열과 모든 행을 조회하세요."
+      },
+      practicalExamTitle: {
+        zh: "SQL 实操模拟考试 (実技模試)",
+        ja: "SQL 実技模擬試験",
+        en: "SQL Practical Mock Exam",
+        ko: "SQL 실전 모의시험"
+      },
+      practicalExamDescription: {
+        zh: "本考试模拟日本 IT 专门学校的 SQL 实操考试模式。在限定时间内，根据给定的日文文字任务在右侧 SQL 沙盒中查询对应的数据，点击“判定”按钮提交测试。",
+        ja: "日本のIT専門学校で行われるSQL実技試験を想定した練習です。制限時間内に、提示された日本語タスクに沿って右側のSQLサンドボックスでデータを検索し、「判定」ボタンで提出します。",
+        en: "This mode simulates an SQL practical exam at a Japanese IT vocational school. Read the task, query the matching data in the SQL sandbox, and submit it with the Judge button within the time limit.",
+        ko: "일본 IT 전문학교의 SQL 실기 시험 형식을 연습하는 모드입니다. 제한 시간 안에 제시된 일본어 과제를 읽고 오른쪽 SQL 샌드박스에서 해당 데이터를 조회한 뒤, 판정 버튼으로 제출합니다."
+      }
+    },
+
     analogy: "学校的系统就像一个大抽屉（数据库），里面的 students_mst 文件夹就像是“学生表”，我们的 SQL 语句就是向它要数据的指令。",
 
     example: "SELECT * FROM students_mst;",
@@ -2060,6 +2123,13 @@ const RANDOM_EXERCISES = {
 
       task: "查询科系主表 (departments_mst) 的所有数据，体验最基本的 SQL 指令。",
 
+      taskI18n: {
+        zh: "查询科系主表 (departments_mst) 的所有数据，体验最基本的 SQL 指令。",
+        ja: "科系マスタ (departments_mst) のすべてのデータを取得し、もっとも基本的なSQL命令を体験しましょう。",
+        en: "Query all data from the departments master table (departments_mst) and practice a basic SQL command.",
+        ko: "학과 마스터 테이블(departments_mst)의 모든 데이터를 조회하며 가장 기본적인 SQL 명령을 연습하세요."
+      },
+
       example: "SELECT * FROM departments_mst;",
 
       expectedQuery: /^\s*SELECT\s+\*\s+FROM\s+departments_mst\s*;?\s*$/i
@@ -2070,6 +2140,13 @@ const RANDOM_EXERCISES = {
 
       task: "查询学生主表 (students_mst) 的所有数据，巩固最基本的 SQL 指令。",
 
+      taskI18n: {
+        zh: "查询学生主表 (students_mst) 的所有数据，巩固最基本的 SQL 指令。",
+        ja: "学生マスタ (students_mst) のすべてのデータを取得し、基本SQL命令を定着させましょう。",
+        en: "Query all data from the student master table (students_mst) to reinforce the most basic SQL command.",
+        ko: "학생 마스터 테이블(students_mst)의 모든 데이터를 조회하며 기본 SQL 명령을 익히세요."
+      },
+
       example: "SELECT * FROM students_mst;",
 
       expectedQuery: /^\s*SELECT\s+\*\s+FROM\s+students_mst\s*;?\s*$/i
@@ -2079,6 +2156,13 @@ const RANDOM_EXERCISES = {
     {
 
       task: "获取科系主表 (departments_mst) 的全量内容，熟悉表的基本数据形式。",
+
+      taskI18n: {
+        zh: "获取科系主表 (departments_mst) 的全量内容，熟悉表的基本数据形式。",
+        ja: "科系マスタ (departments_mst) の全件を取得し、テーブルの基本的なデータ形式に慣れましょう。",
+        en: "Fetch the full contents of the departments master table (departments_mst) and get familiar with a table's basic data shape.",
+        ko: "학과 마스터 테이블(departments_mst)의 전체 내용을 가져와 테이블의 기본 데이터 형태에 익숙해지세요."
+      },
 
       example: "SELECT * FROM departments_mst;",
 
@@ -3305,17 +3389,59 @@ function expandAllRandomExercises() {
 
       if (id === 1 || id === 2) {
         let phrasing = [
-          `查询【students_mst】表格的全部内容进行练习（变化型 ${index}）。`,
-          `读取学生主表 (students_mst) 的全量字段与行记录（变化型 ${index}）。`,
-          `从 students_mst 表中获取所有的列与行（变化型 ${index}）。`,
-          `查询【departments_mst】科系主表的全部字段（变化型 ${index}）。`,
-          `读取科系主表 (departments_mst) 的所有记录以进行测试（变化型 ${index}）。`,
-          `从 departments_mst 表中获取所有行数据以熟悉结构（变化型 ${index}）。`
+          {
+            table: "students_mst",
+            zh: `查询【students_mst】表格的全部内容进行练习（变化型 ${index}）。`,
+            ja: `students_mst テーブルのすべての列と行を取得して練習しましょう（変化型 ${index}）。`,
+            en: `Practice by selecting every column and row from the students_mst table (variant ${index}).`,
+            ko: `students_mst 테이블의 모든 열과 행을 조회하는 연습입니다 (변형 ${index}).`
+          },
+          {
+            table: "students_mst",
+            zh: `读取学生主表 (students_mst) 的全量字段与行记录（变化型 ${index}）。`,
+            ja: `学生マスタ (students_mst) の全列と全行を読み取りましょう（変化型 ${index}）。`,
+            en: `Read all columns and rows from the student master table (students_mst) (variant ${index}).`,
+            ko: `학생 마스터 테이블(students_mst)의 모든 열과 행을 읽어 봅니다 (변형 ${index}).`
+          },
+          {
+            table: "students_mst",
+            zh: `从 students_mst 表中获取所有的列与行（变化型 ${index}）。`,
+            ja: `students_mst テーブルからすべての列と行を取得しましょう（変化型 ${index}）。`,
+            en: `Get every column and row from the students_mst table (variant ${index}).`,
+            ko: `students_mst 테이블에서 모든 열과 행을 가져옵니다 (변형 ${index}).`
+          },
+          {
+            table: "departments_mst",
+            zh: `查询【departments_mst】科系主表的全部字段（变化型 ${index}）。`,
+            ja: `学科マスタ departments_mst のすべての列を取得しましょう（変化型 ${index}）。`,
+            en: `Select every column from the department master table departments_mst (variant ${index}).`,
+            ko: `학과 마스터 테이블 departments_mst의 모든 열을 조회합니다 (변형 ${index}).`
+          },
+          {
+            table: "departments_mst",
+            zh: `读取科系主表 (departments_mst) 的所有记录以进行测试（变化型 ${index}）。`,
+            ja: `テスト用に学科マスタ (departments_mst) のすべての行を読み取りましょう（変化型 ${index}）。`,
+            en: `Read every record from the department master table (departments_mst) for testing (variant ${index}).`,
+            ko: `테스트를 위해 학과 마스터 테이블(departments_mst)의 모든 행을 읽어 봅니다 (변형 ${index}).`
+          },
+          {
+            table: "departments_mst",
+            zh: `从 departments_mst 表中获取所有行数据以熟悉结构（变化型 ${index}）。`,
+            ja: `departments_mst テーブルの全行を取得して構造に慣れましょう（変化型 ${index}）。`,
+            en: `Get all rows from the departments_mst table to learn its structure (variant ${index}).`,
+            ko: `departments_mst 테이블의 모든 행을 가져와 구조에 익숙해집니다 (변형 ${index}).`
+          }
         ];
         let pick = phrasing[index % phrasing.length];
-        let isStudents = pick.includes("students_mst");
+        let isStudents = pick.table === "students_mst";
         mutated = {
-          task: pick,
+          task: pick.zh,
+          taskI18n: {
+            zh: pick.zh,
+            ja: pick.ja,
+            en: pick.en,
+            ko: pick.ko
+          },
           example: isStudents ? "SELECT * FROM students_mst;" : "SELECT * FROM departments_mst;",
           expectedQuery: isStudents ? /^\s*SELECT\s+\*\s+FROM\s+students_mst\s*;?\s*$/i : /^\s*SELECT\s+\*\s+FROM\s+departments_mst\s*;?\s*$/i
         };

@@ -49,6 +49,7 @@ assets_to_cover = [
     "assets/js/i18n-ui-dict.js",
     "assets/js/glossary.js",
     "assets/js/code-runner-api.js",
+    "data/lessons.js",
     "assets/css/index.css",
     "assets/css/glossary.css",
     "assets/images/og-study-tools-v2026-6-11.png",
