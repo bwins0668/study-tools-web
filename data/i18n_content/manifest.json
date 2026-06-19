@@ -1,8 +1,8 @@
 {
-  "assetVersion": "v2026.6.19-r-ko-python-pack",
-  "generatedAt": "2026-06-19T14:50:42.123Z",
-  "webVersion": "v2026.6.19-r-ko-python-pack",
-  "releaseVersion": "v2026.6.19-r-ko-python-pack",
+  "assetVersion": "v2026.6.19-r-ko-itpass-pack",
+  "generatedAt": "2026-06-19T15:04:04.839Z",
+  "webVersion": "v2026.6.19-r-ko-itpass-pack",
+  "releaseVersion": "v2026.6.19-r-ko-itpass-pack",
   "totalSubjects": 5,
   "totalLanguages": 7,
   "totalPacks": 27,
@@ -31,13 +31,12 @@
       "subject": "itpass",
       "lang": "ko",
       "path": "data/i18n_content/itpass_ko.js",
-      "version": "v2026.6.19-r-ko-python-pack",
+      "version": "v2026.6.19-r-ko-itpass-pack",
       "lessonCount": 85,
-      "sizeBytes": 94967,
-      "sha256": "3c35ebe926af477c04f081ed8afe88125e2b9183f3f5bff80bf5903259b27262",
-      "sourceType": "local-starter",
-      "coverageStatus": "starter-ko",
-      "needsReview": true
+      "sizeBytes": 222917,
+      "sha256": "ad6afe437d71f5ff8ecdb94fa1807771220fee427d1e160aed96be4f79f3cb38",
+      "sourceType": "local-usable",
+      "coverageStatus": "usable-ko"
     },
     {
       "subject": "itpass",
