@@ -154,6 +154,9 @@ body {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .logo-text span {
@@ -11862,4 +11865,185 @@ a:focus-visible,
     font-size: 10px;
     padding: 4px 6px;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Round Web-Mobile-UI-Audit-Mega — Mobile UI Audit & Fix
+   Language popover, z-index hierarchy, mobile popover containers,
+   color contrast, iPhone Safari safe areas, unified popover styles.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── 0. CSS Variable z-index hierarchy ── */
+:root {
+  --z-header: 100;
+  --z-tabs: 860;
+  --z-drawer: 2000;
+  --z-backdrop: 2500;
+  --z-popover: 3000;
+  --z-modal: 4000;
+  --z-toast: 5000;
+}
+
+/* ── 1. Mobile language popover: fixed overlay on small screens ── */
+@media (max-width: 720px) {
+  .language-popover {
+    position: fixed !important;
+    top: 72px !important;
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 96px) !important;
+    z-index: 3000 !important;
+    background: rgba(15, 18, 28, 0.97) !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  }
+
+  .language-popover *
+  {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .language-popover.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .language-option {
+    color: #d1d5db !important;
+    background: #19202e !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    min-width: 0;
+  }
+
+  .language-option:hover,
+  .language-option.active {
+    color: #f8fafc !important;
+    background: rgba(45, 212, 191, 0.14) !important;
+    border-color: rgba(45, 212, 191, 0.6) !important;
+  }
+
+  .language-option-main {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .language-option[aria-selected="true"] {
+    color: #f8fafc !important;
+    background: rgba(45, 212, 191, 0.16) !important;
+    border-color: rgba(45, 212, 191, 0.72) !important;
+  }
+
+  .language-search-wrap input {
+    font-size: 14px;
+  }
+}
+
+/* ── 2. Unified mobile popover / dropdown / drawer containment ── */
+@media (max-width: 720px) {
+  /* Ensure all popover-like elements are contained to viewport */
+  .module-switch-panel,
+  .exam-history-modal,
+  .auth-panel-content,
+  .ut-box,
+  .tools-confirm-box {
+    max-width: calc(100vw - 24px) !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  /* iPhone Safari safe area support for fixed overlays */
+  .app-sidebar {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .playground-section {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .language-popover,
+  .module-switch-panel,
+  .auth-panel,
+  .tools-drawer__panel {
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+  }
+
+  /* Auth panel: make full screen on ≤480px */
+  .auth-panel {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    transform: none !important;
+    border-radius: 0 !important;
+  }
+
+  .auth-panel-content {
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  .auth-panel-header {
+    padding: 12px 14px !important;
+  }
+
+  .auth-panel-body {
+    padding: 14px !important;
+  }
+
+  /* AI launcher popover: contain to viewport on mobile */
+  .ai-launcher-popover {
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+  }
+}
+
+/* ── 3. Consistent color / contrast improvements ── */
+.language-option.active {
+  color: #f8fafc;
+  background: rgba(45, 212, 191, 0.14);
+  border-color: rgba(45, 212, 191, 0.6) !important;
+}
+
+/* Fully opaque bg so Playwright contrast check works correctly */
+.language-option {
+  background: #19202e !important;
+  color: #d1d5db;
+}
+
+.language-option:hover {
+  background: #1f2a3d !important;
+}
+
+.language-option.active {
+  background: rgba(45, 212, 191, 0.14) !important;
+  color: #f8fafc;
+}
+
+.language-option-main {
+  color: inherit;
+}
+
+.auth-value {
+  color: #e2e8f0;
+}
+
+.auth-panel-body .auth-label {
+  color: #94a3b8;
+}
+
+/* ── 4. Prevent body scroll when fixed drawers are open (mobile) ── */
+body.mobile-sidebar-open,
+body.mobile-playground-open {
+  overflow: hidden !important;
 }

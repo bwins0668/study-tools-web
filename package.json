@@ -6,5 +6,8 @@
     "dev": "npx -y live-server --port=5173",
     "dev:functions": "npx wrangler pages dev .",
     "start": "npx -y live-server --port=5173"
+  },
+  "dependencies": {
+    "playwright": "^1.61.0"
   }
 }
