@@ -1,21 +1,21 @@
 {
-  "assetVersion": "v2026.6.19-r-ko-java-pack",
-  "generatedAt": "2026-06-19T14:45:23.885Z",
-  "webVersion": "v2026.6.19-r-ko-java-pack",
-  "releaseVersion": "v2026.6.19-r-ko-java-pack",
+  "assetVersion": "v2026.6.19-r-ko-python-pack",
+  "generatedAt": "2026-06-19T14:50:42.127Z",
+  "webVersion": "v2026.6.19-r-ko-python-pack",
+  "releaseVersion": "v2026.6.19-r-ko-python-pack",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
-      "sizeBytes": 1449,
-      "sha256": "c7d024a437a470569308e4be0928782fa90da34533b5f38bd69ce34b69997098",
+      "version": "v2026.6.19-r-ko-python-pack",
+      "sizeBytes": 1455,
+      "sha256": "d52b387386b5fe814fbc5ce45c4947607cbfcce764e825cf0c54f26e1add8318",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 275069,
       "sha256": "8fbe64a61846ac09634bc920d5c57c812e9457fdbddfdc494db102d873059c11",
       "cacheStrategy": "static"
@@ -23,7 +23,7 @@
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 82448,
       "sha256": "f3180cf060948ab5cfb6b0d64e7ac500dfdc204729ae68cfffc985ba81886d67",
       "cacheStrategy": "static"
@@ -31,7 +31,7 @@
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 8263,
       "sha256": "bc088acdcd5442527634048858276eb62e5e8aa69e0ae7d743e9ef132e72144e",
       "cacheStrategy": "static"
@@ -39,7 +39,7 @@
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 331254,
       "sha256": "9951141844d463b8289c73418890f4612341feffedea807b11774bc07e181a0f",
       "cacheStrategy": "static"
@@ -47,7 +47,7 @@
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,7 +55,7 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 1272,
       "sha256": "f9b1ac03a11e46c392e1a22827a20283bd0a84bd8e1c7b1e82311ce53c879869",
       "cacheStrategy": "static"
@@ -63,7 +63,7 @@
     {
       "path": "data/lessons.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 178488,
       "sha256": "dd6ec01e9dea0f6fc1ab60f3066ad05ea9262205332a20686ed5cbe49a8a7154",
       "cacheStrategy": "static"
@@ -71,7 +71,7 @@
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 262170,
       "sha256": "dc06eb3bc3b198c0ccfaa2407e23a722a658632250edf29bbeaa18c2f58e51a6",
       "cacheStrategy": "static"
@@ -79,7 +79,7 @@
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -87,7 +87,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -95,7 +95,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.19-r-ko-java-pack",
+      "version": "v2026.6.19-r-ko-python-pack",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -103,9 +103,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.19-r-ko-java-pack",
-      "sizeBytes": 4558,
-      "sha256": "39a6daca2c49f5f6132651ecc565c8ee8645d8aba95f11d048dc831c802baec1",
+      "version": "v2026.6.19-r-ko-python-pack",
+      "sizeBytes": 4560,
+      "sha256": "8c3902cc2f11d1dc11cd4ad4f4072c83614eb1bf71a613a3be2d19bad4cc29a7",
       "cacheStrategy": "pwa"
     }
   ]

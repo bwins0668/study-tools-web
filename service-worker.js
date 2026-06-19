@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-ko-java-pack";
+﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-ko-python-pack";
 
 const CORE_ASSETS = [
   "./",
