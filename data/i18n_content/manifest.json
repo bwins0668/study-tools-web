@@ -1,8 +1,8 @@
 {
-  "assetVersion": "v2026.6.19-r-ko-itpass-pack",
-  "generatedAt": "2026-06-19T15:04:04.839Z",
-  "webVersion": "v2026.6.19-r-ko-itpass-pack",
-  "releaseVersion": "v2026.6.19-r-ko-itpass-pack",
+  "assetVersion": "v2026.6.19-r-ko-sg-pack",
+  "generatedAt": "2026-06-19T15:09:37.911Z",
+  "webVersion": "v2026.6.19-r-ko-sg-pack",
+  "releaseVersion": "v2026.6.19-r-ko-sg-pack",
   "totalSubjects": 5,
   "totalLanguages": 7,
   "totalPacks": 27,
@@ -184,13 +184,12 @@
       "subject": "sg",
       "lang": "ko",
       "path": "data/i18n_content/sg_ko.js",
-      "version": "v2026.6.19-r-ko-python-pack",
+      "version": "v2026.6.19-r-ko-sg-pack",
       "lessonCount": 44,
-      "sizeBytes": 50509,
-      "sha256": "802ac6087ddd3c0197a1db65fcdfb8d01acc44c4ddcd46f3f092b007771dded8",
-      "sourceType": "local-starter",
-      "coverageStatus": "starter-ko",
-      "needsReview": true
+      "sizeBytes": 107080,
+      "sha256": "154dcf0e31c4f056855487760b280a740b70cffcacdaa2c00efb2a31aaf4f4a5",
+      "sourceType": "local-usable",
+      "coverageStatus": "usable-ko"
     },
     {
       "subject": "sg",

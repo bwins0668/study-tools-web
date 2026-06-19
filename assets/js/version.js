@@ -3,12 +3,12 @@
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
-    webVersion: "v2026.6.19-r-ko-itpass-pack",
+    webVersion: "v2026.6.19-r-ko-sg-pack",
     desktopVersion: "v2026.6.15-r134.2",
-    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.19-r-ko-itpass-pack",
+    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.19-r-ko-sg-pack",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.19-r-ko-itpass-pack"
+    assetVersion: "v2026.6.19-r-ko-sg-pack"
   };
 
   function applyVersionInfo() {
