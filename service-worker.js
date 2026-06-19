@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-sql-ko-content";
+﻿const CACHE_NAME = "study-tools-web-v2026.6.19-r-i18n-minor-pack";
 
 const CORE_ASSETS = [
   "./",

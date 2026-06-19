@@ -1,11 +1,11 @@
 {
-  "assetVersion": "v2026.6.19-r-sql-ko-content",
-  "generatedAt": "2026-06-19T05:38:38Z",
-  "webVersion": "v2026.6.19-r-sql-ko-content",
-  "releaseVersion": "v2026.6.19-r-sql-ko-content",
+  "assetVersion": "v2026.6.19-r-i18n-minor-pack",
+  "generatedAt": "2026-06-19T11:30:00Z",
+  "webVersion": "v2026.6.19-r-i18n-minor-pack",
+  "releaseVersion": "v2026.6.19-r-i18n-minor-pack",
   "totalSubjects": 5,
-  "totalLanguages": 5,
-  "totalPacks": 21,
+  "totalLanguages": 7,
+  "totalPacks": 23,
   "packs": [
     {
       "subject": "sql",
@@ -56,6 +56,26 @@
       "sizeBytes": 18424,
       "sha256": "dfaac67b936e184cd368f2729c26b888edfefe8dc121bd3c12d5c3e883a0373e",
       "sourceType": "manual"
+    },
+    {
+      "subject": "sql",
+      "lang": "th",
+      "path": "data/i18n_content/sql_th.js",
+      "version": "v2026.6.19-r-i18n-minor-pack",
+      "lessonCount": 36,
+      "sizeBytes": 26522,
+      "sha256": "eb7c578c508279cc328c9bf0c12f585c0270d81f0fb0216193850e07d53ec093",
+      "sourceType": "ai-assisted"
+    },
+    {
+      "subject": "sql",
+      "lang": "id",
+      "path": "data/i18n_content/sql_id.js",
+      "version": "v2026.6.19-r-i18n-minor-pack",
+      "lessonCount": 36,
+      "sizeBytes": 16531,
+      "sha256": "4a69310ab25b3911929b41580d23073a53a573f6b78f41e53d8e2a4f1e3f785f",
+      "sourceType": "ai-assisted"
     },
     {
       "subject": "itpass",

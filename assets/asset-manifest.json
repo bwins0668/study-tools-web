@@ -1,8 +1,8 @@
 {
-  "assetVersion": "v2026.6.19-r-sql-ko-content",
-  "generatedAt": "2026-06-19T05:38:38Z",
-  "webVersion": "v2026.6.19-r-sql-ko-content",
-  "releaseVersion": "v2026.6.19-r-sql-ko-content",
+  "assetVersion": "v2026.6.19-r-i18n-minor-pack",
+  "generatedAt": "2026-06-19T11:30:00Z",
+  "webVersion": "v2026.6.19-r-i18n-minor-pack",
+  "releaseVersion": "v2026.6.19-r-i18n-minor-pack",
   "assets": [
     {
       "path": "assets/js/version.js",

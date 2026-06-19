@@ -1441,6 +1441,8 @@ DISABLE_TRANSLATION_OVERLAY = true;
     if (clean === "vi" || clean === "vi-vn" || clean.startsWith("vi-")) return "vi-VN";
     if (clean === "my" || clean === "my-mm" || clean.startsWith("my-")) return "my-MM";
     if (clean === "ko" || clean === "ko-kr" || clean.startsWith("ko-")) return "ko-KR";
+    if (clean === "th" || clean === "th-th" || clean.startsWith("th-")) return "th-TH";
+    if (clean === "id" || clean === "id-id" || clean.startsWith("id-")) return "id-ID";
     if (clean === "fr" || clean === "fr-fr" || clean.startsWith("fr-")) return "fr-FR";
     return "en-US";
   }
@@ -1528,7 +1530,11 @@ DISABLE_TRANSLATION_OVERLAY = true;
   function translateStatic(key, params) {
     if (!key) return "";
     const lang = normalizeLanguageCode(currentLang);
-    const fallbackChain = [lang, "ja-JP", "zh-CN", "en-US"];
+    // For Thai/Indonesian, prefer English as the first fallback (these users are
+    // more likely to read English than Japanese/Chinese when their own dict key is missing).
+    const fallbackChain = (lang === "th-TH" || lang === "id-ID")
+      ? [lang, "en-US", "ja-JP", "zh-CN"]
+      : [lang, "ja-JP", "zh-CN", "en-US"];
     let translated = null;
 
     function getNestedValue(obj, path) {

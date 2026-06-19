@@ -1,3 +1,6 @@
+# Windows reserved device name artifact
+/nul
+
 # Desktop-only runtimes and launchers
 /server.py
 /study_ai.py

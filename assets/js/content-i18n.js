@@ -99,7 +99,7 @@
    */
   function loadPack(subject, lang, isHighPriority) {
     var subjectsList = ["sql", "itpass", "sg", "java", "python"];
-    var langsWithPacks = ["en", "vi", "my", "fr"];
+    var langsWithPacks = ["en", "vi", "my", "fr", "ko", "th", "id"];
 
     // Swap arguments if they are passed in reverse order: (lang, subject)
     if (typeof subject === "string" && typeof lang === "string") {
@@ -188,7 +188,7 @@
    */
   function preheatAllPacks() {
     var subjects = ["sql", "itpass", "sg", "java", "python"];
-    var langs = ["en", "vi", "my", "fr"];
+    var langs = ["en", "vi", "my", "fr", "ko", "th", "id"];
     
     var promises = [];
     for (var i = 0; i < subjects.length; i++) {
