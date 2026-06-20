@@ -78,9 +78,7 @@
       }
     }
     return false;
-  }
-
-  var VISIBLE_DEFAULTS = {
+  }  var VISIBLE_DEFAULTS = {
     ko: {
       subjects: { sql: "SQL", java: "Java", python: "Python", itpass: "IT Passport", sg: "SG 정보 보안" },
       subtitle: "핵심 개념과 실습 정리",
@@ -112,17 +110,18 @@
       successStatus: "성공",
       failedStatus: "실패",
       errorStatus: "오류",
+      hint: "힌트",
       outputLabel: "출력",
       incorrectOutputLabel: "판정 실패 - 예상 출력 결과"
     },
     my: {
       subjects: { sql: "SQL", java: "Java", python: "Python", itpass: "IT Passport", sg: "SG လုံခြုံရေး" },
-      subtitle: "အဓိကအယူအဆနှင့် လက်တွေ့လေ့ကျင့်ခန်း",
+      subtitle: "အဓิကအယူအဆနှင့် လက်တွေ့လေ့ကျင့်ခန်း",
       analogy: function (title, subjectName) {
         return "နေ့စဉ်ဥပမာ: " + title + " ကို " + subjectName + " မှတ်စုတစ်ခုလို သဘောထားပြီး input၊ လုပ်ဆောင်မှုနှင့် output ကို အဆင့်လိုက်ကြည့်ပါ။";
       },
       sandboxInstruction: function (title, subjectName) {
-        return subjectName + " sandbox တွင် " + title + " နှင့်ဆိုင်သော code ကို အနည်းငယ်ပြောင်းပြီး ရလဒ်ကို နှိုင်းယှဉ်ပါ။";
+        return subjectName + " sandbox တွင် " + title + " နှင့်ဆိုင်သော code ကို အနည်းငယ်ပြောင်းပြီး ရလด်ကို နှိုင်းယှဉ်ပါ။";
       },
       sandboxComment: function (title, subjectName) {
         return subjectName + " sandbox: " + title + " ၏ input၊ လုပ်ဆောင်မှုနှင့် output ကို စစ်ဆေးပါ။";
@@ -133,7 +132,7 @@
       resultExplanation: "Output နှင့် မျှော်မှန်းရလဒ်ကို နှိုင်းယှဉ်ပြီး code လုပ်ဆောင်မှုအစဉ်ကို စစ်ဆေးပါ။",
       emptyState: "ပြသရန် ရလဒ် မရှိသေးပါ။",
       wordCardDesc: function (title) {
-        return title + " နှင့်ဆိုင်သော အဓိကဝေါဟာရနှင့် အသုံးပြုမှုကို စုစည်းထားသော word card ဖြစ်သည်။";
+        return title + " နှင့်ဆိုင်သော အဓิကဝေါဟာရနှင့် အသုံးပြုမှုကို စုစည်းထားသော word card ဖြစ်သည်။";
       },
       codeExampleLabel: function (subjectName) { return subjectName + " code ဥပမာ"; },
       conceptLessonStatus: "သီအိုရီသင်ခန်းစာ: runရန် မလိုအပ်ပါ။",
@@ -146,6 +145,7 @@
       successStatus: "အောင်မြင်သည်",
       failedStatus: "မအောင်မြင်ပါ",
       errorStatus: "အမှား",
+      hint: "အကြံပြုချက်",
       outputLabel: "Output",
       incorrectOutputLabel: "စစ်ဆေးမှုမအောင်မြင် - မျှော်မှန်းရလဒ်"
     },
@@ -180,6 +180,7 @@
       successStatus: "Thành công",
       failedStatus: "Không đạt",
       errorStatus: "Lỗi",
+      hint: "Gợi ý",
       outputLabel: "Đầu ra",
       incorrectOutputLabel: "Không đạt - kết quả mong đợi"
     },
@@ -214,6 +215,7 @@
       successStatus: "Réussi",
       failedStatus: "Échec",
       errorStatus: "Erreur",
+      hint: "Indice",
       outputLabel: "Sortie",
       incorrectOutputLabel: "Échec - résultat attendu"
     },
@@ -248,6 +250,7 @@
       successStatus: "สำเร็จ",
       failedStatus: "ไม่ผ่าน",
       errorStatus: "ข้อผิดพลาด",
+      hint: "คำแนะนำ",
       outputLabel: "Output",
       incorrectOutputLabel: "ไม่ผ่าน - ผลลัพธ์ที่คาดหวัง"
     }
@@ -277,6 +280,8 @@
       dailyAnalogy: template.analogy(title, subjectName),
       practiceIntro: localized && localized.practiceIntro ? localized.practiceIntro : template.sandboxInstruction(title, subjectName),
       sandboxInstruction: localized && localized.sandboxInstruction ? localized.sandboxInstruction : template.sandboxInstruction(title, subjectName),
+      playgroundTask: (localized && (localized.playgroundTask || localized.sandboxInstruction || localized.practiceIntro)) || template.sandboxInstruction(title, subjectName),
+      hint: (localized && localized.hint) || template.hint || "Hint",
       sandboxComment: sandboxComment,
       stdinPlaceholder: template.stdinPlaceholder,
       expectedOutput: template.expectedOutput,
@@ -312,7 +317,7 @@
       incorrectOutputLabel: template.incorrectOutputLabel,
       visibleDefaultsApplied: true
     };
-  }
+}
 
   /**
    * Get localized content for a lesson.

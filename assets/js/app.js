@@ -1,4 +1,4 @@
-﻿// App controller for SQL & IT Passport Multi-Subject Learning Portal
+// App controller for SQL & IT Passport Multi-Subject Learning Portal
 
 // Subject & Navigation state
 let currentSubject = 'sql'; // 'sql' | 'itpass' | 'java' | 'sg' | 'python'
@@ -224,6 +224,11 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProgressUI();
   setupEditorLineNumbers();
   setupKeyboardShortcuts();
+
+  document.addEventListener('i18n:languageChanged', () => {
+    initSidebar();
+    loadLesson(currentLessonId, true);
+  });
 
   // Set default values for calculators in IT Passport Mode
   initItPassCalculators();
@@ -1771,7 +1776,7 @@ function pickExerciseTaskText(exercise) {
 }
 
 // Load Lesson Details into Content Panel
-function loadLesson(id) {
+function loadLesson(id, isLanguageSwitch = false) {
   if (window.closeMobileDrawers) window.closeMobileDrawers({ skipFocus: true });
   const lesson = SQL_LESSONS.find(l => l.id === id);
   if (!lesson) return;
@@ -1811,14 +1816,15 @@ function loadLesson(id) {
 
   // Reset editor text
   const sqlEditor = document.getElementById("sql-editor");
-  sqlEditor.value = "";
+  if (!isLanguageSwitch) {
+    sqlEditor.value = "";
+    updateLineNumbers();
+  }
+  // Always refresh output placeholder (i18n labels)
+  resetOutputPlaceholder();
   if (window.I18n && typeof window.I18n.t === "function") {
     sqlEditor.setAttribute("placeholder", window.I18n.t("sandbox.sqlPlaceholder", "Please enter an SQL query here..."));
   }
-  updateLineNumbers();
-  
-  // Reset Console output and status
-  resetOutputPlaceholder();
   
   // Initialize Quiz
   initQuiz(lesson);
@@ -5010,8 +5016,10 @@ function startCbtExam() {
 
   // Setup exam state
   var _now = new Date();
+  const allExamTitle = window.I18n ? I18n.t("exam.allExamTitle", "综合随机模拟考试") : "综合随机模拟考试";
+  const yearExamTitle = window.I18n ? I18n.t("exam.yearExamTitle", "{year} 公开问题 模拟考试") : "{year} 公开问题 模拟考试";
   activeCbtExam = {
-    title: yearSelect === "all" ? "综合随机模拟考试" : `${yearsMapping[yearSelect] || yearSelect} 公开问题 模拟考试`,
+    title: yearSelect === "all" ? allExamTitle : yearExamTitle.replace("{year}", yearsMapping[yearSelect] || yearSelect),
     subject: currentSubject === 'sg' ? 'sg' : 'itpass',
     year: yearSelect !== "all" ? (yearsMapping[yearSelect] || yearSelect) : 'all',
     yearFilter: yearSelect,
@@ -5122,7 +5130,11 @@ function updateCbtNavigatorGridUI() {
   
   const total = activeCbtExam.questions.length;
   const answered = activeCbtExam.answers.filter(a => a !== -1).length;
-  document.getElementById("cbt-nav-status-text").innerText = `第 ${activeCbtExam.currentQIdx + 1} 题，共 ${total} 题 (已作答 ${answered} 题)`;
+  const statusFormat = window.I18n ? I18n.t("mockExam.navStatus", "第 {current} 题，共 {total} 题 (已作答 {answered} 题)") : "第 {current} 题，共 {total} 题 (已作答 {answered} 题)";
+  document.getElementById("cbt-nav-status-text").innerText = statusFormat
+    .replace("{current}", activeCbtExam.currentQIdx + 1)
+    .replace("{total}", total)
+    .replace("{answered}", answered);
 }
 
 function renderCbtQuestion() {
@@ -5132,7 +5144,10 @@ function renderCbtQuestion() {
   const q = activeCbtExam.questions[idx];
 
   document.getElementById("cbt-exam-display-title").innerText = activeCbtExam.title;
-  document.getElementById("cbt-q-number-text").innerText = `第 ${idx + 1} 题 / 問 ${q.number}`;
+  const questionNumberFormat = window.I18n ? I18n.t("mockExam.questionNumber", "第 {num} 题 / 問 {number}") : "第 {num} 题 / 問 {number}";
+  document.getElementById("cbt-q-number-text").innerText = questionNumberFormat
+    .replace("{num}", idx + 1)
+    .replace("{number}", q.number);
 
   // Build short summary: year · category
   const catShort = q.subcategory || q.topic || q.category || "";
@@ -5170,9 +5185,11 @@ function renderCbtQuestion() {
 
   const flagBtn = document.getElementById("cbt-q-flag-btn");
   flagBtn.classList.toggle("flagged", activeCbtExam.flags[idx]);
+  const flaggedText = window.I18n ? I18n.t("mockExam.flagged", "已标记复查") : "已标记复查";
+  const flagText = window.I18n ? I18n.t("mockExam.flag", "标记此题复查") : "标记此题复查";
   flagBtn.innerHTML = activeCbtExam.flags[idx]
-    ? `<i class="fa-solid fa-flag"></i> 已标记复查`
-    : `<i class="fa-regular fa-flag"></i> 标记此题复查`;
+    ? `<i class="fa-solid fa-flag"></i> ${flaggedText}`
+    : `<i class="fa-regular fa-flag"></i> ${flagText}`;
 
   const optionsList = document.getElementById("cbt-q-options-list");
   optionsList.innerHTML = "";
@@ -5370,24 +5387,30 @@ function submitCbtExam(auto = false) {
   
   const badge = document.getElementById("cbt-pass-status-badge");
   badge.className = `pass-status-badge ${isPassed ? 'pass' : 'fail'}`;
-  badge.innerText = isPassed ? "合格" : "不合格";
+  const passText = window.I18n ? I18n.t("examHistory.passed", "合格") : "合格";
+  const failText = window.I18n ? I18n.t("examHistory.failed", "不合格") : "不合格";
+  badge.innerText = isPassed ? passText : failText;
   
-  document.getElementById("cbt-field-score-strat").innerText = `${scoreStrat} / 1000 点`;
+  const scoreFormat = window.I18n ? I18n.t("mockExam.scoreFormat", "{score} / 1000 点") : "{score} / 1000 点";
+  const scorePassText = window.I18n ? I18n.t("mockExam.scorePass", "合格 (>=300)") : "合格 (>=300)";
+  const scoreFailText = window.I18n ? I18n.t("mockExam.scoreFail", "基準点未達 (<300)") : "基準点未達 (<300)";
+
+  document.getElementById("cbt-field-score-strat").innerText = scoreFormat.replace("{score}", scoreStrat);
   document.getElementById("cbt-field-bar-strat").style.width = `${scoreStrat / 10}%`;
   const stratStatus = document.getElementById("cbt-field-status-strat");
-  stratStatus.innerText = passesStrat ? "合格 (>=300)" : "基準点未達 (<300)";
+  stratStatus.innerText = passesStrat ? scorePassText : scoreFailText;
   stratStatus.style.color = passesStrat ? "var(--success-color)" : "#f87171";
   
-  document.getElementById("cbt-field-score-man").innerText = `${scoreMan} / 1000 点`;
+  document.getElementById("cbt-field-score-man").innerText = scoreFormat.replace("{score}", scoreMan);
   document.getElementById("cbt-field-bar-man").style.width = `${scoreMan / 10}%`;
   const manStatus = document.getElementById("cbt-field-status-man");
-  manStatus.innerText = passesMan ? "合格 (>=300)" : "基準点未達 (<300)";
+  manStatus.innerText = passesMan ? scorePassText : scoreFailText;
   manStatus.style.color = passesMan ? "var(--success-color)" : "#f87171";
   
-  document.getElementById("cbt-field-score-tech").innerText = `${scoreTech} / 1000 点`;
+  document.getElementById("cbt-field-score-tech").innerText = scoreFormat.replace("{score}", scoreTech);
   document.getElementById("cbt-field-bar-tech").style.width = `${scoreTech / 10}%`;
   const techStatus = document.getElementById("cbt-field-status-tech");
-  techStatus.innerText = passesTech ? "合格 (>=300)" : "基準点未達 (<300)";
+  techStatus.innerText = passesTech ? scorePassText : scoreFailText;
   techStatus.style.color = passesTech ? "var(--success-color)" : "#f87171";
 
   // Subject B UI updates
@@ -5395,11 +5418,13 @@ function submitCbtExam(auto = false) {
   if (subbItem) {
     if (hasSubB) {
       subbItem.style.display = "block";
-      document.getElementById("cbt-field-score-subb").innerText = `${scoreSubB} / 1000 点`;
+      document.getElementById("cbt-field-score-subb").innerText = scoreFormat.replace("{score}", scoreSubB);
       document.getElementById("cbt-field-bar-subb").style.width = `${scoreSubB / 10}%`;
       const subbStatus = document.getElementById("cbt-field-status-subb");
-      subbStatus.innerText = passesSubB ? "合格 (>=300)" : "基準点未達 (<300)";
-      subbStatus.style.color = passesSubB ? "var(--success-color)" : "#f87171";
+      if (subbStatus) {
+        subbStatus.innerText = passesSubB ? scorePassText : scoreFailText;
+        subbStatus.style.color = passesSubB ? "var(--success-color)" : "#f87171";
+      }
     } else {
       subbItem.style.display = "none";
     }
@@ -5415,7 +5440,8 @@ function submitCbtExam(auto = false) {
     card.className = "exam-review-card";
     card.id = `review-card-${r.num}`;
 
-    const userAnsText = r.isAnswered ? alphabet[r.userOriginalIdx] : "未答";
+    const unansweredLbl = window.I18n ? I18n.t("mockExam.unanswered", "未答") : "未答";
+    const userAnsText = r.isAnswered ? alphabet[r.userOriginalIdx] : unansweredLbl;
     const statusIcon = r.isCorrect ? "correct" : "incorrect";
     const statusLabel = r.isCorrect ? I18n.t("exam.resultCorrect") : I18n.t("exam.resultIncorrect");
 

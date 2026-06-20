@@ -214,7 +214,8 @@ window.PythonSandbox = (() => {
   function clearCode() {
     const editor = getEditor();
     if (!editor) return;
-    if (confirm('コードをクリアしますか？/ Clear code?')) {
+    const confirmMsg = window.I18n ? I18n.t('sandbox.clearCodeConfirm', 'コードをクリアしますか？ / Clear code?') : 'コードをクリアしますか？ / Clear code?';
+    if (confirm(confirmMsg)) {
       setTemplate(getBoilerplateTemplate());
     }
   }
@@ -227,8 +228,9 @@ window.PythonSandbox = (() => {
       if (_btn) {
         var _origIconClass = (_btn.querySelector("i") && _btn.querySelector("i").className) || "";
         var _origText = _btn.childNodes.length > 1 ? (_btn.childNodes[1].textContent || "") : "";
+        const copiedLabel = window.I18n ? I18n.t('sandbox.copied', 'Copied!') : 'Copied!';
         _btn.replaceChildren();
-        _btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-check\"></i> Copied!");
+        _btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-check\"></i> " + copiedLabel);
         setTimeout(function() {
           _btn.replaceChildren();
           _btn.insertAdjacentHTML("beforeend", "<i class=\"" + _origIconClass + "\"></i> " + _origText);
@@ -308,8 +310,10 @@ window.PythonSandbox = (() => {
     const code = editor ? editor.value.trim() : '';
 
     if (!code) {
-      setStatus('error', 'エラー / Error');
-      displayOutput('# コードを入力してください / Please enter some code', 'error');
+      const errLbl = window.I18n ? I18n.t('sandbox.error', 'Error') : 'Error';
+      const enterCodeLbl = window.I18n ? I18n.t('sandbox.pleaseEnterCode', 'Please enter some code') : 'Please enter some code';
+      setStatus('error', errLbl);
+      displayOutput('# ' + enterCodeLbl, 'error');
       return;
     }
 
@@ -322,10 +326,12 @@ window.PythonSandbox = (() => {
     if (btn) {
       btn.disabled = true;
       btn.replaceChildren();
-      btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-spinner fa-spin\"></i> 実行中...");
+      const compilingText = window.I18n ? I18n.t('sandbox.compiling', 'Compiling...') : 'Compiling...';
+      btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-spinner fa-spin\"></i> " + compilingText);
     }
-    setStatus('running', '実行中... / Running...');
-    displayOutput('# 実行中 / Running...\n# しばらくお待ちください / Please wait...', 'idle');
+    const runningText = window.I18n ? I18n.t('sandbox.running', 'Running...') : 'Running...';
+    setStatus('running', runningText);
+    displayOutput('# ' + runningText + '\n# ...', 'idle');
 
     try {
       if (!window.WebCodeRunner || typeof window.WebCodeRunner.runPython !== 'function') {
@@ -343,49 +349,41 @@ window.PythonSandbox = (() => {
         message.includes('503') ||
         message.includes('Service Unavailable')
       ) {
-        setStatus('warning', '在线执行服务暂不可用 / Online service unavailable');
-        displayOutput(
-          '# 在线执行服务暂不可用，请稍后再试或使用 Windows 完整版本地运行。\n' +
-          '# オンライン実行サービスは現在利用できません。しばらくしてから再試行するか、Windows 完整版でローカル実行してください。\n' +
-          '# The online execution service is currently unavailable. Try again later or use the Windows full version for local execution.\n' +
-          '# 온라인 실행 서비스를 현재 사용할 수 없습니다. 나중에 다시 시도하거나 Windows 정식 버전에서 로컬 실행을 사용하세요。',
-          'error'
-        );
+        const warningLbl = window.I18n ? I18n.t('sandbox.warning', 'Warning') : 'Warning';
+        const serviceUnavailableText = window.I18n ? I18n.t('sandbox.serviceUnavailable', 'Online service unavailable') : 'Online service unavailable';
+        setStatus('warning', warningLbl);
+        displayOutput('# ' + serviceUnavailableText, 'error');
         return;
       }
       if (err.name === 'TimeoutError') {
-        setStatus('error', 'タイムアウト / Timeout');
-        displayOutput('# タイムアウトエラー / Timeout Error\n# コードの実行が25秒を超えました。\n# 无限循环或输入挂起，请检查代码。\n\n💡 提示：尝试减小循环次数或检查递归深度', 'error');
+        const timeoutLbl = window.I18n ? I18n.t('sandbox.timeout', 'Timeout') : 'Timeout';
+        const timeoutText = window.I18n ? I18n.t('sandbox.timeoutError', 'Timeout error') : 'Timeout error';
+        setStatus('error', timeoutLbl);
+        displayOutput('# ' + timeoutText, 'error');
       } else if (err.message.includes('fetch') || err.message.includes('Failed')) {
-        setStatus('error', 'サーバー未起動 / Server Off');
+        const serverOffLbl = window.I18n ? I18n.t('sandbox.serverOff', 'Server Off') : 'Server Off';
+        setStatus('error', serverOffLbl);
         const errorMsg = 
-          '# ⚠️ ローカルサーバーが起動していません / Local server not running\n\n' +
-          '# アプリを正しく起動してください：\n' +
-          '# 1. Launcher.exe または 启动.bat を実行して起動\n' +
-          '# 2. ブラウザからアクセス（http://127.0.0.1:PORT）\n\n' +
-          '# ※ ブラウザから直接 index.html を開いた場合はサーバー機能が使えません。\n\n' +
-          '💡 下载完整版：https://github.com/bwins0668/it-study-tools/releases/latest\n';
+          '# ⚠️ ' + serverOffLbl + '\n\n' +
+          '# 1. Launcher.exe\n' +
+          '# 2. http://127.0.0.1:PORT\n';
         displayOutput(errorMsg, 'error');
       } else if (err.message.includes('Python') && err.message.includes('not found')) {
-        setStatus('error', 'Python未安装 / Python Not Found');
-        const errorMsg =
-          '# ⚠️ ローカル環境に Python が見つかりません / Python not found\n\n' +
-          '# 解决方案 / Solutions：\n' +
-          '# 1. 安装 Python：https://www.python.org/downloads/\n' +
-          '# 2. 确保 python.exe 在 PATH 环境变量中\n' +
-          '# 3. 重启应用使环境变量生效\n\n' +
-          '# 检查命令：在命令行输入 python --version\n';
-        displayOutput(errorMsg, 'error');
+        const pythonNotFoundLbl = window.I18n ? I18n.t('sandbox.pythonNotFound', 'Python Not Found') : 'Python Not Found';
+        setStatus('error', pythonNotFoundLbl);
+        displayOutput('# ⚠️ ' + pythonNotFoundLbl, 'error');
       } else {
-        setStatus('error', 'エラー / Error');
-        displayOutput(`# エラー / Error:\n${err.message}\n\n💡 如需要详细诊断，请点击「環境診断」按钮`, 'error');
+        const errLbl = window.I18n ? I18n.t('sandbox.error', 'Error') : 'Error';
+        setStatus('error', errLbl);
+        displayOutput(`# ${errLbl}:\n${err.message}`, 'error');
       }
     } finally {
       isRunning = false;
       if (btn) {
         btn.disabled = false;
         btn.replaceChildren();
-        btn.insertAdjacentHTML("beforeend", "<span class=\"sandbox-btn-icon\">▶</span> 実行 <kbd>Ctrl+Enter</kbd>");
+        const runLbl = window.I18n ? I18n.t('sandbox.run', 'Run') : 'Run';
+        btn.insertAdjacentHTML("beforeend", "<span class=\"sandbox-btn-icon\">▶</span> " + runLbl + " <kbd>Ctrl+Enter</kbd>");
       }
     }
   }
@@ -399,26 +397,31 @@ window.PythonSandbox = (() => {
     let outputClass = '';
 
     if (hasCompileError) {
-      setStatus('error', '構文エラー / Syntax Error');
-      outputText = '❌ 構文エラー / Syntax Error:\n\n' + result.compileError;
+      const compileErrorLbl = window.I18n ? I18n.t('sandbox.compileError', 'Compile Error') : 'Compile Error';
+      setStatus('error', compileErrorLbl);
+      outputText = `❌ ${compileErrorLbl}:\n\n` + result.compileError;
       outputClass = 'error';
     } else if (hasRuntimeError) {
-      setStatus('error', '実行エラー / Runtime Error');
-      outputText = (hasOutput ? '# 出力 / Output:\n' + result.output + '\n\n' : '') +
-                   '⚠️ 実行エラー / Runtime Error:\n' + result.runtimeError;
+      const runtimeErrorLbl = window.I18n ? I18n.t('sandbox.runtimeError', 'Runtime Error') : 'Runtime Error';
+      setStatus('error', runtimeErrorLbl);
+      outputText = (hasOutput ? '# Output:\n' + result.output + '\n\n' : '') + `⚠️ ${runtimeErrorLbl}:\n` + result.runtimeError;
       outputClass = 'error';
     } else if (hasOutput) {
-      setStatus('success', '成功 / Success ✓');
+      const successLbl = window.I18n ? I18n.t('sandbox.success', 'Success') : 'Success';
+      setStatus('success', successLbl);
       outputText = result.output;
       outputClass = 'success';
     } else {
-      setStatus('success', '完了 / Done ✓');
-      outputText = '# プログラムが正常に終了しました（出力なし）\n# Program finished successfully (no output)';
+      const doneLbl = window.I18n ? I18n.t('sandbox.done', 'Done') : 'Done';
+      const noOutputText = window.I18n ? I18n.t('sandbox.noOutput', 'Program finished successfully (no output)') : 'Program finished successfully (no output)';
+      setStatus('success', doneLbl);
+      outputText = '# ' + noOutputText;
       outputClass = 'success';
     }
 
     if (result.executionTimeMs != null) {
-      outputText += `\n\n# 実行時間 / Time: ${result.executionTimeMs}ms`;
+      const executionTimeLbl = window.I18n ? I18n.t('sandbox.executionTime', 'Time') : 'Time';
+      outputText += `\n\n# ${executionTimeLbl}: ${result.executionTimeMs}ms`;
     }
 
     displayOutput(outputText, outputClass);
@@ -507,7 +510,7 @@ window.PythonSandbox = (() => {
         var _dbgIcon = document.createElement("i");
         _dbgIcon.className = "fa-solid fa-robot";
         _dbgBtn.appendChild(_dbgIcon);
-        _dbgBtn.appendChild(document.createTextNode(" AI 帮我看看"));
+        _dbgBtn.appendChild(document.createTextNode(window.I18n ? " " + I18n.t("sandbox.aiHelp", "AI 分析") : " AI 帮我看看"));
         _dbgDiv.appendChild(_dbgBtn);
         debugPanel.appendChild(_dbgDiv);
       }

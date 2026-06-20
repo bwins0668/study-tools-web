@@ -43,14 +43,7 @@
     ".result-table",
     ".data-table",
     ".sql-result-table",
-    ".CodeMirror",
-    ".quiz-section",
-    ".coding-exam-panel",
-    ".eq-body-area",
-    ".typing-workspace",
-    "[data-content-type=\"lesson\"]",
-    "[data-content-type=\"exam-question\"]",
-    "[data-content-type=\"explanation\"]"
+    ".CodeMirror"
   ].join(",");
 
   /* LANGUAGES populated from LOCALE_REGISTRY (loaded before i18n.js).
@@ -390,7 +383,7 @@
   function isCleanTranslationText(value) {
     return isMojibakeFree(value) && !hasLeakedHtmlTagText(value);
   }
-  
+
   function clearAllBadCaches() {
     var totalCleaned = 0;
     var reaped = 0;
@@ -1326,7 +1319,12 @@ DISABLE_TRANSLATION_OVERLAY = true;
   }
 
   function scheduleTranslate(root) {
-    if (DISABLE_TRANSLATION_OVERLAY || !isActive() || translationOverlayUnavailable || !document.body) return;
+    if (!document.body) return;
+
+    // Unconditionally apply static UI dictionary overrides first
+    applyStaticUI(root || document.body);
+
+    if (DISABLE_TRANSLATION_OVERLAY || !isActive() || translationOverlayUnavailable) return;
     if (translating) {
       dirty = true;
       return;
@@ -1451,6 +1449,12 @@ DISABLE_TRANSLATION_OVERLAY = true;
 
   function shouldSkipStatic(el) {
     if (!el) return true;
+    // Explicitly do not skip elements marked for translation unless they are raw script/style tags
+    if (el.hasAttribute("data-i18n") || el.hasAttribute("data-i18n-placeholder")) {
+      const tag = el.tagName.toLowerCase();
+      if (tag === "script" || tag === "style" || tag === "noscript") return true;
+      return false;
+    }
     const STATIC_SKIP_SELECTOR = [
       "[data-i18n-skip]",
       "[data-i18n-managed=\"lesson\"]",
@@ -1459,14 +1463,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
       "noscript",
       "pre",
       "code",
-      "textarea",
-      ".quiz-section",
-      ".coding-exam-panel",
-      ".eq-body-area",
-      ".typing-workspace",
-      "[data-content-type=\"lesson\"]",
-      "[data-content-type=\"exam-question\"]",
-      "[data-content-type=\"explanation\"]"
+      "textarea"
     ].join(",");
     return el.closest(STATIC_SKIP_SELECTOR);
   }
@@ -1592,8 +1589,15 @@ DISABLE_TRANSLATION_OVERLAY = true;
     return { text: "", actualLang: null, requestedLang: normalized, isFallback: false, missing: true };
   }
 
-  function translateStatic(key, params) {
+  function translateStatic(key, params, defaultValue) {
     if (!key) return "";
+
+    // Support I18n.t(key, defaultValue)
+    if (typeof params === "string") {
+      defaultValue = params;
+      params = null;
+    }
+
     const lang = normalizeLanguageCode(currentLang);
     // For Thai/Indonesian, prefer English as the first fallback (these users are
     // more likely to read English than Japanese/Chinese when their own dict key is missing).
@@ -1627,11 +1631,17 @@ DISABLE_TRANSLATION_OVERLAY = true;
     }
 
     if (translated === null || translated === undefined) {
+      if (window.I18n) {
+        if (!window.I18n.missingKeys) window.I18n.missingKeys = [];
+        if (!window.I18n.missingKeys.includes(key)) {
+          window.I18n.missingKeys.push(key);
+        }
+      }
       // Emit observable warning for missing keys — never silently display key as UI text in future releases
       if (typeof console !== "undefined" && console.warn) {
         console.warn("[I18n] Missing UI key:", key, "for lang:", lang, "fallback chain:", fallbackChain.join(","));
       }
-      translated = key;
+      translated = defaultValue !== undefined ? defaultValue : key;
     }
 
     if (params && typeof params === "object") {
@@ -1657,7 +1667,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     container.querySelectorAll("[data-i18n]").forEach((el) => {
       if (shouldSkipStatic(el)) return;
       const key = el.getAttribute("data-i18n");
-      
+
       let original = el.getAttribute("data-i18n-original-text");
       if (original === null) {
         original = el.textContent || "";
@@ -1680,7 +1690,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     container.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
       if (shouldSkipStatic(el)) return;
       const key = el.getAttribute("data-i18n-placeholder");
-      
+
       let original = el.getAttribute("data-i18n-original-placeholder");
       if (original === null) {
         original = el.getAttribute("placeholder") || "";
@@ -1704,7 +1714,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     container.querySelectorAll("[data-i18n-title]").forEach((el) => {
       if (shouldSkipStatic(el)) return;
       const key = el.getAttribute("data-i18n-title");
-      
+
       let original = el.getAttribute("data-i18n-original-title");
       if (original === null) {
         original = el.getAttribute("title") || "";
@@ -1728,7 +1738,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     container.querySelectorAll("[data-i18n-aria-label]").forEach((el) => {
       if (shouldSkipStatic(el)) return;
       const key = el.getAttribute("data-i18n-aria-label");
-      
+
       let original = el.getAttribute("data-i18n-original-aria-label");
       if (original === null) {
         original = el.getAttribute("aria-label") || "";
@@ -1762,7 +1772,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     updateButton();
     updateDisplayModeUI();
     updateCourseLabels();
-    
+
     // Apply static UI translations
     applyStaticUI(document.body);
 
@@ -1778,10 +1788,19 @@ DISABLE_TRANSLATION_OVERLAY = true;
   }
 
   function startObserver() {
-    if (DISABLE_TRANSLATION_OVERLAY) return;
     if (observer || !document.body) return;
     observer = new MutationObserver((mutations) => {
       if (!isActive()) return;
+      if (DISABLE_TRANSLATION_OVERLAY) {
+        if (!startObserver.pending) {
+          startObserver.pending = true;
+          requestAnimationFrame(() => {
+            applyStaticUI(document.body);
+            startObserver.pending = false;
+          });
+        }
+        return;
+      }
       if (mutations.some((mutation) => mutation.target && !shouldSkip(mutation.target.nodeType === 1 ? mutation.target : mutation.target.parentElement))) {
         scheduleTranslate(document.body);
       }
@@ -1836,6 +1855,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     applyStaticUI,
     isTranslationOverlayDisabled: () => DISABLE_TRANSLATION_OVERLAY,
     t: translateStatic,
+    missingKeys: [],
     tAsync: async (key, options = {}) => {
       const text = options.ja || options.source || "";
       if (!isActive() || !text) return text;
@@ -1861,16 +1881,16 @@ DISABLE_TRANSLATION_OVERLAY = true;
     getFallbackOrder: getFallbackOrder,
     pickLocalizedValue: pickLocalizedValue,
   };
- 
+
    /* User translation local storage (Round 20.1 prototype) */
    var USER_TRANSLATIONS_KEY = "study-tools-user-translations-v1";
- 
+
    function getUserTranslationsData() {
      try {
        return JSON.parse(localStorage.getItem(USER_TRANSLATIONS_KEY) || "{}");
      } catch (_) { return {}; }
    }
- 
+
    function saveUserTranslationItem(sourceText, sourceLang, targetLang, translatedText, context) {
      var all = getUserTranslationsData();
      var key = String(sourceText) + "|" + String(sourceLang) + "|" + String(targetLang) + "|" + String(context || "");
@@ -1888,7 +1908,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
 };
      try { localStorage.setItem(USER_TRANSLATIONS_KEY, JSON.stringify(all)); } catch (_) {}
    }
- 
+
    function deleteUserTranslationItem(sourceText, sourceLang, targetLang, context) {
      var all = getUserTranslationsData();
      var key = String(sourceText) + "|" + String(sourceLang) + "|" + String(targetLang) + "|" + String(context || "");
@@ -1908,19 +1928,19 @@ DISABLE_TRANSLATION_OVERLAY = true;
      };
      try { localStorage.setItem(USER_TRANSLATIONS_KEY, JSON.stringify(all)); } catch (_) {}
    }
- 
+
    function getUserTranslationItem(sourceText, sourceLang, targetLang, context) {
      var all = getUserTranslationsData();
      var key = String(sourceText) + "|" + String(sourceLang) + "|" + String(targetLang) + "|" + String(context || "");
      var item = all[key] || null;
      return item && !item.deletedAt ? item : null;
    }
- 
+
    function getUserTranslationCount() {
      var all = getUserTranslationsData();
      return Object.keys(all).length;
    }
- 
+
    window.getUserTranslationsData = getUserTranslationsData;
    window.saveUserTranslationItem = saveUserTranslationItem;
    window.deleteUserTranslationItem = deleteUserTranslationItem;

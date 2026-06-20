@@ -357,129 +357,77 @@ window.JavaSandbox = (() => {
 
 
   function clearCode() {
-
     const editor = getEditor();
-
     if (!editor) return;
-
-    if (confirm('コードをクリアしますか？/ Clear code?')) {
-
+    const confirmMsg = window.I18n ? I18n.t('sandbox.clearCodeConfirm', 'コードをクリアしますか？ / Clear code?') : 'コードをクリアしますか？ / Clear code?';
+    if (confirm(confirmMsg)) {
       setTemplate(getBoilerplateTemplate(getLocalizedSandboxComment()));
-
     }
-
   }
 
-
-
   function copyCode() {
-
     const editor = getEditor();
-
     if (!editor) return;
-
     navigator.clipboard.writeText(editor.value).then(() => {
-
       const _btn2 = document.querySelector('.java-tool-btn:nth-child(2)');
-
       if (_btn2) {
         var _origIconClass2 = (_btn2.querySelector("i") && _btn2.querySelector("i").className) || "";
         var _origText2 = _btn2.childNodes.length > 1 ? (_btn2.childNodes[1].textContent || "") : "";
+        const copiedLabel = window.I18n ? I18n.t('sandbox.copied', 'Copied!') : 'Copied!';
         _btn2.replaceChildren();
-        _btn2.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-check\"></i> Copied!");
+        _btn2.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-check\"></i> " + copiedLabel);
         setTimeout(function() {
           _btn2.replaceChildren();
           _btn2.insertAdjacentHTML("beforeend", "<i class=\"" + _origIconClass2 + "\"></i> " + _origText2);
         }, 1500);
       }
-
-
     });
-
   }
-
-
 
   // ─── Line Numbers ─────────────────────────────────────────────────────────
-
   function updateLineNumbers() {
-
     const editor = getEditor();
-
     const lnContainer = document.getElementById('java-line-numbers');
-
     if (!editor || !lnContainer) return;
-
     const lines = editor.value.split('\n').length;
-
     let html = '';
-
     for (let i = 1; i <= lines; i++) {
-
       html += `<span>${i}</span>`;
-
     }
-
     lnContainer.replaceChildren();
     lnContainer.insertAdjacentHTML("beforeend", html);
-
-    // Sync scroll position immediately to prevent misalignment
-
     lnContainer.scrollTop = editor.scrollTop;
-
   }
-
-
 
   // ─── Run Code via WebCodeRunner ──────────────────────────────────────────
   async function runCode() {
-
     if (isRunning) return;
-
     const editor = getEditor();
-
     const code = editor ? editor.value.trim() : '';
 
-
-
     if (!code) {
-
-      setStatus('error', 'エラー / Error');
-
-      displayOutput('// コードを入力してください / Please enter some code', 'error');
-
+      const errLbl = window.I18n ? I18n.t('sandbox.error', 'Error') : 'Error';
+      const enterCodeLbl = window.I18n ? I18n.t('sandbox.pleaseEnterCode', 'Please enter some code') : 'Please enter some code';
+      setStatus('error', errLbl);
+      displayOutput('// ' + enterCodeLbl, 'error');
       return;
-
     }
-
-
-
-    // Get standard input value
 
     const stdinEl = document.getElementById('java-input-content');
-
     const stdin = stdinEl ? stdinEl.value : '';
 
-
-
     isRunning = true;
-
     const btn = getRunBtn();
-
     if (btn) {
-
       btn.disabled = true;
-
       btn.replaceChildren();
-      btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-spinner fa-spin\"></i> コンパイル中...");
-
+      const compilingText = window.I18n ? I18n.t('sandbox.compiling', 'Compiling...') : 'Compiling...';
+      btn.insertAdjacentHTML("beforeend", "<i class=\"fa-solid fa-spinner fa-spin\"></i> " + compilingText);
     }
 
-    setStatus('running', '実行中... / Running...');
-
-    displayOutput('// コンパイル中 / Compiling...\n// しばらくお待ちください / Please wait...', 'idle');
-
-
+    const runningText = window.I18n ? I18n.t('sandbox.running', 'Running...') : 'Running...';
+    setStatus('running', runningText);
+    displayOutput('// ' + compilingText + '\n// ...', 'idle');
 
     try {
       if (!window.WebCodeRunner || typeof window.WebCodeRunner.runJava !== 'function') {
@@ -487,7 +435,6 @@ window.JavaSandbox = (() => {
       }
       const result = await window.WebCodeRunner.runJava(code, stdin);
       handleRunResult(result);
-
     } catch (err) {
       const message = String(err && err.message || '');
       if (
@@ -497,18 +444,13 @@ window.JavaSandbox = (() => {
         message.includes('503') ||
         message.includes('Service Unavailable')
       ) {
-        setStatus('warning', '在线执行服务暂不可用 / Online service unavailable');
-        displayOutput(
-          '// 在线执行服务暂不可用，请稍后再试或使用 Windows 完整版本地运行。\n' +
-          '// オンライン実行サービスは現在利用できません。しばらくしてから再試行するか、Windows 完整版でローカル実行してください。\n' +
-          '// The online execution service is currently unavailable. Try again later or use the Windows full version for local execution.\n' +
-          '// 온라인 실행 서비스를 현재 사용할 수 없습니다. 나중에 다시 시도하거나 Windows 정식 버전에서 로컬 실행을 사용하세요。',
-          'error'
-        );
+        const warningLbl = window.I18n ? I18n.t('sandbox.warning', 'Warning') : 'Warning';
+        const serviceUnavailableText = window.I18n ? I18n.t('sandbox.serviceUnavailable', 'Online service unavailable') : 'Online service unavailable';
+        setStatus('warning', warningLbl);
+        displayOutput('// ' + serviceUnavailableText, 'error');
         return;
       }
       if (err.name === 'TimeoutError') {
-
         setStatus('error', 'タイムアウト / Timeout');
 
         displayOutput('// タイムアウトエラー / Timeout Error\n// コードの実行が25秒を超えました。\n// 無限ループなどがないか確認してください。\n// 代码执行超过25秒，请检查是否有死循环。', 'error');
@@ -748,7 +690,7 @@ window.JavaSandbox = (() => {
         var _dbgIcon2 = document.createElement("i");
         _dbgIcon2.className = "fa-solid fa-robot";
         _dbgBtn2.appendChild(_dbgIcon2);
-        _dbgBtn2.appendChild(document.createTextNode(" AI \u5e2e\u6211\u770b\u770b"));
+        _dbgBtn2.appendChild(document.createTextNode(window.I18n ? " " + I18n.t("sandbox.aiHelp", "AI 分析") : " AI 帮我看看"));
         _dbgDiv2.appendChild(_dbgBtn2);
         debugPanel.appendChild(_dbgDiv2);
 
