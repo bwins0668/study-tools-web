@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v2026.6.20-r-responsive-fr-full-pack";
+const CACHE_NAME = "study-tools-web-v2026.6.20-r-locale-nav-compare";
 
 const CORE_ASSETS = [
   "./",

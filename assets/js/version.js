@@ -3,12 +3,12 @@
   "use strict";
 
   window.STUDY_TOOLS_VERSION = {
-    webVersion: "v2026.6.20-r-responsive-fr-full-pack",
-    desktopVersion: "v2026.6.20-r-pc-responsive-fr-full-pack",
-    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.20-r-pc-responsive-fr-full-pack",
+    webVersion: "v2026.6.20-r-locale-nav-compare",
+    desktopVersion: "v2026.6.20-r-pc-locale-nav-compare",
+    releaseUrl: "https://github.com/bwins0668/it-study-tools/releases/tag/v2026.6.20-r-pc-locale-nav-compare",
     webUrl: "https://study-tools-web-pages.pages.dev",
     stage: "stable",
-    assetVersion: "v2026.6.20-r-responsive-fr-full-pack"
+    assetVersion: "v2026.6.20-r-locale-nav-compare"
   };
 
   function applyVersionInfo() {
