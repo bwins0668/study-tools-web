@@ -1,29 +1,29 @@
 {
-  "assetVersion": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
-  "generatedAt": "2026-06-19T18:24:54Z",
-  "webVersion": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
-  "releaseVersion": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+  "assetVersion": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
+  "generatedAt": "2026-06-20T01:43:46Z",
+  "webVersion": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
+  "releaseVersion": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
   "assets": [
     {
       "path": "assets/js/version.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
-      "sizeBytes": 1484,
-      "sha256": "17525069ec3af8d2a0c76a69d5288567cc0c8435f38e9cc8070d3cf70a157579",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
+      "sizeBytes": 1480,
+      "sha256": "853fe232c8cdf915f63d49afd501c61f3c2725b850f8db9fea76e4285d6db5fd",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/app.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
-      "sizeBytes": 280179,
-      "sha256": "9b1463a66aafb54fa34cccb1094d82aa246136f482596a3e3cfd55b6cecfc046",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
+      "sizeBytes": 281680,
+      "sha256": "a16cd429fdb52dd5b3d86908f2461bd205dc6386d4ab9a2e0fd85bd3de268d9b",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/i18n.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 83452,
       "sha256": "6083aea3da00d00093982682ce22ff07059c732a17fd708e1d3619055e7706a1",
       "cacheStrategy": "static"
@@ -31,7 +31,7 @@
     {
       "path": "assets/js/content-i18n.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 20416,
       "sha256": "d8583e92b8df24a0f62be949b616005174265ab18e3d7efe8f0154d05a18e0c4",
       "cacheStrategy": "static"
@@ -39,15 +39,15 @@
     {
       "path": "assets/js/i18n-ui-dict.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
-      "sizeBytes": 331987,
-      "sha256": "8a3dbde7e483f5a9d71cd426c55a4284a98cf0a2957084121d73e2013fd42053",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
+      "sizeBytes": 332739,
+      "sha256": "974fe3361805521c60524e8ca2ee25861803a8f0ad289748f1a1ed9f7ca52bf1",
       "cacheStrategy": "static"
     },
     {
       "path": "assets/js/glossary.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 19357,
       "sha256": "11eeb9c0c915a4c7c07671e8cd5ccec6ae2744c2dec2a1bb43fb49f58df698c2",
       "cacheStrategy": "static"
@@ -55,7 +55,7 @@
     {
       "path": "assets/js/code-runner-api.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 1272,
       "sha256": "f9b1ac03a11e46c392e1a22827a20283bd0a84bd8e1c7b1e82311ce53c879869",
       "cacheStrategy": "static"
@@ -63,7 +63,7 @@
     {
       "path": "data/lessons.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 178488,
       "sha256": "dd6ec01e9dea0f6fc1ab60f3066ad05ea9262205332a20686ed5cbe49a8a7154",
       "cacheStrategy": "static"
@@ -71,7 +71,7 @@
     {
       "path": "assets/css/index.css",
       "type": "css",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 262170,
       "sha256": "dc06eb3bc3b198c0ccfaa2407e23a722a658632250edf29bbeaa18c2f58e51a6",
       "cacheStrategy": "static"
@@ -79,7 +79,7 @@
     {
       "path": "assets/css/glossary.css",
       "type": "css",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 7582,
       "sha256": "a4645b936d4b1e1ee002dbbd8eecaad25db9aed8ef882a88c969418b16d20d3d",
       "cacheStrategy": "static"
@@ -87,7 +87,7 @@
     {
       "path": "assets/images/og-study-tools-v2026-6-11.png",
       "type": "image",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 85582,
       "sha256": "ea4304c544f0c12e2f8eab5eb4af13ecf650e14c8da7aa122378096c1969de75",
       "cacheStrategy": "seo"
@@ -95,7 +95,7 @@
     {
       "path": "manifest.webmanifest",
       "type": "webmanifest",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
       "sizeBytes": 1066,
       "sha256": "a7b6c10c52b6a3f3bb4d5894ff0ec24704cad63a47081e518bb93778b6b740e9",
       "cacheStrategy": "pwa"
@@ -103,9 +103,9 @@
     {
       "path": "service-worker.js",
       "type": "javascript",
-      "version": "v2026.6.20-r-i18n-visible-gold-gate-ko-my",
-      "sizeBytes": 4571,
-      "sha256": "4ed551ab59039bea716f6463cd27c5b20f999ff51161bbb43d86655755853485",
+      "version": "v2026.6.20-r-i18n-gold-gate-thai-hotfix",
+      "sizeBytes": 4569,
+      "sha256": "9c6f59fbbad6031dbfbe09863c40ae313332ada585d4f802dbfa110736dbc07d",
       "cacheStrategy": "pwa"
     }
   ]

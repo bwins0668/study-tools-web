@@ -6,7 +6,7 @@
  */
 const { chromium } = require('playwright');
 
-const BASE_URL = 'http://127.0.0.1:5174';
+const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:5174';
 const VIEWPORTS = [
   { w: 375, h: 812, label: 'iPhone X' },
   { w: 390, h: 844, label: 'iPhone 14' },

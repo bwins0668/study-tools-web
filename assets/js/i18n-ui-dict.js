@@ -3791,11 +3791,22 @@
       sandbox: {
         run: "รัน", playground: "แซนด์บ็อกซ์", runSql: "รัน SQL", resetDb: "รีเซ็ต DB",
         hint: "คำใบ้", maximize: "ขยาย", output: "ผลลัพธ์",
+        toolbarCopy: "คัดลอก",
+        toolbarCopyTitle: "คัดลอกโค้ด",
+        toolbarClear: "ล้าง",
+        toolbarClearTitle: "ล้างและรีเซ็ตโค้ด",
         sqlPlaceholder: "พิมพ์คำสั่ง SQL...", currentMission: "ภารกิจปัจจุบัน",
         randomPractice: "ฝึกสุ่ม", databaseStructure: "โครงสร้าง Database",
         schoolDb: "DB โรงเรียน", bookstoreDb: "DB ร้านหนังสือ",
+        stdinPlaceholder: "ใส่ข้อมูล stdin สำหรับโปรแกรม...",
+        runCode: "รัน",
         sqlPlayground: "SQL Playground", readyStatus: "พร้อมแล้ว",
         outputPlaceholder: "(ผลลัพธ์จะแสดงที่นี่)"
+      },
+      toast: {
+        verifySuccess: "ตรวจผ่านแล้ว บันทึกคำตอบเรียบร้อย",
+        outputMismatch: "ผลลัพธ์ output ไม่ตรงกับที่คาดหวัง ตรวจไม่ผ่าน",
+        runtimeError: "เกิดข้อผิดพลาดระหว่างรัน"
       },
       exam: {
         verify: "ตรวจและบันทึก", submit: "ส่งข้อสอบ", previous: "ข้อก่อนหน้า",
