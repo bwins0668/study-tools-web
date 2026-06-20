@@ -475,7 +475,8 @@
         title: "単語カード",
         flip: "フリップ",
         clickToFlip: "カードをクリックして裏表を切り替えます：",
-        clickToFlipHint: "クリックして裏を見る"
+        clickToFlipHint: "クリックして裏を見る",
+        localizedDesc: "{title} の重要用語を確認するカードです。"
       },
       glossary: {
         title: "IT用語集",
@@ -506,7 +507,10 @@
         questionCount: "問題 {current} / 全 {total} 問",
         previous: "前へ",
         next: "次へ",
-        submitAnswer: "回答する"
+        submitAnswer: "回答する",
+        empty: "この章にはまだ小テストがありません。",
+        unavailable: "{title} の小テストはまだこの表示言語に対応していません。",
+        thisLesson: "この章"
       },
       typing: {
         library: "タイピング文庫",
@@ -750,14 +754,14 @@
         maximize: "最大化",
         output: "执行结果",
         sqlPlaceholder: "请在此处输入 SQL 语句...",
-        currentMission: "ミッション (当前任务)",
+        currentMission: "当前任务",
         randomPractice: "随机指令练习",
-        databaseStructure: "データベース構造 (DB 表结构参考)",
+        databaseStructure: "数据库表结构参考",
         schoolDb: "学校DB",
         bookstoreDb: "书店DB",
-        javaSandboxTitle: "Java プログラミング沙盒 / Java编程沙盒",
-        pythonSandboxTitle: "Python プログラミング沙盒 / Python编程沙盒",
-        pythonSandboxDesc: "Python 3.12 · 10s · オフラインサンドボックス",
+        javaSandboxTitle: "Java 编程沙盒",
+        pythonSandboxTitle: "Python 编程沙盒",
+        pythonSandboxDesc: "Python 3.12 · 10s · 离线沙盒",
         sqlPlayground: "SQL 演练沙盒",
         chooseLessonLoadCode: "— 选择课程后载入示例代码 —",
         toolbarTemplate: "模板",
@@ -766,8 +770,8 @@
         toolbarCopyTitle: "复制代码",
         toolbarClear: "重置",
         toolbarClearTitle: "清空并重置",
-        javaEditorPlaceholder: "Java 代码を这里に入力してください...",
-        pythonEditorPlaceholder: "Python 代码を这里に入力してください...",
+        javaEditorPlaceholder: "请在此处输入 Java 代码...",
+        pythonEditorPlaceholder: "请在此处输入 Python 代码...",
         stdinHeader: "标准输入 / Standard Input (stdin)",
         stdinPlaceholder: "程序接收 of 输入内容写在这里...",
         runCode: "运行",
@@ -1088,7 +1092,7 @@
         compareMode: "左右对照 (日/中)",
         japaneseOnly: "日本語のみ",
         chineseOnly: "中文简体",
-        analogy: "身近な例え (形象比喻)",
+        analogy: "形象比喻",
         sqlExample: "SQL构文例 (SQL示例)",
         javaExample: "Java 代码例 (示例代码)",
         pythonExample: "Python 代码例 (示例代码)",
@@ -1101,10 +1105,11 @@
         calculatorSelect: "选择工具:"
       },
       flashcard: {
-        title: "単語カード / 词汇闪卡",
-        flip: "翻转 / Flip",
+        title: "词汇闪卡",
+        flip: "翻转",
         clickToFlip: "点击闪卡即可翻转查看中日对照翻译及释义：",
-        clickToFlipHint: "点击此处翻转 / Click to flip"
+        clickToFlipHint: "点击此处翻转",
+        localizedDesc: "{title} 的核心术语卡片。"
       },
       glossary: {
         title: "术语表 / 用語集",
@@ -1131,14 +1136,17 @@
         resultCount: "共 {count} 个术语 / {count} 件の用語"
       },
       quiz: {
-        title: "理解度テスト (章节小测)",
+        title: "理解度测试 (章节小测)",
         questionCount: "问题 {current} / 共 {total} 题",
         previous: "上一题",
         next: "下一题",
-        submitAnswer: "回答する (提交回答)"
+        submitAnswer: "提交回答",
+        empty: "本章暂无课后练习小测。",
+        unavailable: "{title} 的小测暂未完成当前显示语言本地化。",
+        thisLesson: "本章"
       },
       typing: {
-        library: "打字文库 / タイピング文庫",
+        library: "打字文库",
         libraryDesc: "从 N3 到 N1 实战日本語输入，支持生活、职场、长文练习，自由调整节奏。",
         search: "文库搜索",
         searchPlaceholder: "标题、内容或标签",
@@ -1698,7 +1706,8 @@
         title: "Vocabulary Flashcard",
         flip: "Flip Card",
         clickToFlip: "Click the card to view translation and definitions:",
-        clickToFlipHint: "Click to flip"
+        clickToFlipHint: "Click to flip",
+        localizedDesc: "Localized term card for {title}."
       },
       glossary: {
         title: "IT Glossary",
@@ -1729,7 +1738,10 @@
         questionCount: "Question {current} / {total}",
         previous: "Previous",
         next: "Next",
-        submitAnswer: "Submit Answer"
+        submitAnswer: "Submit Answer",
+        empty: "No quiz is available for this lesson.",
+        unavailable: "The quiz for {title} is not localized for this display language yet.",
+        thisLesson: "this lesson"
       },
       typing: {
         library: "Typing Library",
@@ -2199,7 +2211,8 @@
         title: "ဝေါဟာရကတ်များ",
         flip: "လှန်မည်",
         clickToFlip: "ဂျပန်-တရုတ် ဘာသာပြန်နှင့် အဓိပ္ပာယ်ကို ကြည့်ရန် ကတ်ကို နှိပ်ပါ -",
-        clickToFlipHint: "အနောက်ဘက်ကို ကြည့်ရန် နှိပ်ပါ"
+        clickToFlipHint: "အနောက်ဘက်ကို ကြည့်ရန် နှိပ်ပါ",
+        localizedDesc: "{title} အတွက် အဓိကဝေါဟာရကတ်။"
       },
       glossary: {
         title: "IT ဝေါဟာရစာရင်း",
@@ -2230,7 +2243,10 @@
         questionCount: "မေးခွန်း {current} / စုစုပေါင်း {total}",
         previous: "ယခင်မေးခွန်း",
         next: "နောက်မေးခွန်း",
-        submitAnswer: "အဖြေတင်မည်"
+        submitAnswer: "အဖြေတင်မည်",
+        empty: "ဤသင်ခန်းစာတွင် quiz မရှိသေးပါ။",
+        unavailable: "{title} အတွက် quiz သည် ဤဘာသာစကားတွင် မပြင်ဆင်ရသေးပါ။",
+        thisLesson: "ဤသင်ခန်းစာ"
       },
       typing: {
         library: "Typing စာကြည့်တိုက်",
@@ -2672,7 +2688,8 @@
         title: "Thẻ từ vựng",
         flip: "Lật thẻ",
         clickToFlip: "Nhấp vào thẻ để lật xem nghĩa và cách đọc Nhật-Trung:",
-        clickToFlipHint: "Nhấp để lật xem mặt sau"
+        clickToFlipHint: "Nhấp để lật xem mặt sau",
+        localizedDesc: "Thẻ thuật ngữ chính cho {title}."
       },
       glossary: {
         title: "Bảng thuật ngữ IT",
@@ -2703,7 +2720,10 @@
         questionCount: "Câu hỏi {current} / Tổng số {total}",
         previous: "Câu trước",
         next: "Câu tiếp",
-        submitAnswer: "Nộp câu trả lời"
+        submitAnswer: "Nộp câu trả lời",
+        empty: "Bài này chưa có câu hỏi kiểm tra.",
+        unavailable: "Bài kiểm tra của {title} chưa được bản địa hóa cho ngôn ngữ hiển thị này.",
+        thisLesson: "bài này"
       },
       typing: {
         library: "Kho tài liệu gõ chữ",
@@ -3145,7 +3165,8 @@
         title: "Cartes mémoire",
         flip: "Retourner",
         clickToFlip: "Cliquez sur la carte pour la retourner et voir la traduction et définition :",
-        clickToFlipHint: "Cliquez pour retourner"
+        clickToFlipHint: "Cliquez pour retourner",
+        localizedDesc: "Carte des termes clés pour {title}."
       },
       glossary: {
         title: "Glossaire IT",
@@ -3176,7 +3197,10 @@
         questionCount: "Question {current} / {total}",
         previous: "Précédent",
         next: "Suivant",
-        submitAnswer: "Soumettre la réponse"
+        submitAnswer: "Soumettre la réponse",
+        empty: "Aucun quiz n'est disponible pour cette leçon.",
+        unavailable: "Le quiz de {title} n'est pas encore localisé pour cette langue d'affichage.",
+        thisLesson: "cette leçon"
       },
       typing: {
         library: "Bibliothèque de dactylographie",
@@ -3413,6 +3437,8 @@
         metaCategory: "분류",
         metaSubcategory: "하위 분류",
         metaTopic: "주제",
+        ruleTitleCoding: "실전 프로그래밍 모의시험",
+        ruleDescCoding: "IT 전문학교의 프로그래밍 시험 환경을 재현합니다. 제한 시간 안에 코드를 작성합니다.",
         launchBtnCoding: "시험 시작",
         cbtSimulatorCoding: "실전 모의시험",
         expectedOutput: "예상 출력 결과",
@@ -3706,7 +3732,8 @@
         title: "단어 카드",
         flip: "뒤집기",
         clickToFlip: "카드를 클릭하여 앞뒷면을 전환합니다:",
-        clickToFlipHint: "클릭하여 뒷면 보기"
+        clickToFlipHint: "클릭하여 뒷면 보기",
+        localizedDesc: "{title}의 핵심 용어 카드입니다."
       },
       glossary: {
         title: "IT 용어집",
@@ -3737,7 +3764,10 @@
         questionCount: "문제 {current} / 전체 {total}문",
         previous: "이전",
         next: "다음",
-        submitAnswer: "답변 제출"
+        submitAnswer: "답변 제출",
+        empty: "이 단원에는 아직 퀴즈가 없습니다.",
+        unavailable: "{title}의 퀴즈는 아직 이 표시 언어로 현지화되지 않았습니다.",
+        thisLesson: "이 단원"
       },
       typing: {
         library: "타이핑 라이브러리",
@@ -3906,8 +3936,14 @@
         allCategories: "ทั้งหมด", category: "หมวดหมู่", noResults: "ไม่พบศัพท์ที่เกี่ยวข้อง"
       },
       quiz: {
-        title: "แบบทดสอบความเข้าใจ", previous: "ข้อก่อนหน้า", next: "ข้อถัดไป",
-        submitAnswer: "ส่งคำตอบ"
+        title: "แบบทดสอบความเข้าใจ",
+        questionCount: "ข้อ {current} / {total}",
+        previous: "ข้อก่อนหน้า",
+        next: "ข้อถัดไป",
+        submitAnswer: "ส่งคำตอบ",
+        empty: "บทนี้ยังไม่มีแบบทดสอบ",
+        unavailable: "แบบทดสอบของ {title} ยังไม่ได้แปลสำหรับภาษาที่เลือก",
+        thisLesson: "บทนี้"
       },
       aiLearning: "AI เรียนรู้", language: "ภาษา",
       account: "บัญชี", login: "เข้าสู่ระบบ", logout: "ออกจากระบบ",
@@ -4398,7 +4434,8 @@
       title: "単語カード / 词汇闪卡 / 用語カード",
       flip: "翻转 / Flip / フリップ",
       clickToFlip: "点击闪卡即可翻转查看中日对照翻译及释义： / カードをクリックして裏表を切り替えます：",
-      clickToFlipHint: "点击此处翻转 / クリックして裏を見る"
+      clickToFlipHint: "点击此处翻转 / クリックして裏を見る",
+      localizedDesc: "{title} 的核心术语卡片 / {title} の重要用語カード。"
     },
     glossary: {
       title: "IT术语表 / IT用語集",
@@ -4429,7 +4466,10 @@
       questionCount: "问题 {current} / 共 {total} 题 / 問題 {current} / 全 {total} 問",
       previous: "上一题 / 前へ",
       next: "下一题 / 次へ",
-      submitAnswer: "提交回答 / 回答する"
+      submitAnswer: "提交回答 / 回答する",
+      empty: "本章暂无课后练习小测 / この章にはまだ小テストがありません。",
+      unavailable: "{title} 的小测暂未完成当前显示语言本地化 / {title} の小テストはまだこの表示言語に対応していません。",
+      thisLesson: "本章 / この章"
     },
     typing: {
       library: "打字文库 / タイピング文庫",
@@ -6369,6 +6409,25 @@
     // Duplicate English translations for other non-CJK locales to ensure they never leak Chinese/Japanese
     ["vi-VN", "th-TH", "fr-FR", "id-ID", "en-US"].forEach(function (loc) {
       HOTFIX2_DICT_PATCH[loc] = JSON.parse(JSON.stringify(HOTFIX2_DICT_PATCH["my-MM"]));
+    });
+
+    Object.assign(HOTFIX2_DICT_PATCH["fr-FR"].common, {
+      confirm: "Confirmer",
+      cancel: "Annuler",
+      warning: "Avertissement",
+      success: "Succès",
+      error: "Erreur",
+      back: "Retour"
+    });
+    Object.assign(HOTFIX2_DICT_PATCH["fr-FR"].codingTyping, {
+      title: "Exercice de frappe de code",
+      subtitle: "Maîtrisez la syntaxe en tapant du code. Choisissez une langue et une catégorie.",
+      language: "Langue",
+      category: "Catégorie",
+      difficultyFilter: "Difficulté",
+      allDifficulties: "Tous",
+      exerciseList: "Liste des exercices",
+      inputPlaceholder: "Tapez le code ici..."
     });
 
     Object.keys(HOTFIX2_DICT_PATCH).forEach(function (locale) {

@@ -116,12 +116,12 @@
     },
     my: {
       subjects: { sql: "SQL", java: "Java", python: "Python", itpass: "IT Passport", sg: "SG လုံခြုံရေး" },
-      subtitle: "အဓิကအယူအဆနှင့် လက်တွေ့လေ့ကျင့်ခန်း",
+      subtitle: "အဓိကအယူအဆနှင့် လက်တွေ့လေ့ကျင့်ခန်း",
       analogy: function (title, subjectName) {
         return "နေ့စဉ်ဥပမာ: " + title + " ကို " + subjectName + " မှတ်စုတစ်ခုလို သဘောထားပြီး input၊ လုပ်ဆောင်မှုနှင့် output ကို အဆင့်လိုက်ကြည့်ပါ။";
       },
       sandboxInstruction: function (title, subjectName) {
-        return subjectName + " sandbox တွင် " + title + " နှင့်ဆိုင်သော code ကို အနည်းငယ်ပြောင်းပြီး ရလด်ကို နှိုင်းယှဉ်ပါ။";
+        return subjectName + " sandbox တွင် " + title + " နှင့်ဆိုင်သော code ကို အနည်းငယ်ပြောင်းပြီး ရလဒ်ကို နှိုင်းယှဉ်ပါ။";
       },
       sandboxComment: function (title, subjectName) {
         return subjectName + " sandbox: " + title + " ၏ input၊ လုပ်ဆောင်မှုနှင့် output ကို စစ်ဆေးပါ။";
@@ -132,7 +132,7 @@
       resultExplanation: "Output နှင့် မျှော်မှန်းရလဒ်ကို နှိုင်းယှဉ်ပြီး code လုပ်ဆောင်မှုအစဉ်ကို စစ်ဆေးပါ။",
       emptyState: "ပြသရန် ရလဒ် မရှိသေးပါ။",
       wordCardDesc: function (title) {
-        return title + " နှင့်ဆိုင်သော အဓิကဝေါဟာရနှင့် အသုံးပြုမှုကို စုစည်းထားသော word card ဖြစ်သည်။";
+        return title + " နှင့်ဆိုင်သော အဓိကဝေါဟာရနှင့် အသုံးပြုမှုကို စုစည်းထားသော word card ဖြစ်သည်။";
       },
       codeExampleLabel: function (subjectName) { return subjectName + " code ဥပမာ"; },
       conceptLessonStatus: "သီအိုရီသင်ခန်းစာ: runရန် မလိုအပ်ပါ။",

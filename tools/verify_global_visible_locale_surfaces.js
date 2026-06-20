@@ -27,10 +27,17 @@ const HIRAKATA = /[ぁ-んァ-ンㇰ-ㇿ]/;
 
 let failures = 0;
 let scannedElements = 0;
+let allowedExceptions = 0;
+const LOG_ALLOWED_EXCEPTIONS = process.env.LOG_ALLOWED_I18N_EXCEPTIONS === "1";
+const ALLOWED_POLICIES = new Set(["source-ja", "code", "technical-token", "language-name"]);
 
-function checkText(locale, surfaceName, text, type, tagName, localeConfig) {
+function summarizeText(text) {
+  return String(text || "").replace(/\s+/g, " ").trim().slice(0, 120);
+}
+
+function classifyText(text, localeConfig) {
   const val = String(text || "").trim();
-  if (!val) return;
+  if (!val) return null;
 
   const allowCJK = localeConfig.allowCJK;     // for zh, default-ja-zh, ja
   const allowKana = localeConfig.allowKana;    // for ja, default-ja-zh
@@ -38,44 +45,74 @@ function checkText(locale, surfaceName, text, type, tagName, localeConfig) {
 
   // Raw key / null / undefined / [object Object]
   if (/\b(undefined|null)\b|\[object Object\]/.test(val)) {
-    console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: null/undefined/object residue: "${val}" (${type} in ${tagName})`);
-    failures++;
-    return;
+    return "null/undefined/object residue";
   }
 
   // Raw i18n key pattern
   if (/^[a-z][a-zA-Z0-9-]*\.[a-zA-Z0-9.-]+$/.test(val) && val.includes(".") && val.length > 3) {
     if (!/^[a-zA-Z0-9_.*()]+$/.test(val)) {
-      console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: Raw i18n key: "${val}" (${type} in ${tagName})`);
-      failures++;
-      return;
+      return "Raw i18n key";
     }
   }
 
   // CJK leakage (Chinese Hanzi / Japanese Kanji)
   if (!allowCJK && CJK.test(val)) {
-    console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: CJK leakage: "${val}" (${type} in ${tagName})`);
-    failures++;
-    return;
+    return "CJK leakage";
   }
 
   // Kana leakage (Hiragana / Katakana)
   if (!allowKana && HIRAKATA.test(val)) {
-    console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: Kana leakage: "${val}" (${type} in ${tagName})`);
-    failures++;
-    return;
+    return "Kana leakage";
   }
 
   // Korean requirement
   if (requireKorean) {
     const asciiClean = val.replace(/[a-zA-Z0-9\s:/|.\-+()_▶◀·×Δλπ#@%&=~^'",;!?$€£¥<>{}[\]*\\/]/g, "").trim();
     if (asciiClean.length > 0 && !HANGUL.test(val)) {
-      console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: Expected Korean, lacks Hangul: "${val}" (${type} in ${tagName})`);
-      failures++;
-      return;
+      return "Expected Korean, lacks Hangul";
     }
   }
 
+  return null;
+}
+
+function isAllowedPolicyException(locale, mode, surfaceName, element) {
+  if (!element.policy || !ALLOWED_POLICIES.has(element.policy)) return false;
+  if (element.policy === "code" || element.policy === "technical-token" || element.policy === "language-name") return true;
+  if (element.policy !== "source-ja") return false;
+
+  const text = String(element.text || "");
+  const hasJapaneseSourceText = HIRAKATA.test(text) || CJK.test(text);
+  if (!hasJapaneseSourceText) return false;
+  if (surfaceName === "Japanese Typing") return true;
+  if (mode === "ja-compare" && (surfaceName === "IT Passport page" || surfaceName === "SG page")) return true;
+  if (locale === "default-ja-zh" || locale === "ja") return true;
+  return false;
+}
+
+function checkText(locale, mode, surfaceName, el, localeConfig) {
+  const val = String(el.text || "").trim();
+  if (!val) return;
+
+  if (el.policy && !ALLOWED_POLICIES.has(el.policy)) {
+    console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: Unknown data-i18n-policy="${el.policy}" at ${el.selector}: "${summarizeText(val)}"`);
+    failures++;
+    return;
+  }
+
+  const reason = classifyText(val, localeConfig);
+  if (reason) {
+    if (isAllowedPolicyException(locale, mode, surfaceName, el)) {
+      if (LOG_ALLOWED_EXCEPTIONS) {
+        console.log(`  ⚠️ [${locale}] [${surfaceName}] ALLOWED_EXCEPTION policy=${el.policy} selector=${el.selector}: "${summarizeText(val)}"`);
+      }
+      allowedExceptions++;
+      return;
+    }
+    console.log(`  ❌ [${locale}] [${surfaceName}] FAIL: ${reason}: "${val}" (${el.type} in ${el.tagName})`);
+    failures++;
+    return;
+  }
   scannedElements++;
 }
 
@@ -89,6 +126,25 @@ async function scanPage(page, locale, mode, surfaceName, config) {
       return ["script", "style", "noscript"].includes(tag);
     }
 
+    function describe(el) {
+      if (!el || !el.tagName) return "";
+      let out = el.tagName.toLowerCase();
+      if (el.id) out += "#" + el.id;
+      if (el.className && typeof el.className === "string") {
+        const classes = el.className.trim().split(/\s+/).filter(Boolean).slice(0, 3);
+        if (classes.length) out += "." + classes.join(".");
+      }
+      return out;
+    }
+
+    function policyInfo(el) {
+      const policyEl = el && el.closest ? el.closest("[data-i18n-policy]") : null;
+      return policyEl ? {
+        policy: policyEl.getAttribute("data-i18n-policy") || "",
+        selector: describe(policyEl)
+      } : { policy: "", selector: "" };
+    }
+
     const walk = (node) => {
       if (node.nodeType === 3) {
         const val = node.nodeValue.trim();
@@ -96,18 +152,12 @@ async function scanPage(page, locale, mode, surfaceName, config) {
         const parent = node.parentElement;
         if (!parent || isUniversalSkip(parent)) return;
 
-        // Element-level policy exception: skip source-ja, code, language-name, technical-token
-        if (parent.closest && parent.closest("[data-i18n-policy]")) return;
-
         const style = window.getComputedStyle(parent);
         if (style.display === "none" || style.visibility === "hidden") return;
 
-        results.push({ type: "text", text: val, tagName: parent.tagName, className: parent.className, id: parent.id || "" });
+        results.push(Object.assign({ type: "text", text: val, tagName: parent.tagName, className: parent.className, id: parent.id || "" }, policyInfo(parent)));
       } else if (node.nodeType === 1) {
         if (isUniversalSkip(node)) return;
-
-        // Element-level policy exception
-        if (node.closest && node.closest("[data-i18n-policy]")) return;
 
         if (node.closest("pre, code, .CodeMirror")) {
           for (let i = 0; i < node.childNodes.length; i++) walk(node.childNodes[i]);
@@ -124,11 +174,11 @@ async function scanPage(page, locale, mode, surfaceName, config) {
         if (placeholder) {
           // Skip code editor textareas - code is always in ASCII
           if (!node.closest("textarea, .CodeMirror, pre, code")) {
-            results.push({ type: "placeholder", text: placeholder, tagName: node.tagName, id: node.id });
+            results.push(Object.assign({ type: "placeholder", text: placeholder, tagName: node.tagName, id: node.id }, policyInfo(node)));
           }
         }
-        if (title) results.push({ type: "title", text: title, tagName: node.tagName, id: node.id });
-        if (ariaLabel) results.push({ type: "aria-label", text: ariaLabel, tagName: node.tagName, id: node.id });
+        if (title) results.push(Object.assign({ type: "title", text: title, tagName: node.tagName, id: node.id }, policyInfo(node)));
+        if (ariaLabel) results.push(Object.assign({ type: "aria-label", text: ariaLabel, tagName: node.tagName, id: node.id }, policyInfo(node)));
       }
 
       for (let i = 0; i < node.childNodes.length; i++) walk(node.childNodes[i]);
@@ -157,9 +207,7 @@ async function scanPage(page, locale, mode, surfaceName, config) {
     requireKorean: locale === "ko"
   };
 
-  elements.forEach(el => {
-    checkText(locale, surfaceName, el.text, el.type, el.tagName, localeConfig);
-  });
+  elements.forEach(el => checkText(locale, mode, surfaceName, el, localeConfig));
 }
 
 async function run() {
@@ -285,7 +333,7 @@ async function run() {
   }
 
   await browser.close();
-  console.log(`\n=== COMPLETE: ${scannedElements} elements, ${failures} failures ===`);
+  console.log(`\n=== COMPLETE: PASS ${scannedElements} elements, ALLOWED_EXCEPTION ${allowedExceptions}, FAIL ${failures} ===`);
   process.exit(failures ? 1 : 0);
 }
 

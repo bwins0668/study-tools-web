@@ -817,9 +817,44 @@ DISABLE_TRANSLATION_OVERLAY = true;
   function updateLessonBadge(lesson, lang) {
     var badge = document.getElementById("lesson-section-badge");
     if (!badge) return;
-    var picked = pickLessonLocaleValue(lesson, "subtitle", lang || currentLang);
+    var targetLang = lang || currentLang;
+    var pack = getVisibleContentPack(getActiveSubject(), lesson, targetLang);
+    if (pack && pack.subtitle) {
+      badge.textContent = pack.subtitle;
+      return;
+    }
+    var picked = pickLessonLocaleValue(lesson, "subtitle", targetLang);
     if (picked && !picked.missing && picked.text) {
       badge.textContent = picked.text;
+      return;
+    }
+    var short = normalizeLangShort(targetLang);
+    var fallback = {
+      "default-ja-zh": "カテゴリー",
+      ja: "カテゴリー",
+      zh: "学习重点",
+      ko: "학습 요점",
+      my: "သင်ခန်းစာအချက်များ",
+      vi: "Trọng tâm bài học",
+      th: "ประเด็นการเรียนรู้",
+      fr: "Points clés"
+    };
+    badge.textContent = fallback[short] || "Lesson focus";
+  }
+
+  function updateFlashcardSummaryText() {
+    var desc = document.querySelector(".flashcard-desc-box [data-i18n=\"flashcard.clickToFlip\"]");
+    if (!desc || !window.I18n || typeof window.I18n.t !== "function") return;
+    desc.textContent = window.I18n.t("flashcard.clickToFlip", "Click the card to view the term details:");
+  }
+
+  function refreshDynamicLessonUi() {
+    updateFlashcardSummaryText();
+    if (typeof loadItPassChapterQuiz === "function" && getActiveSubject() === "itpass") {
+      loadItPassChapterQuiz();
+    }
+    if (typeof loadSgChapterQuiz === "function" && getActiveSubject() === "sg") {
+      loadSgChapterQuiz();
     }
   }
 
@@ -873,10 +908,11 @@ DISABLE_TRANSLATION_OVERLAY = true;
       titleTargetEl.textContent = textFromLessonLocale(lesson, "title", "zh", lesson.titleZh || "");
       conceptTargetEl.innerHTML = renderOriginalConcept(textFromLessonLocale(lesson, "concept", "zh", lesson.conceptZh || ""));
       setLessonFallbackState("zh", false);
-      updateCourseLabels();
-      updateLessonVisibleExtras(lesson, "default-ja-zh");
-      if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
-      return;
+    updateCourseLabels();
+    updateLessonVisibleExtras(lesson, "default-ja-zh");
+    refreshDynamicLessonUi();
+    if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
+    return;
     }
 
     if (short === "ja") {
@@ -891,6 +927,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
       setLessonFallbackState("ja", false);
       updateCourseLabels();
       updateLessonVisibleExtras(lesson, "ja");
+      refreshDynamicLessonUi();
       if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
@@ -907,6 +944,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
       setLessonFallbackState("zh", false);
       updateCourseLabels();
       updateLessonVisibleExtras(lesson, "zh");
+      refreshDynamicLessonUi();
       if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
       return;
     }
@@ -1028,6 +1066,7 @@ DISABLE_TRANSLATION_OVERLAY = true;
     setLessonFallbackState(actualLang, isFallback);
     updateCourseLabels();
     updateLessonVisibleExtras(lesson, short);
+    refreshDynamicLessonUi();
 
     if (typeof wrapAllTablesWithScrollWrapper === "function") wrapAllTablesWithScrollWrapper();
   }

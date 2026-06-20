@@ -1705,6 +1705,46 @@ function getCurrentContentLanguage() {
     : "default-ja-zh";
 }
 
+function getCurrentContentLanguageShort() {
+  const lang = getCurrentContentLanguage();
+  if (window.I18n && typeof window.I18n.normalizeLang === "function") {
+    return window.I18n.normalizeLang(lang);
+  }
+  const clean = String(lang || "").toLowerCase();
+  if (clean === "default-ja-zh" || clean === "ja-zh") return "default-ja-zh";
+  if (clean.indexOf("zh") === 0) return "zh";
+  if (clean.indexOf("ja") === 0) return "ja";
+  if (clean.indexOf("ko") === 0) return "ko";
+  if (clean.indexOf("my") === 0) return "my";
+  if (clean.indexOf("vi") === 0) return "vi";
+  if (clean.indexOf("th") === 0) return "th";
+  if (clean.indexOf("fr") === 0) return "fr";
+  if (clean.indexOf("en") === 0) return "en";
+  return "en";
+}
+
+function getCurrentDisplayMode() {
+  if (window.DisplayMode && typeof window.DisplayMode.getEffective === "function") {
+    return window.DisplayMode.getEffective(getCurrentContentLanguage());
+  }
+  return "target-only";
+}
+
+function isSourceContentVisibleMode() {
+  const short = getCurrentContentLanguageShort();
+  return short === "default-ja-zh" || short === "ja" || getCurrentDisplayMode() === "ja-compare";
+}
+
+function uiText(key, fallback, params) {
+  if (window.I18n && typeof window.I18n.t === "function") {
+    return window.I18n.t(key, params || null, fallback);
+  }
+  if (!params) return fallback || "";
+  return String(fallback || "").replace(/\{([^}]+)\}/g, function (_, name) {
+    return params[name] != null ? params[name] : "";
+  });
+}
+
 function pickLocalText(value, fallback) {
   if (window.I18n && typeof window.I18n.pickLocalizedValue === "function") {
     const picked = window.I18n.pickLocalizedValue(value, getCurrentContentLanguage());
@@ -1721,6 +1761,26 @@ function pickLessonLocalText(lesson, field, fallback) {
   if (lessonText) return lessonText;
   const localized = lesson ? getLessonLocalizedText(currentSubject || "sql", lesson) : null;
   return localized && localized[field] ? localized[field] : (fallback || "");
+}
+
+function pickExactCurrentLocaleValue(value) {
+  if (!value || typeof value !== "object") return "";
+  const lang = getCurrentContentLanguageShort();
+  if (lang === "default-ja-zh") {
+    return value.zh || value.ja || value.en || "";
+  }
+  return Object.prototype.hasOwnProperty.call(value, lang) && value[lang] ? value[lang] : "";
+}
+
+function pickLessonStrictCurrentText(subject, lesson, field) {
+  const localText = pickExactCurrentLocaleValue(lesson && lesson.locales ? lesson.locales[field] : null)
+    || pickExactCurrentLocaleValue(lesson ? lesson[field] : null);
+  if (localText) return localText;
+  const localized = getLessonLocalizedText(subject, lesson);
+  if (localized && localized.actualLang === getCurrentContentLanguageShort() && localized[field]) {
+    return localized[field];
+  }
+  return "";
 }
 
 function pickLessonVisibleField(subject, lesson, field, fallback) {
@@ -1740,6 +1800,37 @@ function pickLessonCodeExampleLabel(subject, lesson, fallback) {
 
 function getLessonVisiblePack(subject, lesson) {
   return getLessonLocalizedText(subject, lesson) || {};
+}
+
+function pickVisibleLessonTitle(subject, lesson) {
+  const pack = getLessonVisiblePack(subject, lesson);
+  if (pack.title) return pack.title;
+  return pickLessonVisibleField(subject, lesson, "title", lesson && (lesson.titleZh || lesson.titleJa || lesson.title) || "");
+}
+
+function flashcardTargetText(card, fallback) {
+  if (!card) return fallback || "";
+  return card.target || card.ko || card.my || card.vi || card.th || card.fr || card.en || card.zh || card.term || card.ja || fallback || "";
+}
+
+function flashcardDescText(card, fallback) {
+  if (!card) return fallback || "";
+  return card.desc || card.description || card.explanation || fallback || "";
+}
+
+function makeTargetOnlyFlashcards(subject, lesson, cards, useCardDesc) {
+  const pack = getLessonVisiblePack(subject, lesson);
+  const fallbackTitle = pickVisibleLessonTitle(subject, lesson) || String(subject || "lesson").toUpperCase();
+  const fallbackDesc = pack.analogy || pack.resultExplanation || uiText("flashcard.localizedDesc", "Localized term card for {title}.", { title: fallbackTitle });
+  const sourceCards = Array.isArray(cards) && cards.length ? cards : [{ target: fallbackTitle, desc: fallbackDesc }];
+  return sourceCards.map(function (card) {
+    const target = flashcardTargetText(card, fallbackTitle);
+    return {
+      ja: target,
+      target: target,
+      desc: useCardDesc ? flashcardDescText(card, fallbackDesc) : fallbackDesc
+    };
+  });
 }
 
 function applySandboxVisibleStatus(subject, lesson, statusKey, fallback) {
@@ -1820,8 +1911,15 @@ function loadLesson(id, isLanguageSwitch = false) {
     sqlEditor.value = "";
     updateLineNumbers();
   }
-  // Always refresh output placeholder (i18n labels)
-  resetOutputPlaceholder();
+  const outputBody = document.getElementById("output-body");
+  const hasRunOutput = outputBody && (
+    outputBody.querySelector("table") ||
+    outputBody.querySelector(".output-message-box") ||
+    outputBody.querySelector(".output-error-box")
+  );
+  if (!isLanguageSwitch || !hasRunOutput) {
+    resetOutputPlaceholder();
+  }
   if (window.I18n && typeof window.I18n.t === "function") {
     sqlEditor.setAttribute("placeholder", window.I18n.t("sandbox.sqlPlaceholder", "Please enter an SQL query here..."));
   }
@@ -2175,43 +2273,95 @@ function initQuiz(lesson) {
   });
 }
 
+function getLocalizedLessonQuiz(subject, lesson, idx) {
+  const pack = getLessonVisiblePack(subject, lesson);
+  const lists = [pack.quizList, pack.quizzes, pack.lessonQuiz].filter(Array.isArray);
+  for (const list of lists) {
+    if (list[idx] && list[idx].question && Array.isArray(list[idx].options)) {
+      return list[idx];
+    }
+  }
+  return null;
+}
+
+function buildUnavailableLessonQuiz(subject, lesson) {
+  const title = pickVisibleLessonTitle(subject, lesson) || uiText("quiz.thisLesson", "this lesson");
+  return {
+    unavailable: true,
+    question: uiText("quiz.unavailable", "The quiz for {title} is not localized yet.", { title }),
+    options: []
+  };
+}
+
+function getVisibleLessonQuiz(subject, lesson, idx) {
+  const localized = getLocalizedLessonQuiz(subject, lesson, idx);
+  if (localized) return localized;
+  if (isSourceContentVisibleMode()) return lesson.quizList[idx];
+  return buildUnavailableLessonQuiz(subject, lesson);
+}
+
+function setQuizProgressText(current, total) {
+  const progress = document.getElementById("itpass-quiz-progress-text");
+  if (!progress) return;
+  progress.textContent = uiText("quiz.questionCount", "Question {current} / {total}", {
+    current,
+    total
+  });
+}
+
+function renderLessonQuizOptions(optionsContainer, quiz, onSelect) {
+  optionsContainer.replaceChildren();
+  if (!quiz || quiz.unavailable || !Array.isArray(quiz.options) || quiz.options.length === 0) {
+    return;
+  }
+
+  quiz.options.forEach((opt, idx) => {
+    const optDiv = document.createElement("div");
+    optDiv.className = "quiz-option";
+
+    const marker = document.createElement("div");
+    marker.className = "option-marker";
+    marker.textContent = String.fromCharCode(65 + idx);
+
+    const optionText = document.createElement("div");
+    optionText.className = "option-text";
+    optionText.textContent = opt;
+
+    optDiv.append(marker, optionText);
+    optDiv.addEventListener("click", () => {
+      document.querySelectorAll(".quiz-option").forEach(el => el.classList.remove("selected"));
+      optDiv.classList.add("selected");
+      onSelect(idx);
+    });
+    optionsContainer.appendChild(optDiv);
+  });
+}
+
 // Setup IT Passport Chapter specific quizzes
 function loadItPassChapterQuiz() {
   const lesson = IT_PASSPORT_LESSONS.find(l => l.id === currentItPassLessonId);
   if (!lesson || !lesson.quizList || lesson.quizList.length === 0) {
     document.getElementById("itpass-quiz-nav").style.display = "none";
-    document.getElementById("quiz-question").innerText = "本章暂无课后练习小测。";
-    document.getElementById("quiz-options").innerHTML = "";
+    document.getElementById("quiz-question").textContent = uiText("quiz.empty", "No quiz is available for this lesson.");
+    document.getElementById("quiz-options").replaceChildren();
     return;
   }
   
   const totalQuizzes = lesson.quizList.length;
-  document.getElementById("itpass-quiz-progress-text").innerText = `問題 ${itpassQuizIdx + 1} / 共 ${totalQuizzes} 题`;
+  setQuizProgressText(itpassQuizIdx + 1, totalQuizzes);
   
-  const quiz = lesson.quizList[itpassQuizIdx];
-  document.getElementById("quiz-question").innerText = quiz.question;
+  const quiz = getVisibleLessonQuiz("itpass", lesson, itpassQuizIdx);
+  document.getElementById("quiz-question").textContent = quiz.question;
   
   const optionsContainer = document.getElementById("quiz-options");
-  optionsContainer.innerHTML = "";
   selectedItPassQuizOption = null;
   
   // Hide feedback
   const feedback = document.getElementById("quiz-feedback");
   feedback.className = "quiz-feedback hidden";
   
-  quiz.options.forEach((opt, idx) => {
-    const optDiv = document.createElement("div");
-    optDiv.className = "quiz-option";
-    optDiv.innerHTML = `
-      <div class="option-marker">${String.fromCharCode(65 + idx)}</div>
-      <div class="option-text">${opt}</div>
-    `;
-    optDiv.addEventListener("click", () => {
-      document.querySelectorAll(".quiz-option").forEach(el => el.classList.remove("selected"));
-      optDiv.classList.add("selected");
-      selectedItPassQuizOption = idx;
-    });
-    optionsContainer.appendChild(optDiv);
+  renderLessonQuizOptions(optionsContainer, quiz, (idx) => {
+    selectedItPassQuizOption = idx;
   });
 }
 
@@ -2239,38 +2389,26 @@ function loadSgChapterQuiz() {
   const lesson = SG_LESSONS.find(l => l.id === currentSgLessonId);
   if (!lesson || !lesson.quizList || lesson.quizList.length === 0) {
     document.getElementById("itpass-quiz-nav").style.display = "none";
-    document.getElementById("quiz-question").innerText = "本章暂无课后练习小测。";
-    document.getElementById("quiz-options").innerHTML = "";
+    document.getElementById("quiz-question").textContent = uiText("quiz.empty", "No quiz is available for this lesson.");
+    document.getElementById("quiz-options").replaceChildren();
     return;
   }
   
   const totalQuizzes = lesson.quizList.length;
-  document.getElementById("itpass-quiz-progress-text").innerText = `問題 ${sgQuizIdx + 1} / 共 ${totalQuizzes} 题`;
+  setQuizProgressText(sgQuizIdx + 1, totalQuizzes);
   
-  const quiz = lesson.quizList[sgQuizIdx];
-  document.getElementById("quiz-question").innerText = quiz.question;
+  const quiz = getVisibleLessonQuiz("sg", lesson, sgQuizIdx);
+  document.getElementById("quiz-question").textContent = quiz.question;
   
   const optionsContainer = document.getElementById("quiz-options");
-  optionsContainer.innerHTML = "";
   selectedSgQuizOption = null;
   
   // Hide feedback
   const feedback = document.getElementById("quiz-feedback");
   feedback.className = "quiz-feedback hidden";
   
-  quiz.options.forEach((opt, idx) => {
-    const optDiv = document.createElement("div");
-    optDiv.className = "quiz-option";
-    optDiv.innerHTML = `
-      <div class="option-marker">${String.fromCharCode(65 + idx)}</div>
-      <div class="option-text">${opt}</div>
-    `;
-    optDiv.addEventListener("click", () => {
-      document.querySelectorAll(".quiz-option").forEach(el => el.classList.remove("selected"));
-      optDiv.classList.add("selected");
-      selectedSgQuizOption = idx;
-    });
-    optionsContainer.appendChild(optDiv);
+  renderLessonQuizOptions(optionsContainer, quiz, (idx) => {
+    selectedSgQuizOption = idx;
   });
 }
 
@@ -3063,6 +3201,27 @@ function toggleItPassCard(cardName) {
 }
 
 // Update Mission Text and Random Practice Toggle Button for SQL
+function getSqlMissionFallbackText() {
+  const title = pickVisibleLessonTitle("sql", SQL_LESSONS.find(l => l.id === currentLessonId)) || "SQL";
+  const map = {
+    "default-ja-zh": `使用 students_mst 练习 SQL 查询 / students_mst で SQL クエリを練習しましょう。`,
+    ja: "students_mst を使って SQL クエリを練習しましょう。",
+    zh: "使用 students_mst 练习 SQL 查询。",
+    en: `Practice an SQL query with students_mst for ${title}.`,
+    ko: `students_mst로 ${title} SQL 쿼리를 연습합니다.`,
+    my: `${title} အတွက် students_mst ဖြင့် SQL query လေ့ကျင့်ပါ။`,
+    vi: `Luyện tập câu lệnh SQL với students_mst cho ${title}.`,
+    th: `ฝึกคำสั่ง SQL ด้วย students_mst สำหรับ ${title}`,
+    fr: `Entrainez-vous a ecrire une requete SQL avec students_mst pour ${title}.`
+  };
+  return map[getCurrentContentLanguageShort()] || map.en;
+}
+
+function pickSqlUiText(map, fallback) {
+  const lang = getCurrentContentLanguageShort();
+  return map[lang] || map.en || fallback || "";
+}
+
 function updateMissionUI() {
   const lesson = SQL_LESSONS.find(l => l.id === currentLessonId);
   if (!lesson) return;
@@ -3073,37 +3232,47 @@ function updateMissionUI() {
   const changeBtn = document.getElementById("change-practice-btn");
   
   if (isRandomPracticeActive) {
-    label.innerText = pickLocalText({
+    label.innerText = pickSqlUiText({
+      "default-ja-zh": "随机练习 / ランダム課題",
       zh: "随机练习",
       ja: "ランダム課題",
       en: "Random Practice",
-      ko: "랜덤 연습"
+      ko: "랜덤 연습",
+      my: "ကျပန်းလေ့ကျင့်မှု",
+      vi: "Luyện tập ngẫu nhiên",
+      th: "ฝึกสุ่ม",
+      fr: "Pratique aleatoire"
     }, "随机练习");
     taskText.innerText = lesson.randomExercise
       ? pickExerciseTaskText(lesson.randomExercise)
-      : pickLocalText({ zh: "暂无随机练习", ja: "ランダム練習はまだありません", en: "No random practice yet", ko: "아직 랜덤 연습이 없습니다" }, "暂无随机练习");
-    btn.innerHTML = `<i class="fa-solid fa-circle-arrow-left"></i> ${pickLocalText({
+      : pickSqlUiText({
+        "default-ja-zh": "暂无随机练习 / ランダム練習はまだありません",
+        zh: "暂无随机练习",
+        ja: "ランダム練習はまだありません",
+        en: "No random practice yet",
+        ko: "아직 랜덤 연습이 없습니다",
+        my: "ကျပန်းလေ့ကျင့်မှု မရှိသေးပါ။",
+        vi: "Chua co bai luyen tap ngau nhien.",
+        th: "ยังไม่มีแบบฝึกสุ่ม",
+        fr: "Aucune pratique aleatoire pour le moment"
+      }, "暂无随机练习");
+    btn.innerHTML = `<i class="fa-solid fa-circle-arrow-left"></i> ${escapeHtml(pickSqlUiText({
+      "default-ja-zh": "返回主线任务 / メイン課題に戻る",
       zh: "返回主线任务",
       ja: "メイン課題に戻る",
       en: "Back to Main Mission",
-      ko: "기본 미션으로 돌아가기"
-    }, "返回主线任务")}`;
+      ko: "기본 미션으로 돌아가기",
+      my: "ပင်မမစ်ရှင်သို့ ပြန်သွားပါ",
+      vi: "Quay lai nhiem vu chinh",
+      th: "กลับไปภารกิจหลัก",
+      fr: "Retour a la mission principale"
+    }, "返回主线任务"))}`;
     btn.classList.add('active-practice');
     if (changeBtn) changeBtn.style.display = "inline-flex";
   } else {
-    label.innerText = pickLocalText({
-      zh: "ミッション (当前任务)",
-      ja: "ミッション",
-      en: "Current Mission",
-      ko: "현재 미션"
-    }, "ミッション (当前任务)");
-    taskText.innerText = pickLessonLocalText(lesson, "playgroundTask", lesson.playgroundTask);
-    btn.innerHTML = `<i class="fa-solid fa-shuffle"></i> ${pickLocalText({
-      zh: "随机指令练习",
-      ja: "ランダム指令練習",
-      en: "Random Practice",
-      ko: "랜덤 지시 연습"
-    }, "随机指令练习")}`;
+    label.innerText = uiText("sandbox.currentMission", "Current Mission");
+    taskText.innerText = pickLessonStrictCurrentText("sql", lesson, "playgroundTask") || getSqlMissionFallbackText();
+    btn.innerHTML = `<i class="fa-solid fa-shuffle"></i> ${escapeHtml(uiText("sandbox.randomPractice", "Random Practice"))}`;
     btn.classList.remove('active-practice');
     if (changeBtn) changeBtn.style.display = "none";
   }
@@ -3246,38 +3415,107 @@ validateTaskCompletion = function(userSql) {
 
 // ===================================================
 //  IT Passport Checklists & Flashcards Populators
+const CHECKLIST_FALLBACKS_BY_LANG = {
+  "default-ja-zh": [
+    "说明本节主题的核心概念 / この単元の重要概念を説明する",
+    "区分考试场景中的关键条件 / 試験場面の条件を見分ける",
+    "完成课后小测并整理复习笔记 / 小テスト後に復習メモを残す"
+  ],
+  ja: [
+    "この単元の重要概念と目的を説明する",
+    "試験問題の条件とひっかけを見分ける",
+    "小テスト後に復習メモを一つ残す"
+  ],
+  zh: [
+    "说明本节主题的核心概念和用途",
+    "区分考试场景中的关键条件和常见误区",
+    "完成课后小测并整理一条复习笔记"
+  ],
+  ko: [
+    "이 단원의 핵심 개념과 목적을 설명합니다.",
+    "시험 지문에서 조건과 함정을 구분합니다.",
+    "퀴즈를 풀고 복습 메모를 정리합니다."
+  ],
+  my: [
+    "ဤသင်ခန်းစာ၏ အဓိကအယူအဆနှင့် ရည်ရွယ်ချက်ကို ရှင်းပြပါ။",
+    "မေးခွန်းအခြေအနေများနှင့် လွယ်လွယ်မှားနိုင်သောအချက်များကို ခွဲခြားပါ။",
+    "လေ့ကျင့်ခန်းပြီးနောက် ပြန်လည်သုံးသပ်မှတ်စုတစ်ခုရေးပါ။"
+  ],
+  vi: [
+    "Giải thích khái niệm cốt lõi và mục đích của bài này.",
+    "Phân biệt điều kiện quan trọng và bẫy thường gặp trong câu hỏi.",
+    "Hoàn thành bài kiểm tra và ghi một ghi chú ôn tập."
+  ],
+  th: [
+    "อธิบายแนวคิดหลักและวัตถุประสงค์ของบทนี้",
+    "แยกเงื่อนไขสำคัญและจุดหลอกในโจทย์สอบ",
+    "ทำแบบทดสอบและจดบันทึกทบทวนหนึ่งข้อ"
+  ],
+  fr: [
+    "Expliquer le concept clé et l'objectif de cette leçon.",
+    "Repérer les conditions importantes et les pièges de l'énoncé.",
+    "Terminer le quiz et noter un point de révision."
+  ]
+};
+
+function normalizeChecklistLang(code) {
+  if (window.I18n && typeof window.I18n.normalizeLang === "function") {
+    return window.I18n.normalizeLang(code);
+  }
+  const c = String(code || "default-ja-zh").toLowerCase();
+  if (c === "ko-kr") return "ko";
+  if (c === "my-mm") return "my";
+  if (c === "vi-vn") return "vi";
+  if (c === "th-th") return "th";
+  if (c === "fr-fr") return "fr";
+  if (c === "zh-cn") return "zh";
+  if (c === "ja-jp") return "ja";
+  return c;
+}
+
+function resolveChecklistItems(lesson) {
+  const subject = currentSubject === "sg" ? "sg" : "itpass";
+  const pack = getLessonVisiblePack(subject, lesson);
+  const localizedItems = pack && [pack.keyPoints, pack.checklist, pack.objectives, pack.learningGoals].find(function (items) {
+    return Array.isArray(items) && items.length > 0;
+  });
+  if (localizedItems) return localizedItems.map(function (item) { return String(item); });
+
+  const lang = normalizeChecklistLang(getCurrentContentLanguage());
+  return (CHECKLIST_FALLBACKS_BY_LANG[lang] || CHECKLIST_FALLBACKS_BY_LANG["default-ja-zh"]).slice();
+}
+
 function renderChecklist(lesson) {
   const checklistBody = document.getElementById("checklist-body");
   if (!checklistBody) return;
-  
-  const items = {
-    1: ["理解CPU的五大功能（控制、运算、存储、输入、输出）", "熟悉存储器层次结构（Cache > RAM > HDD/SSD）", "掌握2/10/16进制转换方法"],
-    2: ["理解操作系统的多任务调度和文件路径管理", "掌握绝对路径和相对路径的区别", "能够区分完全、差分与增量备份"],
-    3: ["理解C/S架构与云计算服务类型(SaaS/PaaS/IaaS)", "对比RAID 0, RAID 1和RAID 5磁盘阵列", "掌握MTBF、MTTR的定义和系统可用性公式"],
-    4: ["熟悉TCP/IP通信协议分层和常用端口号", "理解DNS域名解析与DHCP自动分配过程", "掌握VoIP和IP网络通信的基本原理"],
-    5: ["防范勒索软件和钓鱼网络攻击", "对比对称加密(共通键)与非对称加密(公开键)的区别", "理解数字签名的生成及防伪/防否认作用"],
-    6: ["了解关系型数据库的基本概念（主键与外键）", "能够进行数据库第一、第二、第三规范化重构", "掌握事务的ACID特性"],
-    7: ["掌握算法的三大基本控制流（顺序、选择、循环）", "熟悉变量存取与一维数组的声明遍历", "能够阅读伪代码逻辑"],
-    8: ["理清软件开发生命周期流程各阶段任务", "对比瀑布开发模型与敏捷开发模型", "理清WBS工作分解结构与SLA协议指标"],
-    9: ["了解B/S和P/L财务报表以及计算盈亏平衡点", "理解工业产权与著作权的保护范围", "区分外包合同(请负)和劳务派遣的区别"],
-    10: ["掌握SWOT分析、3C分析 and PPM产品矩阵划分", "理解企业资源规划(ERP)和供应链管理(SCM)概念", "了解数字化转型(DX)的基本概念"]
-  };
-  
-  // Use lesson.chapterId to load chapter-specific checklist for all sub-sections
-  const curItems = items[lesson.chapterId] || ["认真学习章节重要概念", "完成课后练习小测"];
-  checklistBody.innerHTML = curItems.map(item => `
-    <div class="checklist-item">
-      <i class="fa-solid fa-circle-check"></i>
-      <span>${item}</span>
-    </div>
-  `).join("");
+
+  const curItems = resolveChecklistItems(lesson);
+  const nodes = curItems.map(function (item) {
+    const row = document.createElement("div");
+    row.className = "checklist-item";
+
+    const icon = document.createElement("i");
+    icon.className = "fa-solid fa-circle-check";
+
+    const text = document.createElement("span");
+    text.textContent = item;
+
+    row.append(icon, text);
+    return row;
+  });
+  checklistBody.replaceChildren.apply(checklistBody, nodes);
 }
 
 function getLocalizedFlashcards(subject, lesson, baseCards) {
   const pack = getLessonVisiblePack(subject, lesson);
-  if (pack.wordCards && Array.isArray(pack.wordCards) && pack.wordCards.length) return pack.wordCards;
-  if (pack.flashcards && Array.isArray(pack.flashcards) && pack.flashcards.length) return pack.flashcards;
-  return baseCards || [];
+  const packCards = pack.wordCards && Array.isArray(pack.wordCards) && pack.wordCards.length
+    ? pack.wordCards
+    : (pack.flashcards && Array.isArray(pack.flashcards) && pack.flashcards.length ? pack.flashcards : null);
+  const cards = packCards || (baseCards || []);
+  if (!isSourceContentVisibleMode()) {
+    return makeTargetOnlyFlashcards(subject, lesson, cards, !!packCards);
+  }
+  return cards;
 }
 
 function normalizeFlashcard(card) {
