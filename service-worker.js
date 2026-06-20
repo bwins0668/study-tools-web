@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v2026.6.20-r-i18n-gold-gate-thai-hotfix";
+const CACHE_NAME = "study-tools-web-v2026.6.20-r-responsive-fr-full-pack";
 
 const CORE_ASSETS = [
   "./",

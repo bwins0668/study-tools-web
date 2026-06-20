@@ -186,3 +186,25 @@ If interrupted, run Q6 regression.
 - Sync Web Thai Gold Gate changes to PC.
 - Run PC quality gates and visible Gold Gate.
 - Build and publish Portable only after both Web and PC final confirmation gates pass.
+
+---
+
+## Round: Dual-Responsive-Gold-UX-FR-Full-Pack-And-Portable-Release
+
+### Stage A Status: WEB + PC responsive UX PASS
+
+#### Web Completed:
+- Added centralized mobile drawer state handling in `assets/js/app.js` for sidebar/playground `aria-expanded`, `aria-hidden`, focus return, and browser Back behavior.
+- Added mobile-only drawer headers and close/return controls in `index.html`.
+- Tightened mobile drawer geometry in `assets/css/index.css`, including the sandbox drawer height reset below the fixed header.
+- Added `tools/verify_responsive_navigation_smoke.js` for the required 14 viewports and real navigation workflows.
+- Added `tools/verify_responsive_visual_smoke.js` for required viewport overflow, drawer geometry, and utility popover containment.
+- Added `docs/responsive_ux_audit_and_improvements.md` with baseline findings, fix map, and validation evidence.
+
+#### Web Responsive Results:
+- Responsive navigation smoke: PASS on 14 viewports, SQL/Java/Python mobile course flows, sidebar, playground, browser Back, language switch, and tools drawer.
+- Responsive visual smoke: PASS on 14 viewports, SQL/Java/Python layouts, horizontal overflow, drawer geometry, and language/tools containment.
+
+#### Next Steps:
+- Do not start Stage B French pack until Web and PC Stage A are both PASS.
+- Stage A requirement is satisfied; proceed to Stage B French pack only after this PASS state remains clean in git.
