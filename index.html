@@ -11,35 +11,155 @@
   <link rel="stylesheet" href="assets/lib/google-fonts/css/google-fonts.css">
   <link rel="stylesheet" href="assets/lib/font-awesome/css/all.min.css">
   <link rel="stylesheet" href="assets/css/index.css?v=v2026.6.20-r-responsive-fr-full-pack">
-  <link rel="stylesheet" href="assets/css/light-theme.css?v=v2026.6.15-r90.0">
+  <!-- P9：light-theme.css 卸载 — 浅色由 tokens 翻转 + quiet.css 变量重映射 +
+       runtime 主题层（app.js）承担；该文件保留在仓库仅作历史参考 -->
   <link rel="stylesheet" href="assets/css/japanese-typing.css?v=20260606_v2">
   <link rel="stylesheet" href="assets/css/ai_learning.css?v=20260608_v2">
 
   <link rel="stylesheet" href="assets/css/glossary.css?v=20260611_v1">
   <link rel="stylesheet" href="assets/css/coding-typing.css?v=v2026.6.14-r22.25">
+  <!-- Design System (PC UI Rebuild) -->
+  <link rel="stylesheet" href="assets/css/ds/tokens.css?v=r2">
+  <link rel="stylesheet" href="assets/css/ds/base.css?v=r2">
+  <link rel="stylesheet" href="assets/css/ds/components.css?v=r2">
+  <link rel="stylesheet" href="assets/css/ds/shell.css?v=r2">
+  <link rel="stylesheet" href="assets/css/ds/home.css?v=r9">
+  <link rel="stylesheet" href="assets/css/ds/lesson.css?v=r9">
+  <link rel="stylesheet" href="assets/css/ds/practice.css?v=r9">
+  <link rel="stylesheet" href="assets/css/ds/quiet.css?v=r9">
 </head>
-<body>
+<body class="has-shell">
 
+  <a href="#main-app-body" class="skip-link ds-scope">メインコンテンツへ / 跳到主内容</a>
+
+  <div class="app-frame">
+    <!-- Nav Rail（P1：与旧导航并存，P2 起为唯一主导航） -->
+    <nav class="nav-rail ds-scope" id="nav-rail" aria-label="学習セクション" data-i18n-aria-label="moduleSwitch.title">
+      <div class="nav-rail__logo" aria-hidden="true">ST</div>
+      <button type="button" class="rail-item" data-module="home" id="rail-home" aria-label="学習ワークスペース" data-i18n-aria-label="home.eyebrow"><i class="fa-solid fa-house" aria-hidden="true"></i></button>
+      <hr class="nav-rail__sep">
+      <button type="button" class="rail-item" data-module="sql" aria-label="SQL 学习" data-i18n-aria-label="nav.sql"><i class="fa-solid fa-database" aria-hidden="true"></i></button>
+      <button type="button" class="rail-item" data-module="java" aria-label="Java 学习" data-i18n-aria-label="nav.java"><i class="fa-brands fa-java" aria-hidden="true"></i></button>
+      <button type="button" class="rail-item" data-module="python" aria-label="Python 学习" data-i18n-aria-label="nav.python"><i class="fa-brands fa-python" aria-hidden="true"></i></button>
+      <button type="button" class="rail-item" data-module="itpass" aria-label="IT Passport 备考" data-i18n-aria-label="nav.itpass"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></button>
+      <button type="button" class="rail-item" data-module="sg" aria-label="SG 备考" data-i18n-aria-label="nav.sg"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></button>
+      <hr class="nav-rail__sep">
+      <button type="button" class="rail-item" data-module="typing" aria-label="日本語タイピング" data-i18n-aria-label="nav.typing"><i class="fa-solid fa-keyboard" aria-hidden="true"></i></button>
+      <button type="button" class="rail-item" data-module="coding-typing" aria-label="编程打字" data-i18n-aria-label="nav.codingTyping"><i class="fa-solid fa-laptop-code" aria-hidden="true"></i></button>
+      <hr class="nav-rail__sep">
+      <button type="button" class="rail-item" data-module="mos365" id="rail-mos365" aria-label="MOS Excel 365"><i class="fa-solid fa-file-excel" aria-hidden="true"></i></button>
+      <div class="nav-rail__spacer"></div>
+      <button type="button" class="rail-item" id="rail-tools" aria-label="工具" data-i18n-aria-label="tools.tools"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></button>
+      <button type="button" class="rail-item" id="rail-theme" aria-label="切换浅色/深色模式" data-i18n-aria-label="common.themeToggle"><i class="fa-solid fa-sun" aria-hidden="true"></i></button>
+    </nav>
+
+    <div class="app-frame__body">
   <!-- App Container -->
   <div class="app-container">
 
     <!-- Header Panel -->
     <header class="app-header">
-      <div class="header-logo">
-        <button id="mobile-sidebar-toggle" class="mobile-toggle-btn" onclick="toggleMobileSidebar()" title="目录" data-i18n-title="sidebar.unitList" aria-label="目录" data-i18n-aria-label="sidebar.unitList" aria-controls="app-sidebar" aria-expanded="false">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <button class="module-switch-trigger" id="module-switch-trigger" type="button"
-          aria-expanded="false" aria-controls="module-switch-panel"
+      <!-- Brand area with module dropdown -->
+      <div class="header-brand-wrapper" id="header-brand-wrapper">
+        <div class="header-brand-trigger" id="header-brand-trigger" tabindex="0" role="button"
+          aria-expanded="false" aria-haspopup="true" aria-controls="module-switch-panel"
           data-i18n-aria-label="moduleSwitch.triggerLabel">
-          <i class="fa-solid fa-graduation-cap logo-icon" id="main-logo-icon"></i>
+          <button id="mobile-sidebar-toggle" class="mobile-toggle-btn" onclick="toggleMobileSidebar(); event.stopPropagation();" title="目录" data-i18n-title="sidebar.unitList" aria-label="目录" data-i18n-aria-label="sidebar.unitList" aria-controls="app-sidebar" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <!-- P15.2：桌面目录入口迁入 header 左端（流内 44×44；收起态正文不再保留左侧避让带） -->
+          <button type="button" class="context-nav-toggle ds-scope" id="context-nav-toggle"
+            onclick="event.stopPropagation();"
+            aria-label="课程目录" data-i18n-aria-label="sidebar.unitList"
+            aria-expanded="false" aria-controls="app-sidebar">
+            <i class="fa-solid fa-table-list" aria-hidden="true"></i>
+          </button>
+          <!-- P11：品牌 monogram（学习笔记折角 + 代码行隐喻；token 着色，深浅自适配） -->
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1.5" y="1.5" width="29" height="29" rx="7.5" class="brand-mark__plate"/>
+              <path d="M20.5 1.5 H23 A7.5 7.5 0 0 1 30.5 9 V11.5 L20.5 1.5 Z" class="brand-mark__fold"/>
+              <rect x="8" y="13" width="16" height="2.6" rx="1.3" class="brand-mark__line brand-mark__line--main"/>
+              <rect x="8" y="19" width="10" height="2.6" rx="1.3" class="brand-mark__line brand-mark__line--sub"/>
+            </svg>
+          </span>
+          <i class="fa-solid fa-graduation-cap logo-icon" id="main-logo-icon" hidden></i>
           <div class="logo-text">
             <h1 id="main-title-text">Study Tools</h1>
-            <span><span data-i18n="common.subtitle">配套备考平台</span> &nbsp;•&nbsp; By: Coco</span>
+            <span><span data-i18n="common.subtitle">配套备考平台</span> · By: Coco</span>
           </div>
           <span class="brand-caret" aria-hidden="true">▾</span>
-        </button>
+        </div>
+        <!-- Module Switch Panel — anchored below brand card -->
+        <div class="module-switch-panel" id="module-switch-panel" hidden role="listbox" aria-modal="false" data-i18n-aria-label="moduleSwitch.title">
+          <div class="module-switch-panel__header">
+            <strong data-i18n="moduleSwitch.title">选择学习版块</strong>
+            <button type="button" class="module-switch-close" aria-label="Close" data-i18n-aria-label="moduleSwitch.close">&times;</button>
+          </div>
+          <div class="module-switch-panel__body">
+
+
+            <button class="module-switch-option active" data-module="sql" onclick="switchSubject('sql')">
+              <span class="module-switch-option__icon"><i class="fa-solid fa-database"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.sql">SQL 学习</strong>
+                <span data-i18n="moduleDesc.sql">数据库基础、查询、练习与沙盒</span>
+              </span>
+            </button>
+
+            <button class="module-switch-option" data-module="sg" onclick="switchSubject('sg')">
+              <span class="module-switch-option__icon"><i class="fa-solid fa-shield-halved"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.sg">SG 备考</strong>
+                <span data-i18n="moduleDesc.sg">情報セキュリティマネジメント試験対策</span>
+              </span>
+            </button>
+
+            <button class="module-switch-option" data-module="itpass" onclick="switchSubject('itpass')">
+              <span class="module-switch-option__icon"><i class="fa-solid fa-graduation-cap"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.itpass">IT Passport 备考</strong>
+                <span data-i18n="moduleDesc.itpass">IT Passport 基础与真题练习</span>
+              </span>
+            </button>
+
+            <button class="module-switch-option" data-module="typing" onclick="switchSubject('typing')">
+              <span class="module-switch-option__icon"><i class="fa-solid fa-keyboard"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.typing">日本語タイピング</strong>
+                <span data-i18n="moduleDesc.typing">日本语输入与打字练习</span>
+              </span>
+            </button>
+
+            <button class="module-switch-option" data-module="coding-typing" onclick="switchSubject('coding-typing')">
+              <span class="module-switch-option__icon"><i class="fa-solid fa-laptop-code"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.codingTyping">编程打字</strong>
+                <span data-i18n="moduleDesc.codingTyping">代码输入与语法练习</span>
+              </span>
+            </button>
+
+            <button class="module-switch-option" data-module="java" onclick="switchSubject('java')">
+              <span class="module-switch-option__icon"><i class="fa-brands fa-java"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.java">Java 学习</strong>
+                <span data-i18n="moduleDesc.java">Java 基础、语法与练习</span>
+              </span>
+            </button>
+
+            <button class="module-switch-option" data-module="python" onclick="switchSubject('python')">
+              <span class="module-switch-option__icon"><i class="fa-brands fa-python"></i></span>
+              <span class="module-switch-option__text">
+                <strong data-i18n="nav.python">Python 学习</strong>
+                <span data-i18n="moduleDesc.python">Python 基础、语法与练习</span>
+              </span>
+            </button>
+
+          </div>
+        </div>
       </div>
+
+      <!-- Header Mode Navigation — created dynamically by JS on desktop -->
 
       <!-- Header Challenge Widget (SQL only) -->
       <div class="header-challenge" id="header-challenge">
@@ -60,6 +180,11 @@
 
       <button id="mobile-playground-toggle" class="mobile-toggle-btn" onclick="toggleMobilePlayground()" title="沙盒" data-i18n-title="sandbox.playground" aria-label="沙盒" data-i18n-aria-label="sandbox.playground" aria-controls="playground-section" aria-expanded="false">
         <i class="fa-solid fa-terminal"></i>
+      </button>
+
+      <!-- Fullscreen Toggle Button -->
+      <button class="fullscreen-toggle-btn" id="fullscreen-toggle-btn" type="button" title="进入沉浸模式" aria-label="进入沉浸模式">
+        <i class="fa-solid fa-expand"></i>
       </button>
 
       <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="切换浅色/深色模式" aria-label="切换浅色或深色模式" data-i18n-title="common.themeToggle" data-i18n-aria-label="common.themeToggle">
@@ -98,35 +223,36 @@
         <div class="tools-drawer__section">
           <div class="tools-drawer__section-title" data-i18n="tools.learningTools">学习工具</div>
           <button type="button" class="tools-drawer-item" data-action="open-dashboard">
-            <span class="tools-drawer-item__icon">📊</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.dashboard">学习统计</strong>
               <small data-i18n="tools.dashboardDesc">查看学习进度与数据概览</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="continue-learning">
-            <span class="tools-drawer-item__icon">▶️</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-play" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.continueLearning">继续学习</strong>
               <small data-i18n="tools.continueLearningDesc">从上次进度继续</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="export-data">
-            <span class="tools-drawer-item__icon">💾</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-floppy-disk" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.exportData">导出学习数据</strong>
               <small data-i18n="tools.exportDataDesc">下载本地学习数据备份 (JSON)</small>
             </span>
           </button>
-          <button type="button" class="tools-drawer-item" data-action="import-preview">
-            <span class="tools-drawer-item__icon">📥</span>
+          <button type="button" class="tools-drawer-item" data-action="import-preview" style="opacity:0.4;pointer-events:none;">
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-file-import" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.importPreview">预览导入备份</strong>
               <small data-i18n="tools.importPreviewDesc">只读预览，不会修改当前数据</small>
+              <small style="display:block;color:var(--text-muted);font-size:9.5px;" data-i18n="tools.importPreviewUnavailable">（Web 公开版）</small>
             </span>
           </button>
           <button type="button" class="tools-drawer-item" data-action="open-glossary">
-            <span class="tools-drawer-item__icon">📖</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-book" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.glossary">术语表</strong>
               <small data-i18n="tools.glossaryDesc">查询 IT / SQL / 编程术语</small>
@@ -137,7 +263,7 @@
         <div class="tools-drawer__section">
           <div class="tools-drawer__section-title" data-i18n="tools.examTools">考试工具</div>
           <button type="button" class="tools-drawer-item" data-action="open-exam-history">
-            <span class="tools-drawer-item__icon">📝</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.examHistory">考试历史</strong>
               <small data-i18n="tools.examHistoryDesc">查看最近的模拟考试记录</small>
@@ -148,18 +274,26 @@
         <div class="tools-drawer__section">
           <div class="tools-drawer__section-title" data-i18n="tools.settings">设置</div>
           <button type="button" class="tools-drawer-item" data-action="open-settings">
-            <span class="tools-drawer-item__icon">⚙️</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-gear" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.settings">设置</strong>
               <small data-i18n="tools.settingsDesc">调整学习工具偏好</small>
             </span>
           </button>
+          <!-- Web 公开版：自动更新为 PC-only，此处为真实发布说明链接（非伪造检查更新） -->
+          <a class="tools-drawer-item" href="https://github.com/bwins0668/it-study-tools/releases" target="_blank" rel="noopener noreferrer">
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+            <span class="tools-drawer-item__text">
+              <strong data-i18n="tools.releaseNotes">发布说明 / リリースノート</strong>
+              <small data-i18n="tools.releaseNotesDesc">查看版本历史与 Windows PC 版下载</small>
+            </span>
+          </a>
         </div>
 
         <div class="tools-drawer__section tools-drawer__section--danger">
           <div class="tools-drawer__section-title" data-i18n="tools.dangerous">危险操作</div>
           <button type="button" class="tools-drawer-item tools-drawer-item--danger" data-action="reset-progress">
-            <span class="tools-drawer-item__icon">↩️</span>
+            <span class="tools-drawer-item__icon"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i></span>
             <span class="tools-drawer-item__text">
               <strong data-i18n="tools.resetProgress">重置进度</strong>
               <small data-i18n="tools.resetProgressDesc">清空当前学习进度，需要确认</small>
@@ -168,65 +302,6 @@
         </div>
       </div>
     </aside>
-
-    <!-- Module Switch Panel -->
-    <div class="module-switch-panel" id="module-switch-panel" hidden role="dialog" aria-modal="true" data-i18n-aria-label="moduleSwitch.title">
-      <div class="module-switch-panel__header">
-        <strong data-i18n="moduleSwitch.title">选择学习版块</strong>
-        <button type="button" class="module-switch-close" aria-label="Close" data-i18n-aria-label="moduleSwitch.close">&times;</button>
-      </div>
-      <div class="module-switch-panel__body">
-        <button class="module-switch-option active" data-module="sql" onclick="switchSubject('sql')">
-          <span class="module-switch-option__icon"><i class="fa-solid fa-database"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.sql">SQL 学习</strong>
-            <span data-i18n="moduleDesc.sql">数据库基础、查询、练习与沙盒</span>
-          </span>
-        </button>
-        <button class="module-switch-option" data-module="sg" onclick="switchSubject('sg')">
-          <span class="module-switch-option__icon"><i class="fa-solid fa-shield-halved"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.sg">SG 备考</strong>
-            <span data-i18n="moduleDesc.sg">情報セキュリティマネジメント試験対策</span>
-          </span>
-        </button>
-        <button class="module-switch-option" data-module="itpass" onclick="switchSubject('itpass')">
-          <span class="module-switch-option__icon"><i class="fa-solid fa-graduation-cap"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.itpass">IT Passport 备考</strong>
-            <span data-i18n="moduleDesc.itpass">IT Passport 基础与真题练习</span>
-          </span>
-        </button>
-        <button class="module-switch-option" data-module="typing" onclick="switchSubject('typing')">
-          <span class="module-switch-option__icon"><i class="fa-solid fa-keyboard"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.typing">日本語タイピング</strong>
-            <span data-i18n="moduleDesc.typing">日本语输入与打字练习</span>
-          </span>
-        </button>
-        <button class="module-switch-option" data-module="coding-typing" onclick="switchSubject('coding-typing')">
-          <span class="module-switch-option__icon"><i class="fa-solid fa-laptop-code"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.codingTyping">编程打字</strong>
-            <span data-i18n="moduleDesc.codingTyping">代码输入与语法练习</span>
-          </span>
-        </button>
-        <button class="module-switch-option" data-module="java" onclick="switchSubject('java')">
-          <span class="module-switch-option__icon"><i class="fa-brands fa-java"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.java">Java 学习</strong>
-            <span data-i18n="moduleDesc.java">Java 基础、语法与练习</span>
-          </span>
-        </button>
-        <button class="module-switch-option" data-module="python" onclick="switchSubject('python')">
-          <span class="module-switch-option__icon"><i class="fa-brands fa-python"></i></span>
-          <span class="module-switch-option__text">
-            <strong data-i18n="nav.python">Python 学习</strong>
-            <span data-i18n="moduleDesc.python">Python 基础、语法与练习</span>
-          </span>
-        </button>
-      </div>
-    </div>
 
     <!-- Sub-Header Bar (Visible in SQL mode to toggle Textbook vs Mock Exam) -->
     <div class="sub-header-bar" id="sql-sub-header" style="display: none;">
@@ -296,6 +371,14 @@
     <div class="app-body" id="main-app-body">
       <div class="mobile-backdrop" id="mobile-backdrop" onclick="closeMobileDrawers()" aria-hidden="true"></div>
 
+      <!-- Sidebar Edge Handle (legacy hover strip — P10 起桌面由 context-nav-toggle 取代) -->
+      <div class="sidebar-edge-handle" id="sidebar-edge-handle" tabindex="0" role="button"
+        aria-label="课程目录" data-i18n-aria-label="sidebar.unitList"
+        aria-expanded="false" aria-controls="app-sidebar"
+        title="课程目录">
+        <span class="sidebar-edge-label"><span class="sidebar-edge-text" data-i18n="sidebar.unitList">目录</span><i class="fa-solid fa-chevron-right"></i></span>
+      </div>
+
       <!-- Sidebar: Lessons List -->
       <aside class="app-sidebar" id="app-sidebar" aria-label="课程目录" data-i18n-aria-label="sidebar.unitList">
         <div class="mobile-drawer-header mobile-sidebar-return">
@@ -306,6 +389,14 @@
           <button type="button" class="mobile-drawer-close" data-mobile-drawer-close="true" aria-label="Close" data-i18n-aria-label="common.close">
             <i class="fa-solid fa-xmark"></i>
             <span data-i18n="common.close">关闭</span>
+          </button>
+        </div>
+        <!-- P11：桌面目录头部行（收起按钮成为结构的一部分，不再悬浮压进度） -->
+        <div class="sidebar-head ds-scope">
+          <span class="sidebar-head__title"><i class="fa-solid fa-table-list" aria-hidden="true"></i> <span data-i18n="sidebar.unitList">課程目録</span></span>
+          <button type="button" class="sidebar-head__collapse" id="sidebar-collapse-btn"
+            aria-label="目次を閉じる / 收起目录" aria-controls="app-sidebar">
+            <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
           </button>
         </div>
         <!-- Sidebar Progress -->
@@ -334,7 +425,10 @@
         </div>
       </aside>
 
-      <main class="lesson-content" data-i18n-policy="source-ja">
+      <!-- Workspace Shell: centered symmetric two-column grid -->
+      <div class="workspace-shell">
+        <div class="workspace-grid">
+          <main class="lesson-content" data-i18n-policy="source-ja">
 
         <div class="content-card">
           <!-- Lesson Header -->
@@ -348,6 +442,7 @@
             </div>
             <h2 id="lesson-title-ja">01-SQLやデータベースとは何か？</h2>
             <h3 id="lesson-title-zh">01-什么是数据库 and SQL？</h3>
+            <span class="lesson-hover-arrow" aria-hidden="true">›</span>
           </div>
 
           <!-- Language Selector Tabs -->
@@ -455,7 +550,7 @@
           <!-- Quiz Section -->
           <div class="quiz-section" data-i18n-policy="source-ja">
             <h4><i class="fa-solid fa-circle-question"></i> <span data-i18n="quiz.title">理解度テスト (章节小测)</span></h4>
-            
+
             <!-- Quiz Navigator (IT Passport Mode Only) -->
             <div class="quiz-nav-header" id="itpass-quiz-nav" style="display: none;" data-i18n-policy="source-ja">
               <span class="quiz-nav-text" id="itpass-quiz-progress-text">问题 1 / 共 2 题</span>
@@ -554,7 +649,7 @@
                 <h5 style="color: var(--neon-blue); margin-bottom: 6px; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-language"></i> <span data-i18n="lesson.translationZh">中文翻译对照</span></h5>
                 <p id="eq-task-zh">查询学生主表的所有数据。</p>
               </div>
-              
+
               <!-- Expected output (for Java/Python) -->
               <div class="eq-expected-box" id="eq-expected-output-box" style="display: none; margin-top: 8px;">
                 <h5 style="color: #fcb900; margin-bottom: 6px; font-size: 12px; font-weight: 600;"><i class="fa-solid fa-square-poll-horizontal"></i> <span data-i18n="exam.expectedOutput">期待される出力結果 (期望执行输出)</span></h5>
@@ -569,7 +664,7 @@
               <span data-i18n="exam.status">测试状态: </span>
               <span class="verify-status-badge" id="eq-verify-status-badge" style="background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 4px; font-weight: 600; color: var(--text-muted);" data-i18n="exam.notStarted">未作答 (未着手)</span>
             </div>
-            
+
             <button class="eq-verify-btn" onclick="verifyCurrentCodingQuestion()" style="padding: 8px 16px; background: linear-gradient(135deg, #7c3aed, #a855f7); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(168, 85, 247, 0.2); transition: var(--transition-smooth);">
               <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.verify">验证并保存答案 (判定)</span>
             </button>
@@ -596,7 +691,7 @@
             <button class="cbt-btn-action reset" onclick="exitCodingExam()" style="padding: 10px 20px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: var(--transition-smooth);">
               <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="exam.exit">中断退出 (試験離脱)</span>
             </button>
-            
+
             <button class="cbt-btn-action submit" onclick="submitCodingExam()" style="padding: 10px 24px; background: linear-gradient(135deg, #10b981, #059669); border: none; color: #fff; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: var(--transition-smooth);">
               <i class="fa-solid fa-circle-check"></i> <span data-i18n="exam.submit">提交试卷并交卷 (試験終了)</span>
             </button>
@@ -824,7 +919,7 @@
             <div class="flashcard-desc-box">
               <span data-i18n="flashcard.clickToFlip">点击闪卡即可翻转查看中日对照翻译及释义：</span>
             </div>
-            
+
             <div class="flashcard-outer">
               <div class="flashcard" id="flashcard-element" onclick="flipFlashcard()">
                 <div class="flashcard-front">
@@ -936,7 +1031,7 @@
                     <span>JDK 21 · 10s · 128MB</span>
                   </div>
                   <button class="java-run-btn" id="java-run-btn" onclick="JavaSandbox.runCode()">
-                    <span class="sandbox-btn-icon">▶</span> <span data-i18n="sandbox.runCode">実行</span> <kbd>Ctrl+Enter</kbd>
+                    <i class="fa-solid fa-play sandbox-btn-icon" aria-hidden="true"></i> <span data-i18n="sandbox.runCode">実行</span> <kbd>Ctrl+Enter</kbd>
                   </button>
                 </div>
               </div>
@@ -952,6 +1047,8 @@
               <span id="python-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
               <span id="java-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
               <div class="output-actions" onclick="event.stopPropagation()">
+                <span id="python-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
+                <span id="java-execution-status" class="sandbox-status-indicator" style="font-size:11px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1);"></span>
                 <span class="java-sandbox-status" id="java-sandbox-status">準備完了 / Ready</span>
                 <button class="console-btn maximize-btn" id="java-output-maximize-btn" onclick="toggleMaximizeJavaOutput()">
                   <i class="fa-solid fa-expand"></i> <span data-i18n="common.maximize">最大化</span>
@@ -1028,7 +1125,7 @@
                     <span data-i18n="sandbox.pythonSandboxDesc">Python 3.12 · 10s · 离线沙盒</span>
                   </div>
                   <button class="python-run-btn" id="python-run-btn" onclick="PythonSandbox.runCode()">
-                    <span class="sandbox-btn-icon">▶</span> <span data-i18n="sandbox.runCode">実行</span> <kbd>Ctrl+Enter</kbd>
+                    <i class="fa-solid fa-play sandbox-btn-icon" aria-hidden="true"></i> <span data-i18n="sandbox.runCode">実行</span> <kbd>Ctrl+Enter</kbd>
                   </button>
                 </div>
               </div>
@@ -1055,17 +1152,20 @@
 （点击运行按钮，结果将显示在这里）</pre>
           </div>
         </div>
-        
+
         <!-- Maximize Overlay Backdrop -->
         <div class="maximize-overlay" id="maximize-overlay" onclick="toggleMaximizeOutput()" title="restore" data-i18n-title="common.minimize"></div>
 
       </section>
 
+        </div><!-- /workspace-grid -->
+      </div><!-- /workspace-shell -->
+
     </div>
 
     <!-- CBT Exam Simulator Container (Visible when Dojo is selected and active) -->
     <div class="cbt-exam-container" id="cbt-exam-container" style="display: none;">
-      
+
       <!-- CBT Config Screen -->
       <div class="cbt-config-screen" id="cbt-config-screen">
         <div class="cbt-config-card">
@@ -1125,7 +1225,7 @@
             <span class="cbt-indicator-badge"><i class="fa-solid fa-laptop"></i> <span data-i18n="exam.cbtSimulator">CBT 模拟系统</span></span>
             <h4 id="cbt-exam-display-title">令和6年 公开问题 模拟考试</h4>
           </div>
-          
+
           <div class="cbt-exam-timer-box">
             <i class="fa-solid fa-stopwatch"></i> <span data-i18n="exam.remainingTime">剩余时间: </span> <strong id="cbt-timer-display">120:00</strong>
           </div>
@@ -1159,7 +1259,7 @@
               <span class="cbt-q-meta-full-label" data-i18n="exam.metaSource">出典：</span>
               <span id="cbt-q-meta-full-text"></span>
             </div>
-            
+
             <div class="cbt-q-body-text" id="cbt-q-body-text">
               <!-- Question HTML here -->
             </div>
@@ -1279,6 +1379,27 @@
     </div>
 
   </div>
+
+  <!-- 学習ワークスペース（P2：overlay，rail Home で開閉；home.js が描画。
+       置于 app-container 之后：同 z-sticky 层级下 DOM 顺序保证盖过旧 header） -->
+  <section id="home-workspace" class="home-workspace ds-scope" hidden aria-label="学習ワークスペース" data-i18n-aria-label="home.eyebrow"></section>
+
+    </div><!-- /app-frame__body -->
+  </div><!-- /app-frame -->
+
+  <!-- StatusBar（P11：版本号即低打扰更新入口；徽标仅真实有更新时由 updater 显示） -->
+  <footer class="app-statusbar ds-scope" id="app-statusbar">
+    <span class="app-statusbar__item"><span class="ds-dot" aria-hidden="true"></span><span data-study-tools-desktop-version>—</span></span>
+    <!-- Web 公开版：不移植自动更新器——版本入口指向真实 GitHub Releases 发布说明（不伪造"检查更新"） -->
+    <a class="app-statusbar__version-entry" id="statusbar-version-entry"
+      href="https://github.com/bwins0668/it-study-tools/releases" target="_blank" rel="noopener noreferrer"
+      aria-label="发布说明" data-i18n-aria-label="tools.releaseNotes" title="发布说明" data-i18n-title="tools.releaseNotes">
+      <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+      <span data-i18n="tools.releaseNotes">发布说明 / リリースノート</span>
+    </a>
+    <span class="app-statusbar__spacer"></span>
+    <span class="app-statusbar__item"><kbd class="ds-kbd">Ctrl Shift /</kbd></span>
+  </footer>
 
   <section class="typing-hub" id="typing-hub" aria-label="日本語タイピング" data-i18n-aria-label="nav.typing">
     <aside class="typing-panel typing-library-panel">
@@ -1560,13 +1681,16 @@
     </main>
   </section>
 
+  <!-- Web 公开版：自动更新器为 PC-only（Portable runtime + Ed25519 验签依赖本地受控环境）。
+       Web 的版本与发布入口 = statusbar 的 GitHub Releases 链接；PWA 更新由 Service Worker 提示。 -->
+
   <!-- Glossary Modal -->
   <div id="glossary-modal" class="glossary-modal" hidden>
     <div class="glossary-backdrop" data-glossary-close></div>
     <section class="glossary-dialog" role="dialog" aria-modal="true" aria-labelledby="glossary-title">
       <header class="glossary-header">
         <div>
-          <h2 id="glossary-title" data-i18n="glossary.title">IT术语表</h2>
+          <h2 id="glossary-title" data-i18n="glossary.title">IT 术语表</h2>
           <p data-i18n="glossary.keepEnglishNote">保留英文技术术语</p>
         </div>
         <button type="button" class="glossary-close-btn" data-glossary-close data-i18n-title="glossary.close">
@@ -1650,8 +1774,9 @@
   <script src="data/sg_lessons.js?v=20260604"></script>
   <script src="data/sg_past_exams.js?v=20260604"></script>
   <script src="data/java_lessons.js?v=20260604"></script>
-  <script src="assets/js/config.web.js?v=v2026.6.15-r134.2"></script>
-  <script src="assets/js/code-runner-api.js?v=v2026.6.15-r134.2"></script>
+  <!-- Web 公开版运行时契约：禁用本地后端 + 浏览器执行 API（PC-only 本地沙盒由此适配） -->
+  <script src="assets/js/config.web.js?v=v2026.8.0-pc-parity"></script>
+  <script src="assets/js/code-runner-api.js?v=v2026.8.0-pc-parity"></script>
   <script src="assets/js/java_sandbox.js?v=v2026.6.20-r-responsive-fr-full-pack"></script>
   <script src="data/python_lessons.js?v=20260606_v6"></script>
   <script src="assets/js/python_sandbox.js?v=v2026.6.20-r-responsive-fr-full-pack"></script>
@@ -1705,6 +1830,8 @@
   <script src="assets/js/import-preview.js?v=v2026.6.15-r90.0"></script>
   <script src="assets/js/dashboard.js?v=v2026.6.15-r29.1"></script>
   <script src="assets/js/sync-engine.js?v=v2026.6.15-r25.2"></script>
+  <!-- 云同步配置：public（tracked，随 Portable 发布，与 Web 公开版同构）
+       + local（gitignored 可选覆盖，开发者切换测试项目用；缺失时 404 静默） -->
   <script src="assets/js/supabase-config.public.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase-client.js?v=v2026.6.15-r24.0"></script>
@@ -1716,10 +1843,27 @@
   <script src="data/i18n_content/navigation_fr.js?v=v2026.6.20-r-locale-nav-compare"></script>
   <script src="data/i18n_content/navigation_zh.js?v=v2026.6.20-r-locale-nav-compare"></script>
   <script src="assets/js/app.js?v=v2026.6.20-r-locale-nav-compare"></script>
-  <script src="assets/js/version.js?v=v2026.6.20-r-locale-nav-compare"></script>
+  <script src="assets/js/shell.js?v=r2"></script>
+  <script src="assets/js/home.js?v=r2"></script>
+  <script src="assets/js/lesson-nav.js?v=r2"></script>
+  <script src="assets/js/practice.js?v=r3"></script>
+  <script src="assets/js/surfaces.js?v=r4"></script>
+  <script src="assets/js/version.js?v=v2026.8.0-pc-parity"></script>
   <script src="assets/js/syntax-highlighter.js?v=v2026.6.16-r136.2"></script>
   <script src="assets/js/japanese-typing-helpers.js?v=v2026.6.16-r136.2"></script>
   <script src="assets/js/keyboard-shortcuts.js?v=v2026.6.16-r136.2"></script>
   <script src="assets/js/ai_assistant.js?v=20260608_global_target"></script>
+  <!-- Immersive Start Overlay -->
+  <div id="immersive-start-overlay" class="immersive-start-overlay" hidden>
+    <div class="immersive-start-card">
+      <i class="fa-solid fa-graduation-cap immersive-start-logo"></i>
+      <h2 class="immersive-start-title">Coco 沉浸式学习系统</h2>
+      <p class="immersive-start-desc">进入全屏沉浸模式，开启专注学习体验</p>
+      <button id="immersive-start-btn" class="immersive-start-btn" type="button">
+        <i class="fa-solid fa-expand"></i> 进入沉浸学习
+      </button>
+      <button id="immersive-skip-btn" class="immersive-skip-btn" type="button">暂不全屏</button>
+    </div>
+  </div>
 </body>
 </html>

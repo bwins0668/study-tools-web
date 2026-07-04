@@ -54,3 +54,9 @@ tools/diag_cbt_dom.py
 tools/test_phase9h.py
 tools/test_pwa_phase9h.py
 *.bak
+
+# GPT Handoff 临时任务队列
+.gpt-handoff/
+
+# PC→Web 同步产物与证据（不入库）
+docs/ui-rebuild-evidence/
