@@ -1,4 +1,4 @@
-const CACHE_NAME = "study-tools-web-v2026.8.0-pc-parity";
+const CACHE_NAME = "study-tools-web-v2026-8-31-audit-p0-hotfix";
 
 const CORE_ASSETS = [
   "./",
